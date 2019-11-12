@@ -104,13 +104,14 @@ public class SemiFinishedInspectController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		semiFinishedInspect = systemService.getEntity(SemiFinishedInspectEntity.class, semiFinishedInspect.getId());
+		allEntitys.add(semiFinishedInspect);
 		List<SemiFinishedFirstInspectEntity> semiFinishedFirstInspectList =  systemService.findByProperty(SemiFinishedFirstInspectEntity.class,"semiFinishedCode",semiFinishedInspect.getSemiFinishedCode());
 		List<SemiFinishedLastInspectEntity> semiFinishedLastInspectList =  systemService.findByProperty(SemiFinishedLastInspectEntity.class,"semiFinishedCode",semiFinishedInspect.getSemiFinishedCode());
 		if(!ListUtils.isNullOrEmpty(semiFinishedFirstInspectList)){
-			allEntitys.add(semiFinishedFirstInspectList);
+			allEntitys.addAll(semiFinishedFirstInspectList);
 		}
 		if(!ListUtils.isNullOrEmpty(semiFinishedLastInspectList)){
-			allEntitys.add(semiFinishedLastInspectList);
+			allEntitys.addAll(semiFinishedLastInspectList);
 		}
 		message = "删除成功";
 		semiFinishedInspectService.deleteAllEntitie(allEntitys);

@@ -5,6 +5,7 @@ import com.jeecg.batch.FinishedOutLookDataBatchRunnable;
 import com.jeecg.entity.invoices.SalesReleaseNodeEntity;
 import com.jeecg.entity.invoices.SalesReleaseOrderEntity;
 import com.jeecg.entity.invoices.SalesReleaseOrgNodeEntity;
+import com.jeecg.entity.look.FinishedWarehousIOLookEntity;
 import com.jeecg.entity.warehous.FinishedWarehousIOEntity;
 import com.jeecg.page.invoices.SalesReleaseOrderPage;
 import com.jeecg.service.invoices.SalesReleaseOrderServiceI;
@@ -123,18 +124,23 @@ public class SalesReleaseOrderController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		salesReleaseOrder = systemService.getEntity(SalesReleaseOrderEntity.class, salesReleaseOrder.getId());
+		allEntitys.add(salesReleaseOrder);
 		List<SalesReleaseNodeEntity> salesReleaseNodeList = systemService.findByProperty(SalesReleaseNodeEntity.class,"receiptId", salesReleaseOrder.getId());
 		List<SalesReleaseOrgNodeEntity> salesReleaseOrgNodeEntityList = systemService.findByProperty(SalesReleaseOrgNodeEntity.class,"receiptId", salesReleaseOrder.getId());
 		if(!ListUtils.isNullOrEmpty(salesReleaseNodeList)){
-			allEntitys.add(salesReleaseNodeList);
+			allEntitys.addAll(salesReleaseNodeList);
 		}
 		if(!ListUtils.isNullOrEmpty(salesReleaseOrgNodeEntityList)){
-			allEntitys.add(salesReleaseOrgNodeEntityList);
+			allEntitys.addAll(salesReleaseOrgNodeEntityList);
 		}
 		message = "删除成功";
 		salesReleaseOrderService.deleteAllEntitie(allEntitys);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		//删除成品出库看板
+		List<FinishedWarehousIOLookEntity> finishedWarehousIOLookEntities = systemService.findByProperty(FinishedWarehousIOLookEntity.class, "salesDeliveryOrderNumber", salesReleaseOrder.getReceiptCode());
+		if(!ListUtils.isNullOrEmpty(finishedWarehousIOLookEntities)){
+			systemService.deleteAllEntitie(finishedWarehousIOLookEntities);
+		}
 		j.setMsg(message);
 		return j;
 	}
@@ -192,7 +198,7 @@ public class SalesReleaseOrderController extends BaseController {
 		}
 		j.setMsg(message);
 		//同步成品出库看板数据
-		new FinishedOutLookDataBatchRunnable(salesReleaseOrderPage,systemService).startBatch();
+		new Thread(new FinishedOutLookDataBatchRunnable(salesReleaseOrder.getReceiptCode(),systemService)).start();
 		return j;
 	}
 

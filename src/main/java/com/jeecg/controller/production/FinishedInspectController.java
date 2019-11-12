@@ -104,13 +104,14 @@ public class FinishedInspectController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		finishedInspect = systemService.getEntity(FinishedInspectEntity.class, finishedInspect.getId());
+		allEntitys.add(finishedInspect);
 		List<FinishedFirstInspectEntity> finishedFirstInspectList =  systemService.findByProperty(FinishedFirstInspectEntity.class,"finishedCode",finishedInspect.getFinishedCode());
 		List<FinishedLastInspectEntity> finishedLastInspectList =  systemService.findByProperty(FinishedLastInspectEntity.class,"finishedCode",finishedInspect.getFinishedCode());
 		if(!ListUtils.isNullOrEmpty(finishedFirstInspectList)){
-			allEntitys.add(finishedFirstInspectList);
+			allEntitys.addAll(finishedFirstInspectList);
 		}
 		if(!ListUtils.isNullOrEmpty(finishedLastInspectList)){
-			allEntitys.add(finishedLastInspectList);
+			allEntitys.addAll(finishedLastInspectList);
 		}
 		message = "删除成功";
 		finishedInspectService.deleteAllEntitie(allEntitys);

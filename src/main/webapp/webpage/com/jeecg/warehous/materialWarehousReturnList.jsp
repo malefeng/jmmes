@@ -49,7 +49,8 @@
                     formatter: function (value, rec, index) {
                         return new Date().format('yyyy-MM-dd hh:mm:ss', value);
                     }
-                }, {field: 'returnedReason', title: '退料原因', width: 120, sortable: true}, {
+                }, {field: 'returnedReason', title: '退料原因', width: 120, sortable: true,
+                    formatter: function (value){return ${rmReason}[value]}}, {
                     field: 'returnedNumber',
                     title: '退料数量',
                     width: 120,

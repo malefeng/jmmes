@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
  */
 public class CustomJsonDateDeserializer extends JsonDeserializer<Date> {
 	private SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat datetimeHalfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
@@ -27,6 +28,8 @@ public class CustomJsonDateDeserializer extends JsonDeserializer<Date> {
 			try {
 				if (text.indexOf(":") == -1 && text.length() == 10) {
 					return this.dateFormat.parse(text);
+				}else if(text.indexOf(":") > 0 && text.length() == 16){
+					return this.datetimeHalfFormat.parse(text);
 				} else if (text.indexOf(":") > 0 && text.length() == 19) {
 					return this.datetimeFormat.parse(text);
 				} else {

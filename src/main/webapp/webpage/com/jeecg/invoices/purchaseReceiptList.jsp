@@ -46,9 +46,7 @@
                     sortable: true,
                     formatter: function(value){return ${depDic}[value]}
                 }, {
-                    field: 'receiptDate', title: '单据日期', sortable: true, formatter: function (value, rec, index) {
-                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
-                    }
+                    field: 'receiptDate', title: '单据日期', sortable: true
                 }, {field: 'receivingOrgCode',
                     title: '收货部门',
                     sortable: true,
@@ -77,13 +75,9 @@
                     sortable: true,
                     formatter: function(value){return ${userDic}[value]}
                 }, {
-                    field: 'verifyDate', title: '审核日期', sortable: true, formatter: function (value, rec, index) {
-                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
-                    }
+                    field: 'verifyDate', title: '审核日期', sortable: true
                 }, {
-                    field: 'createTime', title: '单据创建日期', sortable: true, formatter: function (value, rec, index) {
-                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
-                    }
+                    field: 'createTime', title: '单据创建日期', sortable: true
                 }, {field: 'orderNumber', title: '采购订单号', sortable: true}, {
                     field: 'salesOrderNumber',
                     title: '销售订单号',
@@ -96,10 +90,7 @@
                 , {
                     field: 'acquireTime',
                     title: '获取时间',
-                    sortable: true,
-                    formatter: function (value, rec, index) {
-                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
-                    }
+                    sortable: true
                 }, {
                     field: 'opt',
                     title: '操作',

@@ -34,10 +34,10 @@
 				  <td align="left" bgcolor="#EEEEEE">单位</td>
 				  <td align="left" bgcolor="#EEEEEE">数量</td>
 				  <td align="left" bgcolor="#EEEEEE">批号</td>
-				  <td align="left" bgcolor="#EEEEEE">成品代码</td>
+				  <%--<td align="left" bgcolor="#EEEEEE">成品代码</td>
 				  <td align="left" bgcolor="#EEEEEE">成品名称</td>
 				  <td align="left" bgcolor="#EEEEEE">生产订单号</td>
-				  <td align="left" bgcolor="#EEEEEE">生产派工号</td>
+				  <td align="left" bgcolor="#EEEEEE">生产派工号</td>--%>
 				  <td align="left" bgcolor="#EEEEEE">原料入库时间</td>
 	</tr>
 	<tbody id="add_productionRequisitionNode_table">	
@@ -51,10 +51,10 @@
 				<td align="left"><t:dictSelect field="productionRequisitionNodeList[0].unit" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
 				  <td align="left"><input name="productionRequisitionNodeList[0].rawMaterialNum" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="productionRequisitionNodeList[0].batchNumber" maxlength="120" type="text" style="width:120px;" ></td>
-				  <td align="left" class="select_finishedCode"><t:dictSelect field="productionRequisitionNodeList[0].finishedCode" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
+				  <%--<td align="left" class="select_finishedCode"><t:dictSelect field="productionRequisitionNodeList[0].finishedCode" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
 				  <td align="left" class="select_finishedName"><t:dictSelect field="productionRequisitionNodeList[0].finishedName" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
 				  <td align="left"><input name="productionRequisitionNodeList[0].productionOrderNumber" maxlength="120" type="text" style="width:120px;" ></td>
-				  <td align="left"><input name="productionRequisitionNodeList[0].productionDispatchingNumber" maxlength="120" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="productionRequisitionNodeList[0].productionDispatchingNumber" maxlength="120" type="text" style="width:120px;" ></td>--%>
 				  <td align="left"><input name="productionRequisitionNodeList[0].warehousingDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
    			</tr>
 	</c:if>
@@ -70,10 +70,10 @@
 				<td align="left"><t:dictSelect field="productionRequisitionNodeList[${stuts.index }].unit" defaultVal="${poVal.unit }" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
 				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].rawMaterialNum" maxlength="120" value="${poVal.rawMaterialNum }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].batchNumber" maxlength="120" value="${poVal.batchNumber }" type="text" style="width:120px;"></td>
-				<td align="left" class="select_finishedCode"><t:dictSelect field="productionRequisitionNodeList[${stuts.index }].finishedCode" defaultVal="${poVal.finishedCode }" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
+				<%--<td align="left" class="select_finishedCode"><t:dictSelect field="productionRequisitionNodeList[${stuts.index }].finishedCode" defaultVal="${poVal.finishedCode }" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
 				<td align="left" class="select_finishedName"><t:dictSelect field="productionRequisitionNodeList[${stuts.index }].finishedName" defaultVal="${poVal.finishedName }" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
 				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].productionOrderNumber" maxlength="120" value="${poVal.productionOrderNumber }" type="text" style="width:120px;"></td>
-				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].productionDispatchingNumber" maxlength="120" value="${poVal.productionDispatchingNumber }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].productionDispatchingNumber" maxlength="120" value="${poVal.productionDispatchingNumber }" type="text" style="width:120px;"></td>--%>
 				   <td align="left"><input name="productionRequisitionNodeList[${stuts.index }].warehousingDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" value="${poVal.warehousingDate }" type="text" style="width:120px;"></td>
    			</tr>
 		</c:forEach>

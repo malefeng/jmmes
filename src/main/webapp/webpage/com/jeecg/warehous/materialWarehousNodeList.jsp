@@ -48,9 +48,9 @@
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck"/></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].materialSerino" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].batchNumber" maxlength="120" type="text" style="width:120px;" ></td>
-				  <td align="left"><input name="materialWarehousNodeList[0].warehouseOutNumber" maxlength="120" type="text" style="width:120px;" ></td>
-				  <td align="left"><input name="materialWarehousNodeList[0].virtualRepositoryNumber" maxlength="120" type="text" style="width:120px;" ></td>
-				  <td align="left"><t:dictSelect field="materialWarehousNodeList[0].virtualRepository" dictTable="t_repository_list" dictField="repository_code" dictText="repository_name" readonly="true"></t:dictSelect></td>
+				  <td align="left"><input name="materialWarehousNodeList[0].warehouseOutNumber" class="out_number" value="0" data-old="0" maxlength="120" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="materialWarehousNodeList[0].virtualRepositoryNumber" readonly maxlength="120" type="text" style="width:120px;" ></td>
+				  <td align="left"><t:dictSelect field="materialWarehousNodeList[0].virtualRepository" typeGroupCode="workshop" readonly="true"></t:dictSelect></td>
 				  <td align="left"><t:dictSelect field="materialWarehousNodeList[0].unit" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
 				  <td align="left"><t:dictSelect field="materialWarehousNodeList[0].warehouseOutPersonCode" dictTable="t_s_base_user" dictField="username" dictText="realname" readonly="true"></t:dictSelect></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].warehouseOutDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
@@ -68,9 +68,9 @@
 				<input name="materialWarehousNodeList[${stuts.index }].id"  value="${poVal.id }" type="hidden" >
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].materialSerino" maxlength="120" value="${poVal.code }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].batchNumber" maxlength="120" value="${poVal.batchNumber }" type="text" style="width:120px;"></td>
-				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].warehouseOutNumber" maxlength="120" value="${poVal.warehouseOutNumber }" type="text" style="width:120px;"></td>
-				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].virtualRepositoryNumber" maxlength="120" value="${poVal.virtualRepositoryNumber }" type="text" style="width:120px;"></td>
-					<td align="left"><t:dictSelect field="materialWarehousNodeList[${stuts.index }].virtualRepository" defaultVal="${poVal.virtualRepository }" dictTable="t_repository_list" dictField="repository_code" dictText="repository_name" readonly="true"></t:dictSelect></td>
+				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].warehouseOutNumber" class="out_number" maxlength="120" value="${poVal.warehouseOutNumber+0 }" data-old="0" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].virtualRepositoryNumber" readonly maxlength="120" value="${poVal.virtualRepositoryNumber }" type="text" style="width:120px;"></td>
+				<td align="left"><t:dictSelect field="materialWarehousNodeList[${stuts.index }].virtualRepository" defaultVal="${poVal.virtualRepository }" typeGroupCode="workshop" readonly="true"></t:dictSelect></td>
 					<td align="left"><t:dictSelect field="materialWarehousNodeList[${stuts.index }].unit" defaultVal="${poVal.unit }" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
 					<td align="left"><t:dictSelect field="materialWarehousNodeList[${stuts.index }].warehouseOutPersonCode" defaultVal="${poVal.warehouseOutPersonCode }" dictTable="t_s_base_user" dictField="username" dictText="realname" readonly="true"></t:dictSelect></td>
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].warehouseOutDate" maxlength="" value="${poVal.warehouseOutDate }" type="text" style="width:120px;"></td>

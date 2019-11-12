@@ -291,7 +291,6 @@
                 <span>成品代码:<input type="text" name="finishedCode"></span>
                 <span>成品名称:<input type="text" name="finishedName"></span>
                 <span>物料类型:<t:dictSelect id="materialType" field="materialType" typeGroupCode="matType" readonly="true"></t:dictSelect></span>
-                <a href="#" class="easyui-linkbutton" id="search" plain="true" icon="icon-search">查询</a>
                 <a href="#" class="easyui-linkbutton" style="float: right" onclick="finishedProductListsearch();" plain="true" icon="icon-search">查询</a>
             </div>
             <div style="border-bottom-width:0;" class="datagrid-toolbar">

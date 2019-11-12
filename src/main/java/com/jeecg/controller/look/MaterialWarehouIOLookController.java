@@ -150,11 +150,11 @@ public class MaterialWarehouIOLookController extends BaseController {
 	
 	@RequestMapping(params="listData", method = RequestMethod.GET)
 	@ResponseBody
-	public List<MaterialWarehouIOLookEntity> listData(HttpServletRequest request) {
+	public List listData(HttpServletRequest request) {
 		String sql = "SELECT" +
 				" w.receiving_order_number receivingOrderNumber," +
 				" w.purchase_order_number purchaseOrderNumber," +
-				" w.sales_order_number salesOrderNumber," +
+//				" w.sales_order_number salesOrderNumber," +
 				" w.material_code materialCode," +
 				" w.material_name materialName," +
 				" w.material_size materialSize," +
@@ -169,12 +169,12 @@ public class MaterialWarehouIOLookController extends BaseController {
 				" w.insert_ratio < 100" +
 				" OR (" +
 				" w.insert_ratio >= 100" +
-				" AND w.insert_time >= (NOW() - INTERVAL 24 HOUR)" +
+				" AND w.insert_time >= DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')" +
 				")" +
 				" ORDER BY" +
 				" w.create_date" +
-				" LIMIT 25";
-		List<MaterialWarehouIOLookEntity> materialWarehouIOLookEntities = this.materialWarehouIOLookService.findListbySql(sql);
+				" LIMIT 20";
+		List materialWarehouIOLookEntities = this.materialWarehouIOLookService.findForJdbc(sql);
 		return materialWarehouIOLookEntities;
 	}
 	

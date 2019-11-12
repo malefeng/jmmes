@@ -287,7 +287,6 @@
             <div name="searchColums">
                 <span>原料代码:<input type="text" name="rawMaterialCode"></span>
                 <span>原料名称:<input type="text" name="rawMaterialName"></span>
-                <a href="#" class="easyui-linkbutton" id="search" plain="true" icon="icon-search">查询</a>
                 <a href="#" class="easyui-linkbutton" style="float: right" onclick="rawMaterialListsearch();" plain="true" icon="icon-search">查询</a>
             </div>
             <div style="border-bottom-width:0;" class="datagrid-toolbar">

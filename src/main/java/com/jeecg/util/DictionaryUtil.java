@@ -52,6 +52,8 @@ public class DictionaryUtil {
             case "unitDic" : return getDicList("","unit","");//单位
             case "finshTypeDic" : return getDicList("","rip_p_type","");//熟成产品类型
             case "matTypeDic" : return getDicList("","matType","");//物料类型
+            case "rmReason" : return getDicList("","r_m_reason","");//物料类型
+            case "rpReason" : return getDicList("","r_p_reason","");//物料类型
             default:
                 return null;
         }

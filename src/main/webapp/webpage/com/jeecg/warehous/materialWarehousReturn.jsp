@@ -20,8 +20,6 @@
 						<input class="inputxt" id="materialSerino" name="materialSerino" ignore="ignore"  value="${materialWarehousReturnPage.materialSerino}" />
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							原料代码:
@@ -42,8 +40,6 @@
 						<t:dictSelect field="materialName" defaultVal="${materialWarehousReturnPage.materialName}" dictTable="t_raw_material_list" dictField="raw_material_name" dictText="raw_material_name" hasLabel="false" type="list"></t:dictSelect>
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							原料批次:
@@ -64,8 +60,6 @@
 						<input class="inputxt" id="materialSize" name="materialSize" ignore="ignore"  value="${materialWarehousReturnPage.materialSize}" />
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							入库数量:
@@ -86,8 +80,6 @@
 						<t:dictSelect field="unit" defaultVal="${materialWarehousReturnPage.unit}" typeGroupCode="unit" readonly="true"></t:dictSelect>
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							退料人:
@@ -108,15 +100,13 @@
 						<input class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  style="width: 150px" id="returnedDate" name="returnedDate" ignore="ignore"    value="<fmt:formatDate value='${materialWarehousReturnPage.returnedDate}' type="date" pattern="yyyy-MM-dd hh:mm:ss"/>" />
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							退料原因:
 						</label>
 					</td>
 					<td class="value">
-						<input class="inputxt" id="returnedReason" name="returnedReason" ignore="ignore"  value="${materialWarehousReturnPage.returnedReason}" />
+						<t:dictSelect field="returnedReason" defaultVal="${materialWarehousReturnPage.returnedReason}" typeGroupCode="r_m_reason" readonly="true"></t:dictSelect>
 						<span class="Validform_checktip"></span>
 					</td>
 				</tr>
@@ -130,8 +120,26 @@
 						<input class="inputxt" id="returnedNumber" name="returnedNumber" ignore="ignore"  value="${materialWarehousReturnPage.returnedNumber}" />
 						<span class="Validform_checktip"></span>
 					</td>
+					<td align="right">
+						<label class="Validform_label">
+							退货仓库:
+						</label>
+					</td>
+					<td class="value">
+						<t:dictSelect field="returnWhouse" defaultVal="${materialWarehousReturnPage.returnWhouse}"  dictTable="t_repository_list" dictField="repository_code" dictText="repository_name" readonly="true"></t:dictSelect>
+						<span class="Validform_checktip"></span>
+					</td>
 				</tr>
 				<tr>
+					<td align="right">
+						<label class="Validform_label">
+							退货库位:
+						</label>
+					</td>
+					<td class="value">
+						<t:dictSelect field="warehouseSpaceCode" defaultVal="${materialWarehousReturnPage.warehouseSpaceCode}"  dictTable="t_storage_list" dictField="storage_code" dictText="storage_name" readonly="true"></t:dictSelect>
+						<span class="Validform_checktip"></span>
+					</td>
 					<td align="right">
 						<label class="Validform_label">
 							供应商:
@@ -152,8 +160,6 @@
 						<input class="inputxt" id="receivingOrderNumber" name="receivingOrderNumber" ignore="ignore"  value="${materialWarehousReturnPage.receivingOrderNumber}" />
 						<span class="Validform_checktip"></span>
 					</td>
-				</tr>
-				<tr>
 					<td align="right">
 						<label class="Validform_label">
 							收料单采购订单号:

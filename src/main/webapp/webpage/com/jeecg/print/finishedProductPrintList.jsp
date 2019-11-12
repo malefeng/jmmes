@@ -296,7 +296,7 @@
                     <span style="display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;">~</span>
                     <input type="text" name="createDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                 </span>
-                <a href="#" class="easyui-linkbutton" style="float: right" onclick="purchaseReceiptNodeListsearch();" plain="true" icon="icon-search">查询</a>
+                <a href="#" class="easyui-linkbutton" style="float: right" onclick="finishedProductPrintListsearch();" plain="true" icon="icon-search">查询</a>
             </div>
             <div style="height:0px;">
                 <span style="float:left;"></span>

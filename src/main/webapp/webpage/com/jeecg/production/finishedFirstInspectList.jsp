@@ -39,11 +39,11 @@
 			<tr>
 				<td align="center"><div style="width: 25px;" name="xh">1</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck"/></td>
-				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectNumber" maxlength="" value="1" type="text" style="width:120px;" ></td>
-				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectTimes" readonly maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectNumber" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectTimes" readonly maxlength="" value="1" type="text" style="width:120px;" ></td>
 				  <td align="left"><t:dictSelect field="finishedFirstInspectList[0].firstInspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				  <td align="left"><t:dictSelect field="finishedFirstInspectList[0].firstInspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
-				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectDate" value="" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="datetime-local" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedFirstInspectList[0].firstInspectDate" value="" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
    			</tr>
 	</c:if>
 	<c:if test="${fn:length(finishedFirstInspectList)  > 0 }">

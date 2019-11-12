@@ -93,14 +93,14 @@
 			</td>
 			</tr>
 			<tr>
-			<td align="right"><label class="Validform_label">已出库数量:</label></td>
+			<td align="right"><label class="Validform_label">库存数量:</label></td>
 			<td class="value">
-				<input nullmsg="请填写已出库数量" errormsg="已出库数量格式不对" class="inputxt" id="warehouseOutNumber" name="warehouseOutNumber" ignore="ignore"	value="${materialWarehousIOPage.warehouseOutNumber}" />
+				<input readonly class="inputxt" id="warehouseOutNumber" name="warehouseOutNumber" ignore="ignore"	value="${materialWarehousIOPage.warehouseOutNumber}" />
 				<span class="Validform_checktip"></span>
 			</td>
 			<td align="right"><label class="Validform_label">虚拟仓库数量:</label></td>
 			<td class="value">
-				<input nullmsg="请填写虚拟仓库数量" errormsg="虚拟仓库数量格式不对" class="inputxt" id="virtualRepositoryNumber" name="virtualRepositoryNumber" ignore="ignore"	value="${materialWarehousIOPage.virtualRepositoryNumber}" />
+				<input readonly class="inputxt" id="virtualRepositoryNumber" name="virtualRepositoryNumber" ignore="ignore"	value="${materialWarehousIOPage.virtualRepositoryNumber}" />
 				<span class="Validform_checktip"></span>
 			</td>
 			</tr>
@@ -112,7 +112,7 @@
 			</td>
 			<td align="right"><label class="Validform_label">虚拟仓库:</label></td>
 			<td class="value">
-				<t:dictSelect field="virtualRepository" defaultVal="${materialWarehousIOPage.virtualRepository}" dictTable="t_repository_list" dictField="repository_code" dictText="repository_name" readonly="true"></t:dictSelect>
+				<t:dictSelect field="virtualRepository" typeGroupCode="workshop" defaultVal="${materialWarehousIOPage.virtualRepository}" readonly="true"></t:dictSelect>
 				<span class="Validform_checktip"></span>
 			</td>
 			</tr>
@@ -176,9 +176,9 @@
 			 <td align="center"><input style="width:20px;" type="checkbox" name="ck"/></td>
 				  <td align="left"><input name="materialWarehousNodeList[#index#].materialSerino" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="materialWarehousNodeList[#index#].batchNumber" maxlength="120" type="text" style="width:120px;"></td>
-				  <td align="left"><input name="materialWarehousNodeList[#index#].warehouseOutNumber" maxlength="120" type="text" style="width:120px;"></td>
-				  <td align="left"><input name="materialWarehousNodeList[#index#].virtualRepositoryNumber" maxlength="120" type="text" style="width:120px;"></td>
-				<td align="left"><t:dictSelect field="materialWarehousNodeList[#index#].virtualRepository" dictTable="t_repository_list" dictField="repository_code" dictText="repository_name" readonly="true"></t:dictSelect></td>
+				  <td align="left"><input name="materialWarehousNodeList[#index#].warehouseOutNumber" class="out_number" value="0" data-old="0" maxlength="120" type="text" style="width:120px;"></td>
+				  <td align="left"><input name="materialWarehousNodeList[#index#].virtualRepositoryNumber" readonly maxlength="120" type="text" style="width:120px;"></td>
+				<td align="left"><t:dictSelect field="materialWarehousNodeList[#index#].virtualRepository" typeGroupCode="workshop" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="materialWarehousNodeList[#index#].unit" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="materialWarehousNodeList[#index#].warehouseOutPersonCode" dictTable="t_s_base_user" dictField="username" dictText="realname" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="materialWarehousNodeList[#index#].warehouseOutDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
@@ -189,4 +189,35 @@
 			</tr>
 		 </tbody>
 		</table>
+ <script>
+	 $(document).on("change",".out_number",function(e){
+	 	//库存量
+	 	var mainWarehouseOutNumber = $("#warehouseOutNumber");
+	 	//虚拟仓库量
+	 	var mainVirtualRepositoryNumber = $("#virtualRepositoryNumber");
+	 	//原出库数量
+		 var old_val = $(e.target).data("old");
+	 	//现出库量
+		 var new_val = e.target.value;
+		 //出库增量
+		 var add_num = new_val-old_val;
+		 //本次入虚拟仓库数量
+		 var virtualRepositoryNumber = $(e.target).parent().next().children("input");
+		 if(mainWarehouseOutNumber.val()<add_num && mainVirtualRepositoryNumber.val()<add_num){
+			 alert("剩余库存不足以扣除当前数量，请修改");
+			 e.target.value = old_val.val();
+			 return false;
+		 }
+		 if(mainWarehouseOutNumber.val()>0){
+		 	//首次出库
+			 mainVirtualRepositoryNumber.val(mainWarehouseOutNumber.val()-add_num);
+		 	 mainWarehouseOutNumber.val("0");
+		 }else{
+		 	//二次出库
+			 mainVirtualRepositoryNumber.val(mainVirtualRepositoryNumber.val()-add_num);
+		 }
+		 $(e.target).data("old",new_val);
+		 virtualRepositoryNumber.val(mainVirtualRepositoryNumber.val());
+	 })
+ </script>
  </body>

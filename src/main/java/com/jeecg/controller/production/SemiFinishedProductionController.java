@@ -113,6 +113,7 @@ public class SemiFinishedProductionController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		semiFinishedProduction = systemService.getEntity(SemiFinishedProductionEntity.class, semiFinishedProduction.getId());
+		allEntitys.add(semiFinishedProduction);
 		List<SemiFinishedProductionNodeEntity> semiFinishedProductionNodeList =  systemService.findByProperty(SemiFinishedProductionNodeEntity.class,"semiFinishedSerino",semiFinishedProduction.getSemiFinishedSerino());
 		if(!ListUtils.isNullOrEmpty(semiFinishedProductionNodeList)){
 			allEntitys.add(semiFinishedProductionNodeList);

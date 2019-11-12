@@ -68,7 +68,7 @@ public class MaterialWarehousReturnController extends BaseController {
 	 */
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
-		dictionaryUtil.writeDicList(request,"userDic");
+		dictionaryUtil.writeDicList(request,"userDic","rmReason");
 		return new ModelAndView("com/jeecg/warehous/materialWarehousReturnList");
 	}
 

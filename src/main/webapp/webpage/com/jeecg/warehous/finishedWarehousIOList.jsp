@@ -315,7 +315,7 @@
                     <span style="display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;">~</span>
                     <input type="text" name="createDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                 </span>
-                <a href="#" class="easyui-linkbutton" style="float: right" onclick="ripeningWarehousIOListsearch();" plain="true" icon="icon-search">查询</a>
+                <a href="#" class="easyui-linkbutton" style="float: right" onclick="finishedWarehousIOListsearch();" plain="true" icon="icon-search">查询</a>
             </div>
             <div style="border-bottom-width:0;" class="datagrid-toolbar">
                 <span style="float:left;">

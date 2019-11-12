@@ -114,10 +114,4 @@ public class ProductionLookDataBatchRunnable implements Runnable{
         }
 
     }
-
-    public void startBatch(){
-        logger.info("开始同步生产看板信息");
-        Thread thread = new Thread(this);
-        thread.start();
-    }
 }

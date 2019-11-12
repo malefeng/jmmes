@@ -263,8 +263,8 @@ public abstract class GenericBaseCommonDao<T, PK extends Serializable>
 	public <T> void deleteAllEntitie(Collection<T> entitys) {
 		for (Object entity : entitys) {
 			getSession().delete(entity);
-			//getSession().flush();
 		}
+		getSession().flush();
 	}
 
 	/**

@@ -48,7 +48,7 @@
                     formatter: function (value, rec, index) {
                         return new Date().format('yyyy-MM-dd hh:mm:ss', value);
                     }
-                }, {field: 'returnedNumber', title: '退料数量', width: 120, sortable: true}, {
+                }, {field: 'returnedNumber', title: '退货数量', width: 120, sortable: true}, {
                     field: 'opt',
                     title: '操作',
                     width: 100,

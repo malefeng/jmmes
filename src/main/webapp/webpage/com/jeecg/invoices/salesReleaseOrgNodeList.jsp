@@ -52,8 +52,8 @@
 			<tr>
 				<td align="center"><div style="width: 25px;" name="xh">1</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck"/></td>
-				<td align="left"><t:dictSelect field="salesReleaseNodeList[0].finishedCode" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
-				<td align="left"><t:dictSelect field="salesReleaseNodeList[0].finishedName" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
+				<td align="left"><t:dictSelect field="salesReleaseOrgNodeList[0].finishedCode" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
+				<td align="left"><t:dictSelect field="salesReleaseOrgNodeList[0].finishedName" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
 				  <td align="left"><input name="salesReleaseOrgNodeList[0].finishedSize" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><t:dictSelect field="salesReleaseOrgNodeList[0].supplierAttr" typeGroupCode="supplAttr" readonly="true"></t:dictSelect></td>
 				  <td align="left"><input name="salesReleaseOrgNodeList[0].wideInWidth" maxlength="120" type="text" style="width:120px;" ></td>
@@ -78,8 +78,8 @@
 				<td align="center"><div style="width: 25px;" name="xh">${stuts.index+1 }</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck" /></td>
 				<input name="salesReleaseOrgNodeList[${stuts.index }].id"  value="${poVal.id }" type="hidden" >
-				<td align="left"><t:dictSelect field="salesReleaseNodeList[${stuts.index }].finishedCode" defaultVal="${poVal.finishedCode }" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
-				<td align="left"><t:dictSelect field="salesReleaseNodeList[${stuts.index }].finishedName" defaultVal="${poVal.finishedName }" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
+				<td align="left"><t:dictSelect field="salesReleaseOrgNodeList[${stuts.index }].finishedCode" defaultVal="${poVal.finishedCode }" dictTable="t_finished_product_list" dictField="finished_code" dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
+				<td align="left"><t:dictSelect field="salesReleaseOrgNodeList[${stuts.index }].finishedName" defaultVal="${poVal.finishedName }" dictTable="t_finished_product_list" dictField="finished_name" dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
 				   <td align="left"><input name="salesReleaseOrgNodeList[${stuts.index }].finishedSize" maxlength="120" value="${poVal.finishedSize }" type="text" style="width:120px;"></td>
 				<td align="left"><t:dictSelect field="salesReleaseOrgNodeList[${stuts.index }].supplierAttr" defaultVal="${poVal.supplierAttr }" typeGroupCode="supplAttr" readonly="true"></t:dictSelect></td>
 				   <td align="left"><input name="salesReleaseOrgNodeList[${stuts.index }].wideInWidth" maxlength="120" value="${poVal.wideInWidth }" type="text" style="width:120px;"></td>

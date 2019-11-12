@@ -3,6 +3,7 @@ package com.jeecg.controller.invoices;
 import com.jeecg.batch.MaterialInLookDataBatchRunnable;
 import com.jeecg.entity.invoices.PurchaseReceiptEntity;
 import com.jeecg.entity.invoices.PurchaseReceiptNodeEntity;
+import com.jeecg.entity.look.MaterialWarehouIOLookEntity;
 import com.jeecg.entity.qrcode.QRCodeEntity;
 import com.jeecg.page.invoices.PurchaseReceiptPage;
 import com.jeecg.service.invoices.PurchaseReceiptServiceI;
@@ -77,7 +78,6 @@ public class PurchaseReceiptController extends BaseController {
 
 	/**
 	 * api列表数据查询接口
-	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/apiList/{receiptCode}")
@@ -103,7 +103,6 @@ public class PurchaseReceiptController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -133,12 +132,16 @@ public class PurchaseReceiptController extends BaseController {
 		allEntitys.add(purchaseReceipt);
 		List<PurchaseReceiptNodeEntity> purchaseReceiptNodeEntities = systemService.findByProperty(PurchaseReceiptNodeEntity.class, "inspectId", purchaseReceipt.getId());
 		if(!ListUtils.isNullOrEmpty(purchaseReceiptNodeEntities)){
-			allEntitys.add(purchaseReceiptNodeEntities);
+			allEntitys.addAll(purchaseReceiptNodeEntities);
 		}
 		message = "删除成功";
 		purchaseReceiptService.deleteAllEntitie(allEntitys);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		//删除入库看板
+		List<MaterialWarehouIOLookEntity> materialWarehouIOLookEntities = systemService.findByProperty(MaterialWarehouIOLookEntity.class, "receivingOrderNumber", purchaseReceipt.getReceiptCode());
+		if(!ListUtils.isNullOrEmpty(materialWarehouIOLookEntities)){
+			systemService.deleteAllEntitie(materialWarehouIOLookEntities);
+		}
 		j.setMsg(message);
 		return j;
 	}
@@ -147,7 +150,6 @@ public class PurchaseReceiptController extends BaseController {
 	/**
 	 * 添加采购收料单
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -167,7 +169,7 @@ public class PurchaseReceiptController extends BaseController {
 		}
 		j.setMsg(message);
 		//同步入库看板数据
-		new MaterialInLookDataBatchRunnable(purchaseReceiptPage.getReceiptCode(),systemService).startBatch();
+		new Thread(new MaterialInLookDataBatchRunnable(purchaseReceiptPage.getReceiptCode(),systemService)).start();
 		return j;
 	}
 

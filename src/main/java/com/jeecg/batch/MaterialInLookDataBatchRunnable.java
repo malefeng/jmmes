@@ -52,31 +52,35 @@ public class MaterialInLookDataBatchRunnable implements Runnable {
                 " FROM " +
                 "  t_purchase_receipt_node " +
                 " GROUP BY " +
-                "  RAW_MATERIAL_CODE,RAW_MATERIAL_CODE " +
+                "  INSPECT_ID, " +
+                "  RAW_MATERIAL_CODE " +
                 ") N ON T.ID = N.INSPECT_ID " +
                 "LEFT JOIN t_supplier_list S ON T.SUPPLIER_CODE = S.SUPPLIER_CODE " +
-                "INNER JOIN ( " +
+                "LEFT JOIN ( " +
                 " SELECT " +
                 "  SUM(WAREHOUSING_NUMBER) 'INSERTNUMBER', " +
-                "  RECEIVING_ORDER_NUMBER " +
+                "  RECEIVING_ORDER_NUMBER, " +
+                "material_code " +
                 " FROM " +
                 "  t_material_warehous_io_list " +
+                "where RECEIVING_ORDER_NUMBER = ? " +
                 " GROUP BY " +
-                "  RECEIVING_ORDER_NUMBER,material_code " +
-                ") W ON W.RECEIVING_ORDER_NUMBER = T.RECEIPT_CODE " +
+                "  RECEIVING_ORDER_NUMBER, " +
+                "  material_code " +
+                ") W ON W.material_code = N.RAW_MATERIAL_CODE " +
                 "GROUP BY " +
                 " N.RAW_MATERIAL_CODE";
-        List<Map<String, Object>> resultMap = this.systemService.findForJdbc(sql, this.receivingOrderNumber);
+        List<Map<String, Object>> resultMap = this.systemService.findForJdbc(sql, this.receivingOrderNumber, this.receivingOrderNumber);
 
         if(!ListUtils.isNullOrEmpty(resultMap)){
             Map<String,Map> newDataMap = new HashMap();
             for (Map<String, Object> map :resultMap) {
-                newDataMap.put(String.valueOf(map.get("RECEIVINGORDERNUMBER")),map);
+                newDataMap.put(String.valueOf(map.get("MATERIALCODE")),map);
             }
             List<MaterialWarehouIOLookEntity> materialWarehouIOLookEntities = this.systemService.findByProperty(MaterialWarehouIOLookEntity.class, "receivingOrderNumber", this.receivingOrderNumber);
             //对于已有的看板数据进行更新或删除
             for (MaterialWarehouIOLookEntity materialWarehouIOLookEntity : materialWarehouIOLookEntities) {
-                Map dataNodeMap = newDataMap.get(materialWarehouIOLookEntity.getReceivingOrderNumber());
+                Map dataNodeMap = newDataMap.get(materialWarehouIOLookEntity.getMaterialCode());
                 if(MapUtils.isNotEmpty(dataNodeMap)){
                     materialWarehouIOLookEntity.setReceiveNumber(String.valueOf(dataNodeMap.get("RECEIVENUMBER")));
                     materialWarehouIOLookEntity.setInsertNumber(String.valueOf(dataNodeMap.get("INSERTNUMBER")));
@@ -86,7 +90,7 @@ public class MaterialInLookDataBatchRunnable implements Runnable {
                     if(Double.valueOf(materialWarehouIOLookEntity.getInsertNumber())>=Double.valueOf(materialWarehouIOLookEntity.getReceiveNumber())){
                         materialWarehouIOLookEntity.setInsertTime(new Date());
                     }
-                    newDataMap.remove(materialWarehouIOLookEntity.getReceivingOrderNumber());
+                    newDataMap.remove(materialWarehouIOLookEntity.getMaterialCode());
                     this.systemService.updateEntitie(materialWarehouIOLookEntity);
                 }else{
                     this.systemService.delete(materialWarehouIOLookEntity);
@@ -106,8 +110,8 @@ public class MaterialInLookDataBatchRunnable implements Runnable {
                     materialWarehouIOLookEntity.setMaterialName(String.valueOf(dataNodeMap.get("MATERIALNAME")));
                     materialWarehouIOLookEntity.setMaterialSize(String.valueOf(dataNodeMap.get("MATERIALSIZE")));
                     materialWarehouIOLookEntity.setSupplierType(String.valueOf(dataNodeMap.get("SUPPLIERTYPE")));
-                    materialWarehouIOLookEntity.setReceiveNumber(String.valueOf(dataNodeMap.get("RECEIVENUMBER")));
-                    materialWarehouIOLookEntity.setInsertNumber(String.valueOf(dataNodeMap.get("INSERTNUMBER")));
+                    materialWarehouIOLookEntity.setReceiveNumber(String.valueOf(MathUtil.toInt(dataNodeMap.get("RECEIVENUMBER"))));
+                    materialWarehouIOLookEntity.setInsertNumber(String.valueOf(MathUtil.toInt(dataNodeMap.get("INSERTNUMBER"))));
                     //完成率保留两位小数，百分制
                     Double ratio = MathUtil.toDouble(materialWarehouIOLookEntity.getInsertNumber())*100/MathUtil.toDouble(materialWarehouIOLookEntity.getReceiveNumber());
                     materialWarehouIOLookEntity.setInsertRatio(new BigDecimal(ratio).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
@@ -119,10 +123,5 @@ public class MaterialInLookDataBatchRunnable implements Runnable {
                 this.systemService.batchSave(newDataList);
             }
         }
-    }
-
-    public void startBatch(){
-        Thread thread = new Thread(this);
-        thread.start();
     }
 }

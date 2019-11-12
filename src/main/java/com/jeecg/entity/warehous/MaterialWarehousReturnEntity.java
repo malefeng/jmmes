@@ -72,10 +72,10 @@ public class MaterialWarehousReturnEntity implements java.io.Serializable {
 	private java.lang.String purchaseOrderNumber;
 	/**收料单销售订单号*/
 	private java.lang.String salesOrderNumber;
-	/**预留1*/
-	private java.lang.String attr1;
-	/**预留2*/
-	private java.lang.String attr2;
+	/**退料仓库*/
+	private java.lang.String returnWhouse;
+	/**退料库位*/
+	private java.lang.String warehouseSpaceCode;
 	/**预留3*/
 	private java.lang.String attr3;
 	/**预留4*/
@@ -490,35 +490,35 @@ public class MaterialWarehousReturnEntity implements java.io.Serializable {
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  预留1
+	 *@return: java.lang.String  退料仓库
 	 */
-	@Column(name ="ATTR1",nullable=true,length=120)
-	public java.lang.String getAttr1(){
-		return this.attr1;
+	@Column(name ="RETURN_WHOUSE",nullable=true,length=120)
+	public java.lang.String getReturnWhouse(){
+		return this.returnWhouse;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  预留1
+	 *@param: java.lang.String  退料仓库
 	 */
-	public void setAttr1(java.lang.String attr1){
-		this.attr1 = attr1;
+	public void setReturnWhouse(java.lang.String returnWhouse){
+		this.returnWhouse = returnWhouse;
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  预留2
+	 *@return: java.lang.String  退料库位
 	 */
-	@Column(name ="ATTR2",nullable=true,length=120)
-	public java.lang.String getAttr2(){
-		return this.attr2;
+	@Column(name ="WAREHOUSE_SPACECODE",nullable=true,length=120)
+	public java.lang.String getWarehouseSpaceCode(){
+		return this.warehouseSpaceCode;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  预留2
+	 *@param: java.lang.String  退料库位
 	 */
-	public void setAttr2(java.lang.String attr2){
-		this.attr2 = attr2;
+	public void setWarehouseSpaceCode(java.lang.String warehouseSpaceCode){
+		this.warehouseSpaceCode = warehouseSpaceCode;
 	}
 	/**
 	 *方法: 取得java.lang.String

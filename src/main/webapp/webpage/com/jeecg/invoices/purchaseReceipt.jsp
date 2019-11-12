@@ -221,7 +221,7 @@
         LODOP.ADD_PRINT_TEXT(29,0,'RightMargin:0',38,"采购收料单");
         LODOP.ADD_PRINT_HTM(90,'5%',"90%",200,generateTab(getTabData("main_content")));
         LODOP.ADD_PRINT_HTM(300,'5%',"90%",400,generateTab(getTabData("purchaseReceiptNode_table")));
-        LODOP.PRINTA();
+        LODOP.PREVIEW();
     }
 </script>
 </body>

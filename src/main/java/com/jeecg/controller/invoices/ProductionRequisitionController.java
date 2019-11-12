@@ -5,6 +5,7 @@ import com.jeecg.batch.ProductionLookDataBatchRunnable;
 import com.jeecg.entity.invoices.ProductionRequisitionEntity;
 import com.jeecg.entity.invoices.ProductionRequisitionNodeEntity;
 import com.jeecg.entity.invoices.ProductionRequisitionOrgNodeEntity;
+import com.jeecg.entity.look.ProductionParehousIOLookEntity;
 import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
 import com.jeecg.page.invoices.ProductionRequisitionPage;
 import com.jeecg.service.invoices.ProductionRequisitionServiceI;
@@ -156,15 +157,19 @@ public class ProductionRequisitionController extends BaseController {
 		List<ProductionRequisitionOrgNodeEntity> requisitionOrgNodeEntities = systemService.findByProperty(ProductionRequisitionOrgNodeEntity.class, "inspectId", productionRequisition.getId());
 		allEntity.add(productionRequisition);
 		if(!ListUtils.isNullOrEmpty(requisitionNodeEntities)){
-			allEntity.add(requisitionNodeEntities);
+			allEntity.addAll(requisitionNodeEntities);
 		}
 		if(!ListUtils.isNullOrEmpty(requisitionOrgNodeEntities)){
-			allEntity.add(requisitionOrgNodeEntities);
+			allEntity.addAll(requisitionOrgNodeEntities);
 		}
 		message = "删除成功";
 		productionRequisitionService.deleteAllEntitie(allEntity);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		//删除生产看板
+		List<ProductionParehousIOLookEntity> productionParehousIOLookEntities = systemService.findByProperty(ProductionParehousIOLookEntity.class, "productionDispatchingNumber", productionRequisition.getProductionDispatchingNumber());
+		if(!ListUtils.isNullOrEmpty(productionParehousIOLookEntities)){
+			systemService.deleteAllEntitie(productionParehousIOLookEntities);
+		}
 		j.setMsg(message);
 		return j;
 	}
@@ -179,6 +184,7 @@ public class ProductionRequisitionController extends BaseController {
 	@ResponseBody
 	public AjaxJson save(ProductionRequisitionEntity productionRequisition,ProductionRequisitionPage productionRequisitionPage, HttpServletRequest request) {
 		String message = null;
+		AjaxJson j = new AjaxJson();
 		List<ProductionRequisitionNodeEntity> productionRequisitionNodeList =  productionRequisitionPage.getProductionRequisitionNodeList();
 		List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeList =  productionRequisitionPage.getProductionRequisitionOrgNodeList();
 		if(!ListUtils.isNullOrEmpty(productionRequisitionNodeList)){
@@ -186,15 +192,21 @@ public class ProductionRequisitionController extends BaseController {
 			for (ProductionRequisitionNodeEntity productionRequisitionNodeEntity: productionRequisitionNodeList) {
 				//对应的原料库存信息
 				MaterialWarehousIOEntity materialWarehousIOEntity = productionRequisitionService.findUniqueByProperty(MaterialWarehousIOEntity.class, "materialSerino", productionRequisitionNodeEntity.getRawMaterialSerino());
+				if(materialWarehousIOEntity==null){
+					message = "原料信息不存在";
+					j.setMsg(message);
+					return j;
+				}
 				//已配料
 				materialWarehousIOEntity.setIoType("4");
+
+				productionRequisitionNodeEntity.setFinishedCode(productionRequisition.getFinishedCode());
+				productionRequisitionNodeEntity.setFinishedName(productionRequisition.getFinishedName());
+				productionRequisitionNodeEntity.setProductionOrderNumber(productionRequisition.getProductionOrderNumber());
+				productionRequisitionNodeEntity.setProductionDispatchingNumber(productionRequisition.getProductionDispatchingNumber());
 			}
 			productionRequisitionService.batchSave(materialWarehousIOEntityList);
-			//生产订单号
-			productionRequisition.setProductionOrderNumber(productionRequisitionNodeList.get(0).getProductionOrderNumber());
-			productionRequisition.setProductionDispatchingNumber(productionRequisitionNodeList.get(0).getProductionDispatchingNumber());
 		}
-		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(productionRequisition.getId())) {
 			message = "更新成功";
 			productionRequisitionService.updateMain(productionRequisition, productionRequisitionNodeList,productionRequisitionOrgNodeList);
@@ -205,7 +217,7 @@ public class ProductionRequisitionController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		//同步看板数据
-		new ProductionLookDataBatchRunnable(productionRequisition.getProductionDispatchingNumber(),systemService).startBatch();
+		new Thread(new ProductionLookDataBatchRunnable(productionRequisition.getProductionDispatchingNumber(),systemService)).start();
 		j.setMsg(message);
 		return j;
 	}
@@ -353,10 +365,10 @@ public class ProductionRequisitionController extends BaseController {
 						count += Integer.valueOf(materialWarehousIOEntity.getVirtualRepositoryNumber());
 
 					}
-					val -= count;
 					ProductionRequisitionNodeEntity productionRequisitionNodeEntity = new ProductionRequisitionNodeEntity();
 					//数量
-					productionRequisitionNodeEntity.setRawMaterialNum(String.valueOf(val>0?count:val));
+					productionRequisitionNodeEntity.setRawMaterialNum(String.valueOf(val>=count?count:val));
+					val -= count;
 					productionRequisitionNodeEntity.setRawMaterialSerino(materialWarehousIOEntity.getMaterialSerino());
 					productionRequisitionNodeEntity.setRawMaterialCode(materialWarehousIOEntity.getMaterialCode());
 					productionRequisitionNodeEntity.setRawMaterialName(materialWarehousIOEntity.getMaterialName());

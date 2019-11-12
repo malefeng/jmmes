@@ -12,7 +12,7 @@
             $('#productionRequisitionList').datagrid({
                 idField: 'id',
                 title: '生产领料单',
-                url: 'productionRequisitionController.do?datagrid&field=id,receiptCode,requisitionDate,requisitionWorkshopCode,repositoryCode,repositoryManagerCode,acquirePersonCode,creatorCode,productionDispatchingNumber,finishedCode,finishedName,plannedProductionQuantity,plannedStartDate,plannedCompletionDate,readPersonCode,acquireTime,productionOrderNumber,attr2,attr3,attr4,attr5,',
+                url: 'productionRequisitionController.do?datagrid&field=id,receiptCode,requisitionDate,requisitionWorkshopCode,repositoryCode,repositoryManagerCode,acquirePersonCode,creatorCode,productionDispatchingNumber,productionOrderNumber,finishedCode,finishedName,plannedProductionQuantity,plannedStartDate,plannedCompletionDate,readPersonCode,acquireTime,productionOrderNumber,attr2,attr3,attr4,attr5,',
                 fit: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -275,7 +275,7 @@
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
                 $('#productionRequisitionList').datagrid({
-                    url: 'productionRequisitionController.do?datagrid&field=id,receiptCode,requisitionDate,requisitionWorkshopCode,repositoryCode,repositoryManagerCode,acquirePersonCode,creatorCode,productionDispatchingNumber,finishedCode,finishedName,plannedProductionQuantity,plannedStartDate,plannedCompletionDate,readPersonCode,acquireTime,attr1,attr2,attr3,attr4,attr5,',
+                    url: 'productionRequisitionController.do?datagrid&field=id,receiptCode,requisitionDate,requisitionWorkshopCode,repositoryCode,repositoryManagerCode,acquirePersonCode,creatorCode,productionDispatchingNumber,productionOrderNumber,finishedCode,finishedName,plannedProductionQuantity,plannedStartDate,plannedCompletionDate,readPersonCode,acquireTime,attr1,attr2,attr3,attr4,attr5,',
                     pageNumber: 1
                 });
             }

@@ -5,7 +5,7 @@ var lodop_data,
     lodop_work_title = "打印二维码",
     lodop_page_intOrient = 1,
     lodop_page_height = '30mm',
-    lodop_page_width = '70mm',
+    lodop_page_width = '50mm',
     lodop_page_name = '',
     lodop_FontSize = 6,
     lodop_Bold = 1;
@@ -43,11 +43,11 @@ function createPrintPage() {
             var pubVal = item['pubVal'].split(',');
             var secData = item['secData'];
             //填充二维码信息
-            LODOP_QRCODE.ADD_PRINT_BARCODE(modelTop+2+'mm', 0, '20mm', '20mm', "QRCode", secData);
+            LODOP_QRCODE.ADD_PRINT_BARCODE(modelTop+2+'mm', 5, '20mm', '20mm', "QRCode", secData);
             //填充明文信息
             var initTop = modelTop+2;
             for (var i = 0; i < pubKey.length; i++) {
-                LODOP_QRCODE.ADD_PRINT_TEXT(initTop + 'mm', '18mm', '50mm', '1mm', pubKey[i] + ":" + pubVal[i]);
+                LODOP_QRCODE.ADD_PRINT_TEXT(initTop + 'mm', '23mm', '30mm', '1mm', pubKey[i] + ":" + pubVal[i]);
                 initTop += 3;
             }
             modelTop += 30;

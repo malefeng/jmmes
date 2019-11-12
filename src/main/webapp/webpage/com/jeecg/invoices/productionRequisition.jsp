@@ -26,9 +26,28 @@
 			$(this).find('div[name=\'xh\']').html(i+1);
 		});
 	}
+
+	function removeEmptTr(tableId){
+		$tbody = $("#"+tableId+"");
+		$tr = $tbody.find(">tr");
+		$tr.each(function(i){
+			var flag = true;
+			$(':input:not(input[type="checkbox"]), select', this).each(function(){
+				var $this = $(this), val = $this.val(),$seletedOption = $this.find("option:selected");
+				if(!!val||($seletedOption.length>0&&!!$seletedOption.eq(0).val())){
+					flag = false;
+					return false;
+				}
+			});
+			if(flag){
+				$tr.eq(i).remove();
+			}
+		});
+		resetTrNum(tableId);
+	}
  </script>
  </head>
- <body style="overflow-y: hidden" scroll="no">
+ <body>
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="productionRequisitionController.do?save">
 			<input id="id" name="id" type="hidden" value="${productionRequisitionPage.id }">
 			<table cellpadding="0" cellspacing="1" id="main_content" class="formtable">
@@ -180,14 +199,6 @@
 											   readonly="true"></t:dictSelect></td>
 				  <td align="left"><input name="productionRequisitionNodeList[#index#].rawMaterialNum" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="productionRequisitionNodeList[#index#].batchNumber" maxlength="120" type="text" style="width:120px;"></td>
-				<td align="left" class="select_finishedCode"><t:dictSelect field="productionRequisitionNodeList[#index#].finishedCode"
-											   dictTable="t_finished_product_list" dictField="finished_code"
-											   dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
-				<td align="left" class="select_finishedName"><t:dictSelect field="productionRequisitionNodeList[#index#].finishedName"
-											   dictTable="t_finished_product_list" dictField="finished_name"
-											   dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
-				  <td align="left"><input name="productionRequisitionNodeList[#index#].productionOrderNumber" maxlength="120" type="text" style="width:120px;"></td>
-				  <td align="left"><input name="productionRequisitionNodeList[#index#].productionDispatchingNumber" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="productionRequisitionNodeList[#index#].warehousingDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;"></td>
 			</tr>
 		 </tbody>
@@ -224,7 +235,7 @@
   <script src="plug-in/common/js/dosing.js"></script>
   <script src="plug-in/common/js/autoComplete.js"></script>
   <script>
-	  var properArrs1 = ['rawMaterialSerino','rawMaterialCode','rawMaterialName','unit','rawMaterialNum','batchNumber','finishedCode','finishedName','productionOrderNumber','warehousingDate'];
+	  var properArrs1 = ['rawMaterialSerino','rawMaterialCode','rawMaterialName','unit','rawMaterialNum','batchNumber'/*,'finishedCode','finishedName','productionOrderNumber'*/,'warehousingDate'];
       function print_html(){
           LODOP=getLodop();
           LODOP.PRINT_INIT();
@@ -236,7 +247,7 @@
           LODOP.ADD_PRINT_TEXT(29,0,'RightMargin:0',38,"生产领料单");
           LODOP.ADD_PRINT_HTM(90,'5%',"90%",200,generateTab(getTabData("main_content")));
           LODOP.ADD_PRINT_HTM(300,'5%',"90%",400,generateTab(getTabData("productionRequisitionNode_table")));
-          LODOP.PRINTA();
+          LODOP.PREVIEW();
       }
 
       function dosing(){
@@ -251,13 +262,15 @@
 			  $.messager.alert('error','无需配货!','info');
 			  return;
 		}
-      	$.getJSON("productionRequisitionController.do?dosing",{remainData:JSON.stringify(remainData),requisitionWorkshopCode:requisitionWorkshopCode},remainData,function(data){
+      	$.getJSON("productionRequisitionController.do?dosing",{remainData:JSON.stringify(remainData),requisitionWorkshopCode:requisitionWorkshopCode},function(data){
 			if(!!data&&data.length>0){
+				//去除空行
+				removeEmptTr('add_productionRequisitionNode_table');
 				$.each(data,function(i,e){
-					var tr =  $("#add_salesReleaseNode_table_template tr").clone();
-					generateTr(tr,e,"salesReleaseNodeList",properArrs1,properArrs1);
-					$("#add_salesReleaseNode_table").append(tr);
-					resetTrNum('add_salesReleaseNode_table');
+					var tr =  $("#add_productionRequisitionNode_table_template tr").clone();
+					generateTr(tr,e,"productionRequisitionNodeList",properArrs1,properArrs1);
+					$("#add_productionRequisitionNode_table").append(tr);
+					resetTrNum('add_productionRequisitionNode_table');
 				})
 			}else{
 				$.messager.alert('error', '无可用数据!', 'info');

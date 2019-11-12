@@ -1,5 +1,6 @@
 package com.jeecg.controller.warehous;
 
+import com.jeecg.batch.FinishedOutLookDataBatchRunnable;
 import com.jeecg.batch.ProductionLookDataBatchRunnable;
 import com.jeecg.entity.warehous.FinishedWarehousIOEntity;
 import com.jeecg.service.warehous.FinishedWarehousIOServiceI;
@@ -110,7 +111,10 @@ public class FinishedWarehousIOController extends BaseController {
 		message = "成品出入库删除成功";
 		finishedWarehousIOService.delete(finishedWarehousIO);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		//同步生产看板数据
+		new Thread(new ProductionLookDataBatchRunnable(finishedWarehousIO.getProductionDispatchingNumber(),systemService)).start();
+		//同步成品出库看板数据
+		new Thread(new FinishedOutLookDataBatchRunnable(finishedWarehousIO.getSalesDeliveryOrderNumber(),systemService)).start();
 		j.setMsg(message);
 		return j;
 	}
@@ -142,8 +146,13 @@ public class FinishedWarehousIOController extends BaseController {
 			finishedWarehousIOService.save(finishedWarehousIO);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
-		//同步看板数据
-		new ProductionLookDataBatchRunnable(finishedWarehousIO.getProductionDispatchingNumber(),systemService).startBatch();
+		if("1".equals(finishedWarehousIO.getIoType())){
+			//同步生产看板数据
+			new Thread(new ProductionLookDataBatchRunnable(finishedWarehousIO.getProductionDispatchingNumber(),systemService)).start();
+		}else if("2".equals(finishedWarehousIO.getIoType())){
+			//同步成品出库看板数据
+			new Thread(new FinishedOutLookDataBatchRunnable(finishedWarehousIO.getSalesDeliveryOrderNumber(),systemService)).start();
+		}
 		j.setMsg(message);
 		return j;
 	}
@@ -152,8 +161,13 @@ public class FinishedWarehousIOController extends BaseController {
 	@ResponseBody
 	public void apiSave(@RequestBody FinishedWarehousIOEntity finishedWarehousIO){
 		finishedWarehousIOService.saveOrUpdate(finishedWarehousIO);
-		//同步看板数据
-		new ProductionLookDataBatchRunnable(finishedWarehousIO.getProductionOrderNumber(),systemService).startBatch();
+		if("1".equals(finishedWarehousIO.getIoType())){
+			//同步生产看板数据
+			new Thread(new ProductionLookDataBatchRunnable(finishedWarehousIO.getProductionDispatchingNumber(),systemService)).start();
+		}else if("2".equals(finishedWarehousIO.getIoType())){
+			//同步成品出库看板数据
+			new Thread(new FinishedOutLookDataBatchRunnable(finishedWarehousIO.getSalesDeliveryOrderNumber(),systemService)).start();
+		}
 	}
 
 	/**

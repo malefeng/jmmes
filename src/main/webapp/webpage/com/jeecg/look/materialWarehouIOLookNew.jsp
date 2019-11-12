@@ -80,7 +80,6 @@
 		 <div class="table-tr">
 			 <div class="table-th">收料单号</div>
 			 <div class="table-th">采购订单号</div>
-			 <div class="table-th">销售订单号</div>
 			 <div class="table-th">物料代码</div>
 			 <div class="table-th">物料名称</div>
 			 <div class="table-th">规格型号</div>
@@ -90,10 +89,9 @@
 			 <div class="table-th">入库率（%）</div>
 			 <div class="table-th">入库完成时间</div>
 		 </div>
-		 <c:forEach var="i" begin="0" end="24" step="1">
+		 <c:forEach var="i" begin="0" end="19" step="1">
 			 <div class="table-tr" name="tr_${i}">
 				 <div class="table-td">预排收料单${i+1}</div>
-				 <div class="table-td"></div>
 				 <div class="table-td"></div>
 				 <div class="table-td"></div>
 				 <div class="table-td"></div>
@@ -111,7 +109,7 @@
  <script src="plug-in/showTime/showTime.js"></script>
  <script src="plug-in/common/js/common.js"></script>
  <script>
-	 var fildArr = ['receivingOrderNumber','purchaseOrderNumber','salesOrderNumber','materialCode','materialName','materialSize','supplierType','receiveNumber','insertNumber','insertRatio','insertTime'];
+	 var fildArr = ['receivingOrderNumber','purchaseOrderNumber','materialCode','materialName','materialSize','supplierType','receiveNumber','insertNumber','insertRatio','insertTime'];
 	 $(function(){
 		 //显示时间
 		 showTime("timeDiv");
@@ -135,7 +133,7 @@
 		 $.getJSON("materialWarehouIOLookController.do?listData&"+new Date(),function(data){
 			if(!!data){
 				var dataLen = data.length;
-				for (var i = 0; i < 25; i++) {
+				for (var i = 0; i < 20; i++) {
 					var node = $("div[name='tr_"+i+"']").children();
 					if(i>=dataLen){
 						node.each(function(){
@@ -145,8 +143,7 @@
 					}else{
 						var item = data[i];
 						for (var j = 0; j < fildArr.length; j++) {
-							// node.eq(j).text(item[fildArr[j]]||"");
-							node.eq(j).text(item[j]||"");
+							node.eq(j).text(item[fildArr[j]]==null?"":item[fildArr[j]]);
 						}
 					}
 				}

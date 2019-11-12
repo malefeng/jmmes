@@ -115,9 +115,10 @@ public class FinishedProductionController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		finishedProduction = systemService.getEntity(FinishedProductionEntity.class, finishedProduction.getId());
+		allEntitys.add(finishedProduction);
 		List<FinishedProductionNodeEntity> finishedProductionNodeList =  systemService.findByProperty(FinishedProductionNodeEntity.class,"finishedSerino",finishedProduction.getFinishedSerino());
 		if(!ListUtils.isNullOrEmpty(finishedProductionNodeList)){
-			allEntitys.add(finishedProductionNodeList);
+			allEntitys.addAll(finishedProductionNodeList);
 		}
 		message = "删除成功";
 		finishedProductionService.deleteAllEntitie(allEntitys);

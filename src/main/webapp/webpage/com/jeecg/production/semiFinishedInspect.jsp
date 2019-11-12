@@ -38,7 +38,7 @@
 		 }
 		 ul.top_title{
 			 width:100%;
-			 height: 120px;
+			 height: 80px;
 			 padding: 0 10px;
 			 position: relative;
 			 display: flex;
@@ -95,12 +95,13 @@
 				  <a href="javascrip:;">${semiFinishedInspectMainPage.productionOrderNumber}</a>
 				  <input type="hidden" name="productionOrderNumber" value="${semiFinishedInspectMainPage.productionOrderNumber}">
 			  </li>
-			  <li>
-				  <a href="javascrip:;" name="">首末检记录表:</a>
-				  <t:webUploader name="inspectLogSheet" displayTxt="true" pathValues="${semiFinishedInspectMainPage.inspectLogSheet}"  extensions="xlsx" bizType="semifinished"></t:webUploader>
-			  </li>
-
 		  </ul>
+	  <ul>
+		  <li>
+			  <a href="javascrip:;" name="">首末检记录表:</a>
+			  <t:webUploader name="inspectLogSheet" displayTxt="true" pathValues="${semiFinishedInspectMainPage.inspectLogSheet}"  extensions="xlsx" bizType="semifinished"></t:webUploader>
+		  </li>
+	  </ul>
 			<div style="width: auto;height: 200px;">
 				<%-- 增加一个div，用于调节页面大小，否则默认太小 --%>
 				<div style="width:690px;height:1px;"></div>

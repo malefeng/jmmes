@@ -39,8 +39,8 @@
 			<tr>
 				<td align="center"><div style="width: 25px;" name="xh">1</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck"/></td>
-				  <td align="left"><input name="finishedLastInspectList[0].lastInspectNumber" maxlength="" value="1" type="text" style="width:120px;" ></td>
-				  <td align="left"><input name="finishedLastInspectList[0].lastInspectTimes" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedLastInspectList[0].lastInspectNumber" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedLastInspectList[0].lastInspectTimes" maxlength="" value="1" type="text" style="width:120px;" ></td>
 				<td align="left"><t:dictSelect field="finishedLastInspectList[0].lastInspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="finishedLastInspectList[0].lastInspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="finishedLastInspectList[0].lastInspectDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>

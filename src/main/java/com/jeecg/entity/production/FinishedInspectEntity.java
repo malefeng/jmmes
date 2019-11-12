@@ -135,7 +135,7 @@ public class FinishedInspectEntity implements java.io.Serializable {
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  生产订单号
+	 *@return: java.lang.String  生产派工单号
 	 */
 	@Column(name ="PRODUCTION_ORDER_NUMBER",nullable=true,length=32)
 	public java.lang.String getProductionOrderNumber(){
@@ -144,7 +144,7 @@ public class FinishedInspectEntity implements java.io.Serializable {
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  生产订单号
+	 *@param: java.lang.String  生产派工单号
 	 */
 	public void setProductionOrderNumber(java.lang.String productionOrderNumber){
 		this.productionOrderNumber = productionOrderNumber;

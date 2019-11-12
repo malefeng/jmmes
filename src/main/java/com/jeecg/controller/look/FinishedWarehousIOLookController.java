@@ -152,29 +152,28 @@ public class FinishedWarehousIOLookController extends BaseController {
 	@ResponseBody
 	public List<FinishedWarehousIOLookEntity> listData(HttpServletRequest request) {
 		String sql = "SELECT " +
-				" l.sales_delivery_order_number salesDeliveryOrderNumber, " +
-				" l.delivery_advice_order_number deliveryAdviceOrderNumber, " +
-				" l.material_code materialCode, " +
-				" l.material_name materialName, " +
-				" l.material_size materialSize, " +
-				" c.customer_name customerCode, " +
-				" l.should_send_number shouldSendNumber, " +
-				" l.actual_send_number actualSendNumber, " +
-				" l.send_ratio sendRatio, " +
-				" l.send_finish_time sendFinishTime " +
+				" sales_delivery_order_number salesDeliveryOrderNumber, " +
+				"delivery_advice_order_number deliveryAdviceOrderNumber, " +
+				"material_code materialCode, " +
+				"material_name materialName, " +
+				"material_size materialSize, " +
+				"customer_code customerCode, " +
+				"should_send_number shouldSendNumber, " +
+				"actual_send_number actualSendNumber, " +
+				"send_ratio sendRatio, " +
+				"send_finish_time sendFinishTime " +
 				"FROM " +
-				" t_finished_warehous_io_look l " +
-				"LEFT JOIN t_customer_list c ON l.customer_code = c.customer_code " +
+				" t_finished_warehous_io_look " +
 				"WHERE " +
-				" l.send_ratio < 100 " +
+				" send_ratio < 100 " +
 				"OR ( " +
-				" l.send_ratio >= 100 " +
-				" AND l.send_finish_time >= (NOW() - INTERVAL 24 HOUR) " +
+				" send_ratio >= 100 " +
+				" AND send_finish_time >= DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') " +
 				") " +
 				"ORDER BY " +
-				" l.create_date " +
-				"LIMIT 25";
-		List<FinishedWarehousIOLookEntity> finishedWarehousIOLooks = this.finishedWarehousIOLookService.findListbySql(sql);
+				" create_date " +
+				"LIMIT 20";
+		List finishedWarehousIOLooks = finishedWarehousIOLookService.findForJdbc(sql);
 		return finishedWarehousIOLooks;
 	}
 	

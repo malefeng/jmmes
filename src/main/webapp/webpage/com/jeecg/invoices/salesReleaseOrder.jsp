@@ -26,6 +26,25 @@
                 $(this).find('div[name=\'xh\']').html(i + 1);
             });
         }
+
+        function removeEmptTr(tableId){
+            $tbody = $("#"+tableId+"");
+            $tr = $tbody.find(">tr");
+            $tr.each(function(i){
+                var flag = true;
+                $(':input:not(input[type="checkbox"]), select', this).each(function(){
+                    var $this = $(this), val = $this.val(),$seletedOption = $this.find("option:selected");
+                    if(!!val||($seletedOption.length>0&&!!$seletedOption.eq(0).val())){
+                        flag = false;
+                        return false;
+                    }
+                });
+                if(flag){
+                    $tr.eq(i).remove();
+                }
+            });
+            resetTrNum(tableId);
+        }
     </script>
 </head>
 <body>
@@ -34,7 +53,7 @@
         <input id="id" name="id" type="hidden" value="${salesReleaseOrderPage.id }">
         <table cellpadding="0" id="main_content" cellspacing="1" class="formtable">
             <tr>
-                <td align="right"><label class="Validform_label">销售出库单号:</label></td>
+                <td align="right"><lbel class="Validform_label">销售出库单号:</label></td>
                 <td class="value">
                     <input nullmsg="请填写销售出库单号" errormsg="销售出库单号格式不对" class="inputxt" id="receiptCode" name="receiptCode"
                            ignore="ignore" value="${salesReleaseOrderPage.receiptCode}"/>
@@ -186,10 +205,10 @@
                 <div style="width: 25px;" name="xh"></div>
             </td>
             <td align="center"><input style="width:20px;" type="checkbox" name="ck"/></td>
-            <td align="left"><t:dictSelect field="salesReleaseNodeList[#index#].finishedCode"
+            <td align="left"><t:dictSelect field="salesReleaseOrgNodeList[#index#].finishedCode"
                                            dictTable="t_finished_product_list" dictField="finished_code"
                                            dictText="finished_code" hasLabel="false" type="list"></t:dictSelect></td>
-            <td align="left"><t:dictSelect field="salesReleaseNodeList[#index#].finishedName"
+            <td align="left"><t:dictSelect field="salesReleaseOrgNodeList[#index#].finishedName"
                                            dictTable="t_finished_product_list" dictField="finished_name"
                                            dictText="finished_name" hasLabel="false" type="list"></t:dictSelect></td>
             <td align="left"><input name="salesReleaseOrgNodeList[#index#].finishedSize" maxlength="120" type="text"
@@ -243,19 +262,22 @@
         LODOP.ADD_PRINT_TEXT(29,0,'RightMargin:0',38,"销售出库单");
         LODOP.ADD_PRINT_HTM(90,'5%',"90%",200,generateTab(getTabData("main_content")));
         LODOP.ADD_PRINT_HTM(300,'5%',"90%",400,generateTab(getTabData("salesReleaseNode_table")));
-        LODOP.PRINTA();
+        LODOP.PREVIEW();
     }
     function dosing(){
         var remainData = CountRemaining("salesReleaseNode_table",3,null,"salesReleaseOrgNode_table",2,9);
         if (JSON.stringify(remainData) != JSON.stringify({})){
             $.getJSON("salesReleaseOrderController.do?dosing",{remainData:JSON.stringify(remainData)},function(data){
                 if(!!data&&data.length>0){
+                    removeEmptTr('add_salesReleaseNode_table');
                     $.each(data,function(i,e){
                         var tr =  $("#add_salesReleaseNode_table_template tr").clone();
                         generateTr(tr,e,"salesReleaseNodeList",properArrs1,properArrs2);
                         $("#add_salesReleaseNode_table").append(tr);
                         resetTrNum('add_salesReleaseNode_table');
                     })
+                }else{
+                    $.messager.alert('error','无可配成品!','info');
                 }
             })
         }else{

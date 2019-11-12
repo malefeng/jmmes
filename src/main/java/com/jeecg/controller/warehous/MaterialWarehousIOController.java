@@ -137,14 +137,16 @@ public class MaterialWarehousIOController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		materialWarehousIO = systemService.getEntity(MaterialWarehousIOEntity.class, materialWarehousIO.getId());
+		allEntitys.add(materialWarehousIO);
 		List<MaterialWarehousNodeEntity> materialWarehousNodeList = systemService.findByProperty(MaterialWarehousNodeEntity.class,"materialSerino",materialWarehousIO.getMaterialSerino());
 		if(!ListUtils.isNullOrEmpty(materialWarehousNodeList)){
-			allEntitys.add(materialWarehousNodeList);
+			allEntitys.addAll(materialWarehousNodeList);
 		}
 		message = "删除成功";
 		materialWarehousIOService.deleteAllEntitie(allEntitys);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
-		
+		//同步入库看板数据
+		new Thread(new MaterialInLookDataBatchRunnable(materialWarehousIO.getReceivingOrderNumber(),systemService)).start();
 		j.setMsg(message);
 		return j;
 	}
@@ -171,8 +173,10 @@ public class MaterialWarehousIOController extends BaseController {
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		j.setMsg(message);
-		//同步入库看板数据
-		new MaterialInLookDataBatchRunnable(materialWarehousIO.getReceivingOrderNumber(),systemService).startBatch();
+		if("1".equals(materialWarehousIO.getIoType())){
+			//同步入库看板数据
+			new Thread(new MaterialInLookDataBatchRunnable(materialWarehousIO.getReceivingOrderNumber(),systemService)).start();
+		}
 		return j;
 	}
 
@@ -205,6 +209,8 @@ public class MaterialWarehousIOController extends BaseController {
 				//当前登陆人
 				TSUser sessionUser = ResourceUtil.getSessionUser();
 				materialWarehousIOOld.setWarehouseOutPersonCode(sessionUser.getUserName());
+				//当前库存
+				materialWarehousIOOld.setWarehouseOutNumber(materialWarehousIOParam.getWarehouseOutNumber());
 				//最新出库时间
 				materialWarehousIOOld.setWarehouseOutDate(new Date());
 				//虚拟仓库
@@ -232,8 +238,10 @@ public class MaterialWarehousIOController extends BaseController {
 				response.setStatus(406);
 			}
 			logger.info("原料出入库请提交成功");
-			//同步入库看板数据
-			new MaterialInLookDataBatchRunnable(materialWarehousIOParam.getReceivingOrderNumber(),systemService).startBatch();
+			if("1".equals(materialWarehousIOParam.getIoType())){
+				//同步入库看板数据
+				new Thread(new MaterialInLookDataBatchRunnable(materialWarehousIOParam.getReceivingOrderNumber(),systemService)).start();
+			}
 		}
 	}
 
