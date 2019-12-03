@@ -28,7 +28,6 @@
 	<tr bgcolor="#E6E6E6">
 		<td align="center" bgcolor="#EEEEEE">序号</td>
 		<td align="center" bgcolor="#EEEEEE">操作</td>
-				  <td align="left" bgcolor="#EEEEEE">原料编号</td>
 				  <td align="left" bgcolor="#EEEEEE">原料批次</td>
 				  <td align="left" bgcolor="#EEEEEE">出库数量</td>
 				  <td align="left" bgcolor="#EEEEEE">本次入虚拟仓库数量</td>
@@ -46,7 +45,6 @@
 			<tr>
 				<td align="center"><div style="width: 25px;" name="xh">1</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck"/></td>
-				  <td align="left"><input name="materialWarehousNodeList[0].materialSerino" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].batchNumber" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].warehouseOutNumber" class="out_number" value="0" data-old="0" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="materialWarehousNodeList[0].virtualRepositoryNumber" readonly maxlength="120" type="text" style="width:120px;" ></td>
@@ -66,7 +64,6 @@
 				<td align="center"><div style="width: 25px;" name="xh">${stuts.index+1 }</div></td>
 				<td align="center"><input style="width:20px;"  type="checkbox" name="ck" /></td>
 				<input name="materialWarehousNodeList[${stuts.index }].id"  value="${poVal.id }" type="hidden" >
-				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].materialSerino" maxlength="120" value="${poVal.code }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].batchNumber" maxlength="120" value="${poVal.batchNumber }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].warehouseOutNumber" class="out_number" maxlength="120" value="${poVal.warehouseOutNumber+0 }" data-old="0" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="materialWarehousNodeList[${stuts.index }].virtualRepositoryNumber" readonly maxlength="120" value="${poVal.virtualRepositoryNumber }" type="text" style="width:120px;"></td>

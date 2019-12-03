@@ -1,14 +1,15 @@
 package com.jeecg.service.impl.warehous;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import com.jeecg.service.warehous.MaterialWarehousIOServiceI;
-import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
-import org.jeecgframework.core.common.exception.BusinessException;
-import org.jeecgframework.core.util.MyBeanUtils;
 import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
 import com.jeecg.entity.warehous.MaterialWarehousNodeEntity;
+import com.jeecg.service.warehous.MaterialWarehousIOServiceI;
+import org.jeecgframework.core.common.exception.BusinessException;
+import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
+import org.jeecgframework.core.util.MyBeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 @Service("materialWarehousIOService")
 @Transactional
 public class MaterialWarehousIOServiceImpl extends CommonServiceImpl implements MaterialWarehousIOServiceI {
@@ -36,7 +37,7 @@ public class MaterialWarehousIOServiceImpl extends CommonServiceImpl implements 
 		
 		//===================================================================================
 		//获取参数
-		Object materialSerino0 = materialWarehousIO.getMaterialSerino();
+		String materialSerino0 = materialWarehousIO.getMaterialSerino();
 		//===================================================================================
 		//1.查询出数据库的明细数据-原料出库详情列表
 	    String hql0 = "from MaterialWarehousNodeEntity where 1 = 1 AND materialSerino = ? ";
@@ -49,6 +50,7 @@ public class MaterialWarehousIOServiceImpl extends CommonServiceImpl implements 
 					if(oldE.getId().equals(sendE.getId())){
 		    			try {
 							MyBeanUtils.copyBeanNotNull2Bean(sendE,oldE);
+							oldE.setMaterialSerino(materialSerino0);
 							this.saveOrUpdate(oldE);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -68,7 +70,7 @@ public class MaterialWarehousIOServiceImpl extends CommonServiceImpl implements 
 		for(MaterialWarehousNodeEntity materialWarehousNode:materialWarehousNodeList){
 			if(materialWarehousNode.getId()==null){
 				//外键设置
-				materialWarehousNode.setMaterialSerino(materialWarehousIO.getMaterialSerino());
+				materialWarehousNode.setMaterialSerino(materialSerino0);
 				this.save(materialWarehousNode);
 			}
 		}

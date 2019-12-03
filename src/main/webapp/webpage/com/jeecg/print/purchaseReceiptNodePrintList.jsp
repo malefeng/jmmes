@@ -78,8 +78,7 @@
                             return '';
                         }
                         var href = '';
-                        href += "<a href='#'   class='ace_button'  onclick=inputParam('" + rec.id + "','" + index + "')> ";
-                        href += "打印</a>&nbsp;";
+                        href += "<a href='#'   class='ace_button'  onclick=inputParam('" + rec.id + "','" + index + "')> 打印</a>&nbsp;";
                         return href;
                     }
                 }]],
@@ -317,6 +316,7 @@
                     <input type="text" name="createDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                 </span>
                 <a href="#" class="easyui-linkbutton" style="float: right" onclick="purchaseReceiptNodeListsearch();" plain="true" icon="icon-search">查询</a>
+                <a href="#" class="easyui-linkbutton" style="float: right" onclick="rePrint();" plain="true" icon="icon-search">重打</a>
             </div>
             <div style="height:0px;">
                 <span style="float:left;"></span>
@@ -335,9 +335,19 @@
         <button id="wind_close" style="height: 30px">取消</button>
     </div>
 </div>
+<div id="rp" style="padding: 0 10px;">
+    <div style=" display: flex; flex-direction: column; justify-content: space-between; align-items: center">
+        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">二维码编号：<input
+                type="text" id="qrCode"></div>
+    </div>
+    <div style="height: 30px;  display: flex; justify-content: space-between;  align-items: center">
+        <button id="rp_submit" style="height: 30px">确认</button>
+        <button id="rp_close" style="height: 30px">取消</button>
+    </div>
+</div>
 <script>
     var printId;
-
+    //打印
     function inputParam(id) {
         printId = id;
         $("#batchNo").val("");
@@ -351,7 +361,7 @@
             modal: true
         });
     }
-
+    //提交打印
     $("#wind_submit").click(function () {
         var batchNo = $("#batchNo").val();
         if (!batchNo) {
@@ -361,12 +371,47 @@
         $('#win').window('close');
         print(printId, batchNo);
     })
+    //取消打印
     $("#wind_close").click(function () {
         $('#win').window('close');
     })
 
     function print(id, batchNo) {
         $.getJSON("purchaseReceiptNodeController.do?getPrintData", {id: id, batchNo: batchNo}, function (data) {
+            if (!!data) {
+                printQRCode(data);
+            } else {
+                $.messager.alert('error', '无有效数据!', 'info');
+            }
+        })
+    }
+    //重打
+    function rePrint(){
+        $('#rp').window({
+            title: '请输入二维码编号',
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            width: 300,
+            height: 130,
+            modal: true
+        });
+    }
+    //提交重打
+    $("#rp_submit").click(function(){
+        var qrCode = $("#qrCode").val();
+        if (!qrCode) {
+            $.messager.alert('error', '二维码不能为空!', 'info');
+            return false;
+        }
+        doRePrint(qrCode);
+    })
+    //取消重打
+    $("#rp_close").click(function () {
+        $('#rp').window('close');
+    })
+    function doRePrint(qrCode) {
+        $.getJSON("purchaseReceiptNodeController.do?rePrint", {qrCode: qrCode}, function (data) {
             if (!!data) {
                 printQRCode(data);
             } else {

@@ -78,12 +78,16 @@
                 }, {
                     field: 'opt',
                     title: '操作',
-                    width: 100,
+                    width: 200,
                     formatter: function (value, rec, index) {
                         if (!rec.id) {
                             return '';
                         }
                         var href = '';
+                        if(rec.ripeningStoreType != "2"){
+                            href += "<a href='#'   class='ace_button'  onclick=outWareHous('ripeningWarehousIOController.do?outWareHous&id=" + rec.id + "','finishedWarehousIOList')>";
+                            href += "出库</a>&nbsp;";
+                        }
                         href += "<a href='#'   class='ace_button'  onclick=delObj('ripeningWarehousIOController.do?del&id=" + rec.id + "','ripeningWarehousIOList')>  <i class=' fa fa-trash-o'></i> ";
                         href += "删除</a>&nbsp;";
                         return href;
@@ -310,7 +314,15 @@
                 url: 'ripeningWarehousIOController.do?datagrid&field=id,productSerino,productCode,productName,ripeningProType,productBatch,productSize,productNumber,unit,warehousePositionCode,warehouseSpaceCode,ripeningStoreType,warehousingPersonCode,warehousingDate,warehouseOutPersonCode,warehouseOutDate,productionOrderNumber,takeMaterilNumber,',
                 pageNumber: 1
             });
-        }</script>
+        }
+        function outWareHous(url,id){
+            $.getJSON(url,function(data){
+                if(data&&data.success){
+                    reloadTable();
+                }
+            })
+        }
+        </script>
         <table width="100%" id="ripeningWarehousIOList" toolbar="#ripeningWarehousIOListtb"></table>
         <div id="ripeningWarehousIOListtb" style="padding:3px; height: auto">
             <input id="_complexSqlbuilder" name="complexSqlbuilder" type="hidden"/>

@@ -28,9 +28,9 @@
 	}
  </script>
  </head>
- <body style="overflow-y: hidden" scroll="no">
+ <body>
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="materialWarehousIOController.do?save">
-			<input id="id" name="id" type="hidden" value="${materialWarehousIOPage.id }">
+			<input id="id" name="+" type="hidden" value="${materialWarehousIOPage.id }">
 			<table cellpadding="0" cellspacing="1" class="formtable">
 			<tr>
 			<td align="right"><label class="Validform_label">原料编号:</label></td>
@@ -64,7 +64,7 @@
 			</td>
 			<td align="right"><label class="Validform_label">入库数量:</label></td>
 			<td class="value">
-				<input nullmsg="请填写入库数量" errormsg="入库数量格式不对" class="inputxt" id="warehousingNumber" name="warehousingNumber" ignore="ignore"	value="${materialWarehousIOPage.warehousingNumber}" />
+				<input nullmsg="请填写入库数量" errormsg="入库数量格式不对" class="inputxt" id="warehousingNumber"<c:if test="${materialWarehousIOPage.id !=null }">readonly</c:if>  name="warehousingNumber" ignore="ignore"	value="${materialWarehousIOPage.warehousingNumber}" />
 				<span class="Validform_checktip"></span>
 			</td>
 			</tr>
@@ -95,7 +95,7 @@
 			<tr>
 			<td align="right"><label class="Validform_label">库存数量:</label></td>
 			<td class="value">
-				<input readonly class="inputxt" id="warehouseOutNumber" name="warehouseOutNumber" ignore="ignore"	value="${materialWarehousIOPage.warehouseOutNumber}" />
+				<input readonly class="inputxt" id="warehouseOutNumber" name="warehouseOutNumber" ignore="ignore" value="${materialWarehousIOPage.warehouseOutNumber}" />
 				<span class="Validform_checktip"></span>
 			</td>
 			<td align="right"><label class="Validform_label">虚拟仓库数量:</label></td>
@@ -174,7 +174,6 @@
 			<tr>
 			 <td align="center"><div style="width: 25px;" name="xh"></div></td>
 			 <td align="center"><input style="width:20px;" type="checkbox" name="ck"/></td>
-				  <td align="left"><input name="materialWarehousNodeList[#index#].materialSerino" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="materialWarehousNodeList[#index#].batchNumber" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="materialWarehousNodeList[#index#].warehouseOutNumber" class="out_number" value="0" data-old="0" maxlength="120" type="text" style="width:120px;"></td>
 				  <td align="left"><input name="materialWarehousNodeList[#index#].virtualRepositoryNumber" readonly maxlength="120" type="text" style="width:120px;"></td>
@@ -190,6 +189,12 @@
 		 </tbody>
 		</table>
  <script>
+	 $(function(){
+	 	var id = $("#id").val();
+	 	if(!!id){
+
+		}
+	 })
 	 $(document).on("change",".out_number",function(e){
 	 	//库存量
 	 	var mainWarehouseOutNumber = $("#warehouseOutNumber");
@@ -219,5 +224,9 @@
 		 $(e.target).data("old",new_val);
 		 virtualRepositoryNumber.val(mainVirtualRepositoryNumber.val());
 	 })
+
+	 $("#warehousingNumber").change(function(){
+	 	$("#warehouseOutNumber").val($(this).val());
+	 });
  </script>
  </body>

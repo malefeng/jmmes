@@ -1,9 +1,9 @@
-package com.jeecg.service.checktask;
+package com.jeecg.service.warehous;
 
 import java.util.List;
 import org.jeecgframework.core.common.service.CommonService;
-import com.jeecg.entity.checktask.CheckTaskEntity;
-import com.jeecg.entity.checktask.CheckNodeEntity;
+import com.jeecg.entity.warehous.CheckTaskEntity;
+import com.jeecg.entity.warehous.CheckNodeEntity;
 
 public interface CheckTaskServiceI extends CommonService{
 

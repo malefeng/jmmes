@@ -62,7 +62,7 @@
                         var href = '';
                         href += "<a href='#'   class='ace_button'  onclick=delObj('semiFinishedProductionController.do?del&id=" + rec.id + "','semiFinishedProductionList')>  <i class=' fa fa-trash-o'></i> ";
                         href += "删除</a>&nbsp;";
-                        href += "<a href='#'   class='ace_button'  onclick=add('录入','semiFinishedInspectController.do?addorupdate&semiFinishedCode="+rec.semiFinishedSerino+"&semiFinishedName="+rec.semiFinishedName+"&productionOrderNumber="+rec.productionOrderNumber+"','semiFinishedInspectMainList','80%','80%')>";
+                        href += "<a href='#'   class='ace_button'  onclick=add('录入','semiFinishedInspectController.do?addorupdate&semiFinishedCode="+rec.semiFinishedSerino+"&semiFinishedName="+rec.semiFinishedName+"&productionOrderNumber="+rec.productionOrderNumber+"','semiFinishedInspectMainList','100%','100%')>";
                         href += "首末检</a>&nbsp;";
                         return href;
                     }

@@ -49,10 +49,14 @@ public class ApiLogAspect {
         String url = request.getRequestURL().toString();
         String ipAddr = getRemoteHost(request);
         String reqParam = preHandle(joinPoint,request);
-        logger.info(String.format(requestLog,uuid.toString(),className,ipAddr,url,reqParam));
+        String requestStr = String.format(requestLog,uuid.toString(),className,ipAddr,url,reqParam);
+        logger.info(requestStr);
+        System.out.println(requestStr);
         Object result= joinPoint.proceed();
         String respParam = postHandle(result);
-        logger.info(String.format(responseLog,uuid.toString(),respParam));
+        String resStr = String.format(responseLog,uuid.toString(),respParam);
+        logger.info(resStr);
+        System.out.println(resStr);
         return result;
     }
 

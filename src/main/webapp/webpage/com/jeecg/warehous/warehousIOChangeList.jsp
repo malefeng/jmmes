@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/context/mytags.jsp" %>
-<t:base type="jquery,easyui,tools,DatePicker,common"></t:base>
+<t:base type="jquery,easyui,tools,DatePicker"></t:base>
 <div class="easyui-layout" fit="true">
     <div region="center" style="padding:0px;border:0px">
 
@@ -8,10 +8,10 @@
         <script type="text/javascript">$(function () {
             storage = $.localStorage;
             if (!storage) storage = $.cookieStorage;
-            $('#finishedInspectList').datagrid({
+            $('#warehousIOChangeList').datagrid({
                 idField: 'id',
-                title: '成品首末检',
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                title: '调库调位',
+                url: 'warehousIOChangeController.do?datagrid&field=id,materialsType,remark,changeMan,changeDate,materialsSerino,materialsNumber,repositoryCode,storageCode,',
                 fit: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -26,34 +26,45 @@
                 showFooter: true,
                 frozenColumns: [[]],
                 columns: [[{field: 'id', title: '编号', hidden: true, sortable: true}, {
-                    field: 'finishedCode',
-                    title: '成品编号',
-                    sortable: true
-                }, {field: 'finishedName', title: '成品名称', sortable: true},
-                    {field: 'productionOrderNumber', title: '生产订单号', sortable: true}, {
-                    field: 'inspectLogSheet',
-                    title: '首末检记录表',
+                    field: 'materialsType',
+                    title: '物资类型',
+                    width: 120,
                     sortable: true,
-                    formatter:function(value){
-                        return value&&value.length>20?value.substring(0,19)+"...":value;
+                    formatter: function (value){return ${materType}[value]}
+                }, {field: 'changeMan', title: '调配人', width: 120, sortable: true,
+                    formatter: function (value){return ${userDic}[value]}}, {
+                    field: 'changeDate',
+                    title: '调配时间',
+                    width: 120,
+                    sortable: true, formatter: function (value, rec, index) {
+                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
                     }
-                }, {
+                }, {field: 'materialsSerino', title: '物资编号', width: 120, sortable: true},
+                    {field: 'repositoryCode', title: '移入仓库', width: 120, sortable: true,
+                    formatter: function (value){return ${repostDic}[value]}}, {
+                    field: 'storageCode',
+                    title: '移入库位',
+                    width: 120,
+                    sortable: true,
+                    formatter: function (value){return ${storageDic}[value]}
+                }, {field: 'remark', title: '备注', width: 120, sortable: true}
+                , {
                     field: 'opt', title: '操作', width: 100, formatter: function (value, rec, index) {
                         if (!rec.id) {
                             return '';
                         }
                         var href = '';
-                        href += "<a href='#'   class='ace_button'  onclick=delObj('finishedInspectController.do?del&id=" + rec.id + "','finishedInspectList')>  <i class=' fa fa-trash-o'></i> ";
+                        href += "<a href='#'   class='ace_button'  onclick=delObj('warehousIOChangeController.do?del&id=" + rec.id + "','warehousIOChangeList')>  <i class=' fa fa-trash-o'></i> ";
                         href += "删除</a>&nbsp;";
                         return href;
                     }
                 }]],
                 onLoadSuccess: function (data) {
-                    $("#finishedInspectList").datagrid("clearChecked");
-                    $("#finishedInspectList").datagrid("clearSelections");
+                    $("#warehousIOChangeList").datagrid("clearChecked");
+                    $("#warehousIOChangeList").datagrid("clearSelections");
                     if (!false) {
                         if (data.total && data.rows.length == 0) {
-                            var grid = $('#finishedInspectList');
+                            var grid = $('#warehousIOChangeList');
                             var curr = grid.datagrid('getPager').data("pagination").options.pageNumber;
                             grid.datagrid({pageNumber: (curr - 1)});
                         }
@@ -65,17 +76,17 @@
                 },
                 onClickRow: function (rowIndex, rowData) {
                     rowid = rowData.id;
-                    gridname = 'finishedInspectList';
+                    gridname = 'warehousIOChangeList';
                 }
             });
-            $('#finishedInspectList').datagrid('getPager').pagination({
+            $('#warehousIOChangeList').datagrid('getPager').pagination({
                 beforePageText: '',
                 afterPageText: '/{pages}',
                 displayMsg: '{from}-{to}共 {total}条',
                 showPageList: true,
                 showRefresh: true
             });
-            $('#finishedInspectList').datagrid('getPager').pagination({
+            $('#warehousIOChangeList').datagrid('getPager').pagination({
                 onBeforeRefresh: function (pageNumber, pageSize) {
                     $(this).pagination('loading');
                     $(this).pagination('loaded');
@@ -95,11 +106,11 @@
             }
         }
 
-        function reloadfinishedInspectList() {
-            $('#finishedInspectList').datagrid('reload');
+        function reloadwarehousIOChangeList() {
+            $('#warehousIOChangeList').datagrid('reload');
         }
 
-        function getfinishedInspectListSelected(field) {
+        function getwarehousIOChangeListSelected(field) {
             return getSelected(field);
         }
 
@@ -113,9 +124,9 @@
             return value;
         }
 
-        function getfinishedInspectListSelections(field) {
+        function getwarehousIOChangeListSelections(field) {
             var ids = [];
-            var rows = $('#finishedInspectList').datagrid('getSelections');
+            var rows = $('#warehousIOChangeList').datagrid('getSelections');
             for (var i = 0; i < rows.length; i++) {
                 ids.push(rows[i][field]);
             }
@@ -124,19 +135,19 @@
         };
 
         function getSelectRows() {
-            return $('#finishedInspectList').datagrid('getChecked');
+            return $('#warehousIOChangeList').datagrid('getChecked');
         }
 
         function saveHeader() {
             var columnsFields = null;
             var easyextends = false;
             try {
-                columnsFields = $('#finishedInspectList').datagrid('getColumns');
+                columnsFields = $('#warehousIOChangeList').datagrid('getColumns');
                 easyextends = true;
             } catch (e) {
-                columnsFields = $('#finishedInspectList').datagrid('getColumnFields');
+                columnsFields = $('#warehousIOChangeList').datagrid('getColumnFields');
             }
-            var cols = storage.get('finishedInspectListhiddenColumns');
+            var cols = storage.get('warehousIOChangeListhiddenColumns');
             var init = true;
             if (cols) {
                 init = false;
@@ -146,7 +157,7 @@
                 if (easyextends) {
                     hiddencolumns.push({field: columnsFields[i].field, hidden: columnsFields[i].hidden});
                 } else {
-                    var columsDetail = $('#finishedInspectList').datagrid("getColumnOption", columnsFields[i]);
+                    var columsDetail = $('#warehousIOChangeList').datagrid("getColumnOption", columnsFields[i]);
                     if (init) {
                         hiddencolumns.push({
                             field: columsDetail.field,
@@ -166,7 +177,7 @@
                     }
                 }
             }
-            storage.set('finishedInspectListhiddenColumns', JSON.stringify(hiddencolumns));
+            storage.set('warehousIOChangeListhiddenColumns', JSON.stringify(hiddencolumns));
         }
 
         function isShowBut() {
@@ -185,41 +196,41 @@
         }
 
         function restoreheader() {
-            var cols = storage.get('finishedInspectListhiddenColumns');
+            var cols = storage.get('warehousIOChangeListhiddenColumns');
             if (!cols) return;
             for (var i = 0; i < cols.length; i++) {
                 try {
-                    if (cols.visible != false) $('#finishedInspectList').datagrid((cols[i].hidden == true ? 'hideColumn' : 'showColumn'), cols[i].field);
+                    if (cols.visible != false) $('#warehousIOChangeList').datagrid((cols[i].hidden == true ? 'hideColumn' : 'showColumn'), cols[i].field);
                 } catch (e) {
                 }
             }
         }
 
         function resetheader() {
-            var cols = storage.get('finishedInspectListhiddenColumns');
+            var cols = storage.get('warehousIOChangeListhiddenColumns');
             if (!cols) return;
             for (var i = 0; i < cols.length; i++) {
                 try {
-                    $('#finishedInspectList').datagrid((cols.visible == false ? 'hideColumn' : 'showColumn'), cols[i].field);
+                    $('#warehousIOChangeList').datagrid((cols.visible == false ? 'hideColumn' : 'showColumn'), cols[i].field);
                 } catch (e) {
                 }
             }
         }
 
-        function finishedInspectListsearch() {
+        function warehousIOChangeListsearch() {
             try {
-                if (!$("#finishedInspectListForm").Validform({tiptype: 3}).check()) {
+                if (!$("#warehousIOChangeListForm").Validform({tiptype: 3}).check()) {
                     return false;
                 }
             } catch (e) {
             }
             if (true) {
-                var queryParams = $('#finishedInspectList').datagrid('options').queryParams;
-                $('#finishedInspectListtb').find('*').each(function () {
+                var queryParams = $('#warehousIOChangeList').datagrid('options').queryParams;
+                $('#warehousIOChangeListtb').find('*').each(function () {
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
-                $('#finishedInspectList').datagrid({
-                    url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                $('#warehousIOChangeList').datagrid({
+                    url: 'warehousIOChangeController.do?datagrid&field=id,materialsType,remark,changeMan,changeDate,materialsSerino,materialsNumber,repositoryCode,storageCode,',
                     pageNumber: 1
                 });
             }
@@ -227,104 +238,70 @@
 
         function dosearch(params) {
             var jsonparams = $.parseJSON(params);
-            $('#finishedInspectList').datagrid({
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+            $('#warehousIOChangeList').datagrid({
+                url: 'warehousIOChangeController.do?datagrid&field=id,materialsType,remark,changeMan,changeDate,materialsSerino,materialsNumber,repositoryCode,storageCode,',
                 queryParams: jsonparams
             });
         }
 
-        function finishedInspectListsearchbox(value, name) {
-            var queryParams = $('#finishedInspectList').datagrid('options').queryParams;
+        function warehousIOChangeListsearchbox(value, name) {
+            var queryParams = $('#warehousIOChangeList').datagrid('options').queryParams;
             queryParams[name] = value;
             queryParams.searchfield = name;
-            $('#finishedInspectList').datagrid('reload');
+            $('#warehousIOChangeList').datagrid('reload');
         }
 
-        $('#finishedInspectListsearchbox').searchbox({
+        $('#warehousIOChangeListsearchbox').searchbox({
             searcher: function (value, name) {
-                finishedInspectListsearchbox(value, name);
-            }, menu: '#finishedInspectListmm', prompt: '请输入查询关键字'
+                warehousIOChangeListsearchbox(value, name);
+            }, menu: '#warehousIOChangeListmm', prompt: '请输入查询关键字'
         });
 
         function EnterPress(e) {
             var e = e || window.event;
             if (e.keyCode == 13) {
-                finishedInspectListsearch();
+                warehousIOChangeListsearch();
             }
         }
 
         function searchReset(name) {
             $("#" + name + "tb").find(":input").val("");
-            var queryParams = $('#finishedInspectList').datagrid('options').queryParams;
-            $('#finishedInspectListtb').find('*').each(function () {
+            var queryParams = $('#warehousIOChangeList').datagrid('options').queryParams;
+            $('#warehousIOChangeListtb').find('*').each(function () {
                 queryParams[$(this).attr('name')] = $(this).val();
             });
-            $('#finishedInspectListtb').find("input[type='checkbox']").each(function () {
+            $('#warehousIOChangeListtb').find("input[type='checkbox']").each(function () {
                 $(this).attr('checked', false);
             });
-            $('#finishedInspectListtb').find("input[type='radio']").each(function () {
+            $('#warehousIOChangeListtb').find("input[type='radio']").each(function () {
                 $(this).attr('checked', false);
             });
-            $('#finishedInspectList').datagrid({
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+            $('#warehousIOChangeList').datagrid({
+                url: 'warehousIOChangeController.do?datagrid&field=id,materialsType,remark,changeMan,changeDate,materialsSerino,materialsNumber,repositoryCode,storageCode,',
                 pageNumber: 1
             });
         }</script>
-        <table width="100%" id="finishedInspectList" toolbar="#finishedInspectListtb"></table>
-        <div id="finishedInspectListtb" style="padding:3px; height: auto">
+        <table width="100%" id="warehousIOChangeList" toolbar="#warehousIOChangeListtb"></table>
+        <div id="warehousIOChangeListtb" style="padding:3px; height: auto">
             <input id="_complexSqlbuilder" name="complexSqlbuilder" type="hidden"/>
             <div name="searchColums">
-                <span>成品编号:<input type="text" name="finishedCode"></span>
-                <span>成品名称:<input type="text" name="finishedName"></span>
-                <span>生产订单号:<input type="text" name="productionOrderNumber"></span>
-                <span>创建时间:
-                    <input type="text" name="createDate_begin"  style="width: 120px"  class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+                <span>物资类型:<t:dictSelect field="materialsType" typeGroupCode="mater_type"  hasLabel="false" type="list"></t:dictSelect></span>
+                <span>物资编号:<input type="text" name="materialsSerino"></span>
+                <span>调配时间:
+                    <input type="text" name="changeDate_begin"  style="width: 120px"  class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                     <span style="display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;">~</span>
-                    <input type="text" name="createDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+                    <input type="text" name="changeDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                 </span>
-                <a href="#" class="easyui-linkbutton" style="float: right" onclick="finishedInspectListsearch();" plain="true" icon="icon-search">查询</a>
+                <a href="#" class="easyui-linkbutton" style="float: right" onclick="warehousIOChangeListsearch();" plain="true" icon="icon-search">查询</a>
             </div>
             <div style="border-bottom-width:0;" class="datagrid-toolbar">
                 <span style="float:left;">
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addNew()">录入</a>
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','finishedInspectController.do?addorupdate','finishedInspectList',null,null)">编辑</a>
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','finishedInspectController.do?addorupdate','finishedInspectList',null,null)">查看</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('录入','warehousIOChangeController.do?addorupdate','warehousIOChangeList',null,null)">录入</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','warehousIOChangeController.do?addorupdate','warehousIOChangeList',null,null)">编辑</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-search" onclick="detail('查看','warehousIOChangeController.do?addorupdate','warehousIOChangeList',null,null)">查看</a>
                 </span>
                 <div style="clear:both"></div>
             </div>
         </div>
     </div>
 </div>
-<script>
-    //成品编号长度
-    var finishedSerinoLen = 12;
-    function addNew(){
-        $.messager.prompt("","请输入成品首末检编号",function(data){
-            if (data != null) {
-                $.ajax({
-                    type: 'get',
-                    url: "finishedProductionController.do?get&finishedSerino="+data.substr(0,finishedSerinoLen),
-                    dataType: 'json',
-                    beforeSend: function () {
-                        loadMask();
-                    },
-                    complete: function () {
-                        disLoadMask();
-                    },
-                    success: function (data) {
-                        if(!!data){
-                            add('录入','finishedInspectController.do?addorupdate&finishedCode='+data.finishedSerino+"&finishedName="+data.finishedName+"&productionOrderNumber="+data.productionOrderNumber,'finishedInspectList',"100%","100%")
-                        }else{
-                            $.messager.show({
-                                msg:'该成品不存在或未投产',
-                                showType:'slide',
-                                showSpeed:'200',
-                                style:{color:'red'}
-                            });
-                        }
-                    }
-                });
-            }
-        });
-    }
-</script>

@@ -1,51 +1,44 @@
-package com.jeecg.controller.checktask;
-import java.util.List;
+package com.jeecg.controller.warehous;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeecg.entity.warehous.CheckNodeEntity;
+import com.jeecg.entity.warehous.CheckTaskEntity;
+import com.jeecg.page.warehous.CheckTaskPage;
+import com.jeecg.service.warehous.CheckTaskServiceI;
+import com.jeecg.util.DictionaryUtil;
 import org.apache.log4j.Logger;
-import org.jeecgframework.jwt.util.ResponseMessage;
-import org.jeecgframework.jwt.util.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
+import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.jwt.util.ResponseMessage;
+import org.jeecgframework.jwt.util.Result;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.service.SystemService;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.jeecgframework.core.beanvalidator.BeanValidators;
-import java.util.Set;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.net.URI;
-import org.springframework.http.MediaType;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.jeecg.entity.checktask.CheckTaskEntity;
-import com.jeecg.page.checktask.CheckTaskPage;
-import com.jeecg.service.checktask.CheckTaskServiceI;
-import com.jeecg.entity.checktask.CheckNodeEntity;
+import java.util.List;
+import java.util.Set;
 /**   
  * @Title: Controller
  * @Description: 盘点任务
  * @author zhangdaihao
- * @date 2019-11-12 23:12:33
+ * @date 2019-11-13 23:39:45
  * @version V1.0   
  *
  */
@@ -63,6 +56,8 @@ public class CheckTaskController extends BaseController {
 	private SystemService systemService;
 	@Autowired
 	private Validator validator;
+	@Autowired
+	private DictionaryUtil dictionaryUtil;
 	
 	
 	/**
@@ -72,7 +67,8 @@ public class CheckTaskController extends BaseController {
 	 */
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
-		return new ModelAndView("com/jeecg/checktask/checkTaskList");
+		dictionaryUtil.writeDicList(request,"checkType","checkStaut","userDic");
+		return new ModelAndView("com/jeecg/warehous/checkTaskList");
 	}
 
 	/**
@@ -81,7 +77,6 @@ public class CheckTaskController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -116,7 +111,6 @@ public class CheckTaskController extends BaseController {
 	/**
 	 * 添加盘点任务
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -138,6 +132,23 @@ public class CheckTaskController extends BaseController {
 		return j;
 	}
 
+	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
+	public boolean appSave(@RequestBody CheckTaskPage checkTaskPage){
+		String message = null;
+		CheckTaskEntity checkTask = checkTaskPage.getCheckTask();
+		List<CheckNodeEntity> checkNodeList =  checkTaskPage.getCheckNodeList();
+		if (StringUtil.isNotEmpty(checkTask.getId())) {
+			message = "更新成功";
+			checkTaskService.updateMain(checkTask, checkNodeList);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} else {
+			message = "添加成功";
+			checkTaskService.addMain(checkTask, checkNodeList);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+		}
+		return true;
+	}
+
 	/**
 	 * 盘点任务列表页面跳转
 	 * 
@@ -149,7 +160,7 @@ public class CheckTaskController extends BaseController {
 			checkTask = checkTaskService.getEntity(CheckTaskEntity.class, checkTask.getId());
 			req.setAttribute("checkTaskPage", checkTask);
 		}
-		return new ModelAndView("com/jeecg/checktask/checkTask");
+		return new ModelAndView("com/jeecg/warehous/checkTask");
 	}
 	
 	
@@ -173,7 +184,7 @@ public class CheckTaskController extends BaseController {
 		}catch(Exception e){
 			logger.info(e.getMessage());
 		}
-		return new ModelAndView("com/jeecg/checktask/checkNodeList");
+		return new ModelAndView("com/jeecg/warehous/checkNodeList");
 	}
 	
 	@RequestMapping(value="/list/{pageNo}/{pageSize}", method = RequestMethod.GET)
@@ -187,6 +198,16 @@ public class CheckTaskController extends BaseController {
 		query.setPageSize(pageSize<1?1:pageSize);
 		List<CheckTaskEntity> listCheckTasks = this.checkTaskService.getListByCriteriaQuery(query,true);
 		return Result.success(listCheckTasks);
+	}
+
+	@RequestMapping(value="/apiList/{pageNo}/{pageSize}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<CheckTaskEntity> apiList(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize){
+		CriteriaQuery query = new CriteriaQuery(CheckTaskEntity.class);
+		query.setCurPage(pageNo<=0?1:pageNo);
+		query.setPageSize(pageSize<1?1:pageSize);
+		List<CheckTaskEntity> listCheckTasks = this.checkTaskService.getListByCriteriaQuery(query,true);
+		return listCheckTasks;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

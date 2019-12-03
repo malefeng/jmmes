@@ -1,14 +1,14 @@
-package com.jeecg.service.impl.checktask;
+package com.jeecg.service.impl.warehous;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import com.jeecg.service.checktask.CheckTaskServiceI;
+import com.jeecg.service.warehous.CheckTaskServiceI;
 import org.jeecgframework.core.common.service.impl.CommonServiceImpl;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.util.MyBeanUtils;
-import com.jeecg.entity.checktask.CheckTaskEntity;
-import com.jeecg.entity.checktask.CheckNodeEntity;
+import com.jeecg.entity.warehous.CheckTaskEntity;
+import com.jeecg.entity.warehous.CheckNodeEntity;
 @Service("checkTaskService")
 @Transactional
 public class CheckTaskServiceImpl extends CommonServiceImpl implements CheckTaskServiceI {

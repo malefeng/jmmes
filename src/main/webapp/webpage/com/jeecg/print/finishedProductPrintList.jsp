@@ -234,7 +234,7 @@
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
                 $('#finishedProductPrintList').datagrid({
-                    url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,materialType,finishedSize,finishedNumber,finishedUnitCode,',
+                    url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,finishedName,materialType,finishedSize,finishedNumber,finishedUnitCode,',
                     pageNumber: 1
                 });
             }
@@ -281,7 +281,7 @@
                 $(this).attr('checked', false);
             });
             $('#finishedProductPrintList').datagrid({
-                url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,materialType,finishedSize,finishedNumber,finishedUnitCode,',
+                url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,finishedName,materialType,finishedSize,finishedNumber,finishedUnitCode,',
                 pageNumber: 1
             });
         }</script>
@@ -289,8 +289,8 @@
         <div id="finishedProductPrintListtb" style="padding:3px; height: auto">
             <input id="_complexSqlbuilder" name="complexSqlbuilder" type="hidden"/>
             <div name="searchColums">
-                <span>物料代码:<input type="text" name="rawMaterialCode"></span>
-                <span>物料名称:<input type="text" name="rawMaterialName"></span>
+                <span>成品代码:<input type="text" name="finishedCode"></span>
+                <span>成品名称:<input type="text" name="finishedName"></span>
                 <span>创建时间:
                     <input type="text" name="createDate_begin"  style="width: 120px"  class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                     <span style="display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;">~</span>

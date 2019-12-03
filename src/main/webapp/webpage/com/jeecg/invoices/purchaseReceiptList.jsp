@@ -18,8 +18,8 @@
                 pageSize: 10,
                 pagination: true,
                 pageList: [10, 20, 30],
+                sortName:'receiptDate',
                 sortOrder: 'desc',
-                rownumbers: true,
                 singleSelect: true,
                 fitColumns: true,
                 striped: true,
@@ -351,9 +351,41 @@
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('录入','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">录入</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">编辑</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">查看</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="copy()">查看</a>
                 </span>
                 <div style="clear:both"></div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function copy(){
+        $.messager.prompt("","请输入收料单编号",function(data){
+            if (data != null) {
+                $.ajax({
+                    type: 'get',
+                    url: "purchaseReceiptController.do?getErpData&number="+data,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        loadMask();
+                    },
+                    complete: function () {
+                        disLoadMask();
+                    },
+                    success: function (id) {
+                        if(!!id){
+                            update('编辑','purchaseReceiptController.do?addorupdate&id='+id,'purchaseReceiptList','100%','100%');
+                        }else{
+                            $.messager.show({
+                                msg:'未查询到有效数据',
+                                showType:'slide',
+                                showSpeed:'200',
+                                style:{color:'red'}
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

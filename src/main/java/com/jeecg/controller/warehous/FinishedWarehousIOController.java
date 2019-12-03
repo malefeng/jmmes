@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class FinishedWarehousIOController extends BaseController {
 	private Validator validator;
 	@Autowired
 	private DictionaryUtil dictionaryUtil;
-	
+
 
 
 	/**
@@ -76,8 +77,14 @@ public class FinishedWarehousIOController extends BaseController {
 
 	@RequestMapping(value = "/apiList/{finishedSerino}")
 	@ResponseBody
-	public FinishedWarehousIOEntity apiList(@PathVariable("finishedSerino")String finishedSerino){
-		return finishedWarehousIOService.findUniqueByProperty(FinishedWarehousIOEntity.class,"finishedSerino",finishedSerino);
+	public FinishedWarehousIOEntity apiList(@PathVariable("finishedSerino")String finishedSerino, HttpServletResponse response) throws IOException {
+		try{
+			return finishedWarehousIOService.findUniqueByProperty(FinishedWarehousIOEntity.class,"finishedSerino",finishedSerino);
+		}catch (Exception e){
+			response.setStatus(500);
+			response.sendError(500,"成品库存中，成品编号："+finishedSerino+"存在重复数据");
+		}
+		return null;
 	}
 
 	/**

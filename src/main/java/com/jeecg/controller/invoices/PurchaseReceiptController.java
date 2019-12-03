@@ -1,6 +1,8 @@
 package com.jeecg.controller.invoices;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.MaterialInLookDataBatchRunnable;
+import com.jeecg.constant.ERPApiCodeEnum;
 import com.jeecg.entity.invoices.PurchaseReceiptEntity;
 import com.jeecg.entity.invoices.PurchaseReceiptNodeEntity;
 import com.jeecg.entity.look.MaterialWarehouIOLookEntity;
@@ -8,6 +10,8 @@ import com.jeecg.entity.qrcode.QRCodeEntity;
 import com.jeecg.page.invoices.PurchaseReceiptPage;
 import com.jeecg.service.invoices.PurchaseReceiptServiceI;
 import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.ERPApiUitl;
+import com.jeecg.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -35,11 +39,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-/**   
+import java.util.*;
+
+/**
  * @Title: Controller
  * @Description: 采购收料单
  * @author zhangdaihao
@@ -186,8 +191,44 @@ public class PurchaseReceiptController extends BaseController {
 		}
 		return new ModelAndView("com/jeecg/invoices/purchaseReceipt");
 	}
-	
-	
+
+	@RequestMapping(params = "getErpData")
+	@ResponseBody
+	public String getErpData(String number){
+		try {
+			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"FBillNo\":\"%s\"}", number));
+			PurchaseReceiptEntity purchaseReceipt = new PurchaseReceiptEntity();
+			List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList = new ArrayList<>();
+			if(analysisErpData(res,purchaseReceipt,purchaseReceiptNodeList)){
+				purchaseReceiptService.addMain(purchaseReceipt, purchaseReceiptNodeList);
+				return purchaseReceipt.getId();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private boolean analysisErpData(String res, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) {
+		Map resMap = JSONObject.parseObject(res, Map.class);
+		return translate(resMap,purchaseReceipt,purchaseReceiptNodeList);
+	}
+
+	private boolean translate(Map resMap, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) {
+		resMap.get("");
+		return true;
+	}
+
+	private boolean reflact(Map resMap,Object o,Map<String,String> translateMap) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		Class cla = o.getClass();
+		for (Map.Entry<String,String> entry:translateMap.entrySet()) {
+			String methodName = "set"+ StringUtils.firstUpperCase(entry.getKey());
+			Method method = cla.getMethod(methodName,cla);
+			method.invoke(o,resMap.get(entry.getValue()));
+		}
+		return true;
+	}
+
 	/**
 	 * 加载明细列表[采购收料单物料信息]
 	 * 

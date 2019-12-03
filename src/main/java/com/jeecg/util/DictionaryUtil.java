@@ -52,8 +52,11 @@ public class DictionaryUtil {
             case "unitDic" : return getDicList("","unit","");//单位
             case "finshTypeDic" : return getDicList("","rip_p_type","");//熟成产品类型
             case "matTypeDic" : return getDicList("","matType","");//物料类型
-            case "rmReason" : return getDicList("","r_m_reason","");//物料类型
-            case "rpReason" : return getDicList("","r_p_reason","");//物料类型
+            case "rmReason" : return getDicList("","r_m_reason","");//退料原因
+            case "rpReason" : return getDicList("","r_p_reason","");//退货原因
+            case "checkType" : return getDicList("","check_type","");//盘点类型
+            case "checkStaut" : return getDicList("","checkStaut","");//盘点状态
+            case "materType" : return getDicList("","mater_type","");//物资类型
             default:
                 return null;
         }

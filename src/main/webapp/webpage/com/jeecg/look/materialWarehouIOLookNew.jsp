@@ -43,7 +43,7 @@
 
 		 .table-tr {
 			 display: table-row;
-			 height: 18px;
+			 height: 25px;
 		 }
 
 		 .table-th {

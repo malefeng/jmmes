@@ -90,6 +90,41 @@ public class PurchaseReceiptNodeController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping(params = "rePrint")
+	@ResponseBody
+	public Object rePrint(String qrCode){
+		QRCodeEntity qrCodeEntity = purchaseReceiptNodeService.findUniqueByProperty(QRCodeEntity.class, "number", qrCode);
+		if(null!=qrCodeEntity){
+			String rawMaterialCode = qrCodeEntity.getCode();
+			List result = new ArrayList();
+			//明文key
+			Object[] keys = new Object[6];
+			//明文value
+			Object[] values = new Object[6];
+			//二维码类型
+			keys[0] = "类型";
+			values[0] = "11-原料";
+			//批次
+			keys[1] = "批次";
+			values[1] = qrCodeEntity.getBatchNo();
+			//编号
+			keys[2] = "编号";
+			values[2] = qrCode;
+			//代码
+			keys[3] = "代码";
+			values[3] = rawMaterialCode;
+			//名称
+			keys[4] = "名称";
+			values[4] = qrCodeEntity.getMaterialName();
+			//规格型号
+			keys[5] = "规格型号";
+			values[5] = qrCodeEntity.getMaterialSize();
+			result.add(generateContent(qrCode.concat(",").concat(rawMaterialCode).concat(",11"), keys, values));
+			return result;
+		}
+		return null;
+	}
+
 	private void generatePrintData(String id, String batchNo, List toSaveList, List result) {
 		PurchaseReceiptNodeEntity purchaseReceiptNodeEntity =purchaseReceiptNodeService.get(PurchaseReceiptNodeEntity.class,id);
 		if(purchaseReceiptNodeEntity!=null){
@@ -110,7 +145,7 @@ public class PurchaseReceiptNodeController extends BaseController {
 				int times = (int)Math.ceil(purchaseReceiptNodeEntity.getActualReceivedNumber()/(double)rawMaterial.getRawMaterialNumber());
 				for (int i = 0; i<times; i++){
 					qrCodeEntity = qrCodeEntity.clone();
-					//二维码代码待维护
+					//二维码代码
 					String qrCode = sequenceServiceI.getqrCode("material");
 					qrCodeEntity.setNumber(qrCode);
 					toSaveList.add(qrCodeEntity);

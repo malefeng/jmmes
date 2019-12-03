@@ -85,7 +85,7 @@ public class MaterialInLookDataBatchRunnable implements Runnable {
                     materialWarehouIOLookEntity.setReceiveNumber(String.valueOf(dataNodeMap.get("RECEIVENUMBER")));
                     materialWarehouIOLookEntity.setInsertNumber(String.valueOf(dataNodeMap.get("INSERTNUMBER")));
                     //完成率保留两位小数，百分制
-                    Double ratio = new Double(materialWarehouIOLookEntity.getInsertNumber())*100/new Double(materialWarehouIOLookEntity.getReceiveNumber());
+                    Double ratio = MathUtil.toDouble(materialWarehouIOLookEntity.getInsertNumber())*100/MathUtil.toDouble(materialWarehouIOLookEntity.getReceiveNumber());
                     materialWarehouIOLookEntity.setInsertRatio(new BigDecimal(ratio).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                     if(Double.valueOf(materialWarehouIOLookEntity.getInsertNumber())>=Double.valueOf(materialWarehouIOLookEntity.getReceiveNumber())){
                         materialWarehouIOLookEntity.setInsertTime(new Date());

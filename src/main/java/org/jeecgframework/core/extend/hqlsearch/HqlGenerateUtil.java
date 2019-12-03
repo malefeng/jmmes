@@ -1,21 +1,5 @@
 package org.jeecgframework.core.extend.hqlsearch;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.persistence.Column;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.Disjunction;
@@ -26,14 +10,19 @@ import org.jeecgframework.core.common.model.common.QueryCondition;
 import org.jeecgframework.core.extend.hqlsearch.parse.ObjectParseUtil;
 import org.jeecgframework.core.extend.hqlsearch.parse.PageValueConvertRuleEnum;
 import org.jeecgframework.core.extend.hqlsearch.parse.vo.HqlRuleEnum;
-import org.jeecgframework.core.util.JSONHelper;
-import org.jeecgframework.core.util.JeecgDataAutorUtils;
-import org.jeecgframework.core.util.LogUtil;
-import org.jeecgframework.core.util.ResourceUtil;
-import org.jeecgframework.core.util.StringUtil;
-import org.jeecgframework.core.util.oConvertUtils;
+import org.jeecgframework.core.util.*;
 import org.jeecgframework.web.system.pojo.base.TSDataRule;
 import org.springframework.util.NumberUtils;
+
+import javax.persistence.Column;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -183,8 +172,16 @@ public class HqlGenerateUtil {
 	//							rule = HqlRuleEnum.EQ;
 	//						}
 
-							
 							value = PageValueConvertRuleEnum.replaceValue(rule,value);
+
+							/**
+							 * start
+							 *  马乐峰
+							 *  2019-11-20
+							 *  默认所有匹配条件改为模糊查询
+							 */
+							rule = HqlRuleEnum.LIKE;
+							/**-------end----------*/
 							ObjectParseUtil.addCriteria(cq, aliasName, rule, value);
 						}
 

@@ -10,6 +10,7 @@ import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
 import com.jeecg.page.invoices.ProductionRequisitionPage;
 import com.jeecg.service.invoices.ProductionRequisitionServiceI;
 import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
@@ -86,9 +88,16 @@ public class ProductionRequisitionController extends BaseController {
 	 */
 	@RequestMapping(value = "/apiList/{receiptCode}")
 	@ResponseBody
-	public Object apiList(@PathVariable("receiptCode") String receiptCode){
+	public Object apiList(@PathVariable("receiptCode") String receiptCode,HttpServletResponse response) throws IOException {
 		Map result = new HashMap();
-		ProductionRequisitionEntity productionRequisitionEntity = productionRequisitionService.findUniqueByProperty(ProductionRequisitionEntity.class,"receiptCode",receiptCode);
+		ProductionRequisitionEntity productionRequisitionEntity = null;
+		try {
+			productionRequisitionEntity = productionRequisitionService.findUniqueByProperty(ProductionRequisitionEntity.class,"receiptCode",receiptCode);
+		} catch (Exception e) {
+			response.setStatus(500);
+			response.sendError(500,"生产领料单，领料单号："+receiptCode+"存在重复数据");
+			e.printStackTrace();
+		}
 		result.put("productionRequisitionEntity",productionRequisitionEntity);
 		if(productionRequisitionEntity!=null){
 			List<ProductionRequisitionNodeEntity> productionRequisitionNodeEntityList = productionRequisitionService.findByProperty(ProductionRequisitionNodeEntity.class, "inspectId", productionRequisitionEntity.getId());
@@ -112,11 +121,12 @@ public class ProductionRequisitionController extends BaseController {
 	@ResponseBody
 	public Object getUnproductedListByParam(String finishedCode,String printType){
 		StringBuilder hql = new StringBuilder("from ProductionRequisitionEntity r where 1=1 ");
-		if(FINISHED_PRINT.equals(printType)){
+		hql.append(" and not exists (select s.id from SalesReleaseNodeEntity s where s.productionOrderNumber = r.productionOrderNumber)");
+		/*if(FINISHED_PRINT.equals(printType)){
 			hql.append("and NOT EXISTS (select fp.id from FinishedProductionEntity fp where fp.takeMaterilNumber = r.receiptCode)");
 		}else if(SEMI_FINISHED_PRINT.equals(printType)){
 			hql.append(" and NOT EXISTS (select sp.id from SemiFinishedProductionEntity sp where sp.takeMaterilNumber = r.receiptCode)");
-		}
+		}*/
 		if(StringUtil.isNotEmpty(finishedCode)){
 			hql.append(" and r.finishedCode = ").append(finishedCode);
 		}
@@ -182,7 +192,7 @@ public class ProductionRequisitionController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(ProductionRequisitionEntity productionRequisition,ProductionRequisitionPage productionRequisitionPage, HttpServletRequest request) {
+	public AjaxJson save(ProductionRequisitionEntity productionRequisition,ProductionRequisitionPage productionRequisitionPage, HttpServletRequest request,HttpServletResponse response) throws IOException {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		List<ProductionRequisitionNodeEntity> productionRequisitionNodeList =  productionRequisitionPage.getProductionRequisitionNodeList();
@@ -191,7 +201,14 @@ public class ProductionRequisitionController extends BaseController {
 			List<MaterialWarehousIOEntity> materialWarehousIOEntityList = new ArrayList<>(productionRequisitionNodeList.size());
 			for (ProductionRequisitionNodeEntity productionRequisitionNodeEntity: productionRequisitionNodeList) {
 				//对应的原料库存信息
-				MaterialWarehousIOEntity materialWarehousIOEntity = productionRequisitionService.findUniqueByProperty(MaterialWarehousIOEntity.class, "materialSerino", productionRequisitionNodeEntity.getRawMaterialSerino());
+				MaterialWarehousIOEntity materialWarehousIOEntity = null;
+				try {
+					materialWarehousIOEntity = productionRequisitionService.findUniqueByProperty(MaterialWarehousIOEntity.class, "materialSerino", productionRequisitionNodeEntity.getRawMaterialSerino());
+				} catch (Exception e) {
+					response.setStatus(500);
+					response.sendError(500,"原料仓库中，原料编号："+productionRequisitionNodeEntity.getRawMaterialSerino()+"存在重复数据");
+					e.printStackTrace();
+				}
 				if(materialWarehousIOEntity==null){
 					message = "原料信息不存在";
 					j.setMsg(message);
@@ -199,13 +216,13 @@ public class ProductionRequisitionController extends BaseController {
 				}
 				//已配料
 				materialWarehousIOEntity.setIoType("4");
-
+				materialWarehousIOEntityList.add(materialWarehousIOEntity);
+				productionRequisitionService.updateEntitie(materialWarehousIOEntity);
 				productionRequisitionNodeEntity.setFinishedCode(productionRequisition.getFinishedCode());
 				productionRequisitionNodeEntity.setFinishedName(productionRequisition.getFinishedName());
 				productionRequisitionNodeEntity.setProductionOrderNumber(productionRequisition.getProductionOrderNumber());
 				productionRequisitionNodeEntity.setProductionDispatchingNumber(productionRequisition.getProductionDispatchingNumber());
 			}
-			productionRequisitionService.batchSave(materialWarehousIOEntityList);
 		}
 		if (StringUtil.isNotEmpty(productionRequisition.getId())) {
 			message = "更新成功";
@@ -353,7 +370,7 @@ public class ProductionRequisitionController extends BaseController {
 		List<ProductionRequisitionNodeEntity> result = new ArrayList<ProductionRequisitionNodeEntity>();
 		if(StringUtil.isNotEmpty(remainData)) {
 			Map<String, Integer> remainDataMap = JSONObject.parseObject(remainData, Map.class);
-			String sql = "from MaterialWarehousIOEntity where ioType in ('1','3') and materialCode = ? order by warehousingDate";
+			String sql = "from MaterialWarehousIOEntity where ioType in ('1','3') and materialCode = ? order by virtualRepositoryNumber desc,warehousingDate";
 			for (Map.Entry<String,Integer> entry: remainDataMap.entrySet()){
 				int val = entry.getValue();
 				List<MaterialWarehousIOEntity> materialWarehousIOEntityList = productionRequisitionService.findHql(sql, entry.getKey());
@@ -362,7 +379,7 @@ public class ProductionRequisitionController extends BaseController {
 					int count = Integer.valueOf(materialWarehousIOEntity.getWarehouseOutNumber());
 					//与领料车间相同的虚拟仓库原料才可以参与配料
 					if(StringUtil.equals(materialWarehousIOEntity.getVirtualRepository(),requisitionWorkshopCode)){
-						count += Integer.valueOf(materialWarehousIOEntity.getVirtualRepositoryNumber());
+						count += MathUtil.toInt(materialWarehousIOEntity.getVirtualRepositoryNumber());
 
 					}
 					ProductionRequisitionNodeEntity productionRequisitionNodeEntity = new ProductionRequisitionNodeEntity();

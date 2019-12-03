@@ -25,7 +25,7 @@ public class JeecgOneToMainUtil {
 		CodeParamEntity codeParamEntityIn = new CodeParamEntity();
 		codeParamEntityIn.setTableName("t_check_task");//表名
 		codeParamEntityIn.setEntityName("CheckTask");	 //实体名
-		codeParamEntityIn.setEntityPackage("checktask");	 //包名
+		codeParamEntityIn.setEntityPackage("warehous");	 //包名
 		codeParamEntityIn.setFtlDescription("盘点任务");	 //描述
 
 		//第二步：设置子表集合配置
@@ -34,7 +34,7 @@ public class JeecgOneToMainUtil {
 		SubTableEntity po = new SubTableEntity();
 		po.setTableName("t_check_node_list");//表名
 		po.setEntityName("CheckNode");	    //实体名
-		po.setEntityPackage("checktask");	        //包名
+		po.setEntityPackage("warehous");	        //包名
 		po.setFtlDescription("盘点明细表");       //描述
 		//子表外键参数配置
 		/*说明:

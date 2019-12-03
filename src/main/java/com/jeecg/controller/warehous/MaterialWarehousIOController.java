@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -182,12 +183,23 @@ public class MaterialWarehousIOController extends BaseController {
 
 	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
 	@ResponseBody
-	public void apiSave(@RequestBody MaterialWarehousIODTO materialWarehousIODTO,HttpServletResponse response){
+	public void apiSave(@RequestBody MaterialWarehousIODTO materialWarehousIODTO,HttpServletResponse response) throws IOException {
 		logger.info("原料出入库请提交求报文："+ JSON.toJSONString(materialWarehousIODTO));
 		MaterialWarehousIOEntity materialWarehousIOParam = materialWarehousIODTO.getMaterialWarehousIO();
 		List<MaterialWarehousNodeEntity> materialWarehousNodeList = materialWarehousIODTO.getMaterialWarehousNodeList();
 		if(materialWarehousIOParam!=null){
-			MaterialWarehousIOEntity materialWarehousIOOld = materialWarehousIOService.findUniqueByProperty(MaterialWarehousIOEntity.class,"materialSerino",materialWarehousIOParam.getMaterialSerino());
+			MaterialWarehousIOEntity materialWarehousIOOld = null;
+			try {
+				try {
+					materialWarehousIOOld = materialWarehousIOService.findUniqueByProperty(MaterialWarehousIOEntity.class,"materialSerino",materialWarehousIOParam.getMaterialSerino());
+				} catch (Exception e) {
+					response.setStatus(500);
+					response.sendError(500,"原料库存中,原料编号："+materialWarehousIOParam.getMaterialSerino()+"存在重复记录");
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if(materialWarehousIOOld==null){
 				if("1".equals(materialWarehousIOParam.getIoType())){
 					//新增（入库）
@@ -216,7 +228,14 @@ public class MaterialWarehousIOController extends BaseController {
 				//虚拟仓库
 				if(materialWarehousNodeList.get(0)!=null){
 					//从领料单获取车间信息
-					ProductionRequisitionEntity productionRequisitionEntity = systemService.findUniqueByProperty(ProductionRequisitionEntity.class, "receiptCode", materialWarehousNodeList.get(0).getProdReqOrderNumber());
+					ProductionRequisitionEntity productionRequisitionEntity = null;
+					try {
+						productionRequisitionEntity = systemService.findUniqueByProperty(ProductionRequisitionEntity.class, "receiptCode", materialWarehousNodeList.get(0).getProdReqOrderNumber());
+					} catch (Exception e) {
+						response.setStatus(500);
+						response.sendError(500,"领料单中,生产领料单号:"+materialWarehousNodeList.get(0).getProdReqOrderNumber()+"存在重复记录");
+						e.printStackTrace();
+					}
 					materialWarehousIOOld.setVirtualRepository(productionRequisitionEntity.getRequisitionWorkshopCode());
 				}
 				systemService.updateEntitie(materialWarehousIOOld);
@@ -236,6 +255,7 @@ public class MaterialWarehousIOController extends BaseController {
 			}else{
 				//请求数据不规范
 				response.setStatus(406);
+				response.sendError(406,"请求数据不规范");
 			}
 			logger.info("原料出入库请提交成功");
 			if("1".equals(materialWarehousIOParam.getIoType())){
@@ -271,14 +291,16 @@ public class MaterialWarehousIOController extends BaseController {
 		//===================================================================================
 		//获取参数
 		Object materialSerino0 = materialWarehousIO.getMaterialSerino();
-		//===================================================================================
-		//查询-原料出库详情列表
-	    String hql0 = "from MaterialWarehousNodeEntity where 1 = 1 AND materialSerino = ? ";
-		try{
-		    List<MaterialWarehousNodeEntity> materialWarehousNodeEntityList = systemService.findHql(hql0,materialSerino0);
-			req.setAttribute("materialWarehousNodeList", materialWarehousNodeEntityList);
-		}catch(Exception e){
-			logger.info(e.getMessage());
+		if(StringUtil.isNotEmpty(materialSerino0)){
+			//===================================================================================
+			//查询-原料出库详情列表
+			String hql0 = "from MaterialWarehousNodeEntity where 1 = 1 AND materialSerino = ? ";
+			try{
+				List<MaterialWarehousNodeEntity> materialWarehousNodeEntityList = systemService.findHql(hql0,materialSerino0);
+				req.setAttribute("materialWarehousNodeList", materialWarehousNodeEntityList);
+			}catch(Exception e){
+				logger.info(e.getMessage());
+			}
 		}
 		return new ModelAndView("com/jeecg/warehous/materialWarehousNodeList");
 	}

@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +155,7 @@ public class FinishedInspectController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(FinishedInspectEntity finishedInspect, HttpServletRequest req) {
+	public ModelAndView addorupdate(FinishedInspectEntity finishedInspect, HttpServletRequest req,HttpServletResponse response) throws IOException {
 		FinishedInspectEntity newfinishedInspect = null;
 		/*//检验成品是否已投产
 		List<FinishedProductionEntity> finishedProductionEntities = finishedInspectService.findByProperty(FinishedProductionEntity.class, "finishedSerino", finishedInspect.getFinishedCode());
@@ -165,7 +166,13 @@ public class FinishedInspectController extends BaseController {
 			if (StringUtil.isNotEmpty(finishedInspect.getId())) {
 				newfinishedInspect = finishedInspectService.getEntity(FinishedInspectEntity.class, finishedInspect.getId());
 			}else if(StringUtil.isNotEmpty(finishedInspect.getFinishedCode())){
-				newfinishedInspect = finishedInspectService.findUniqueByProperty(FinishedInspectEntity.class,"finishedCode",finishedInspect.getFinishedCode());
+				try {
+					newfinishedInspect = finishedInspectService.findUniqueByProperty(FinishedInspectEntity.class,"finishedCode",finishedInspect.getFinishedCode());
+				} catch (Exception e) {
+					response.setStatus(500);
+					response.sendError(500,"成品首末检，成品代码："+finishedInspect.getFinishedCode()+"存在重复记录");
+					e.printStackTrace();
+				}
 			}
 			newfinishedInspect = newfinishedInspect == null?finishedInspect:newfinishedInspect;
 			if(newfinishedInspect!=null&&StringUtil.isEmpty(newfinishedInspect.getInspectLogSheet())){

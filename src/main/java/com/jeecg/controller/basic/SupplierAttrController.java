@@ -1,8 +1,7 @@
 package com.jeecg.controller.basic;
 
-import com.jeecg.entity.basic.SupplierEntity;
-import com.jeecg.service.basic.SupplierServiceI;
-import com.jeecg.util.DictionaryUtil;
+import com.jeecg.entity.basic.SupplierAttrEntity;
+import com.jeecg.service.basic.SupplierAttrServiceI;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -36,79 +35,75 @@ import java.util.Set;
 
 /**   
  * @Title: Controller
- * @Description: 供应商信息
+ * @Description: 供应商属性
  * @author zhangdaihao
- * @date 2019-10-04 18:32:09
+ * @date 2019-11-14 00:17:02
  * @version V1.0   
  *
  */
 @Controller
-@RequestMapping("/supplierController")
-public class SupplierController extends BaseController {
+@RequestMapping("/supplierAttrController")
+public class SupplierAttrController extends BaseController {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = Logger.getLogger(SupplierController.class);
+	private static final Logger logger = Logger.getLogger(SupplierAttrController.class);
 
 	@Autowired
-	private SupplierServiceI supplierService;
+	private SupplierAttrServiceI supplierAttrService;
 	@Autowired
 	private SystemService systemService;
 	@Autowired
 	private Validator validator;
-	@Autowired
-	private DictionaryUtil dictionaryUtil;
 	
 
 
 	/**
-	 * 供应商信息列表 页面跳转
+	 * 供应商属性列表 页面跳转
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
-		dictionaryUtil.writeDicList(request,"supplAttr");
-		return new ModelAndView("com/jeecg/basic/supplierList");
+		return new ModelAndView("com/jeecg/basic/supplierAttrList");
 	}
 
-	@RequestMapping("/apiList/{supplierCode}")
+
+	@RequestMapping("/apiList")
 	@ResponseBody
-	public SupplierEntity list(@PathVariable(value = "supplierCode")String supplierCode){
-		return supplierService.findUniqueByProperty(SupplierEntity.class,"supplierCode",supplierCode);
+	public List<SupplierAttrEntity> apiList(){
+		return this.supplierAttrService.getList(SupplierAttrEntity.class);
 	}
-
 	/**
 	 * easyui AJAX请求数据
 	 * 
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
-	public void datagrid(SupplierEntity supplier,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
-		CriteriaQuery cq = new CriteriaQuery(SupplierEntity.class, dataGrid);
+	public void datagrid(SupplierAttrEntity supplierAttr,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		CriteriaQuery cq = new CriteriaQuery(SupplierAttrEntity.class, dataGrid);
 		//查询条件组装器
-		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, supplier, request.getParameterMap());
-		this.supplierService.getDataGridReturn(cq, true);
+		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, supplierAttr, request.getParameterMap());
+		this.supplierAttrService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
 	}
 
 	/**
-	 * 删除供应商信息
+	 * 删除供应商属性
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "del")
 	@ResponseBody
-	public AjaxJson del(SupplierEntity supplier, HttpServletRequest request) {
+	public AjaxJson del(SupplierAttrEntity supplierAttr, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		supplier = systemService.getEntity(SupplierEntity.class, supplier.getId());
-		message = "供应商信息删除成功";
-		supplierService.delete(supplier);
+		supplierAttr = systemService.getEntity(SupplierAttrEntity.class, supplierAttr.getId());
+		message = "供应商属性删除成功";
+		supplierAttrService.delete(supplierAttr);
 		systemService.addLog(message, Globals.Log_Type_DEL, Globals.Log_Leavel_INFO);
 		
 		j.setMsg(message);
@@ -117,30 +112,29 @@ public class SupplierController extends BaseController {
 
 
 	/**
-	 * 添加供应商信息
+	 * 添加供应商属性
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
-	public AjaxJson save(SupplierEntity supplier, HttpServletRequest request) {
+	public AjaxJson save(SupplierAttrEntity supplierAttr, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
-		if (StringUtil.isNotEmpty(supplier.getId())) {
-			message = "供应商信息更新成功";
-			SupplierEntity t = supplierService.get(SupplierEntity.class, supplier.getId());
+		if (StringUtil.isNotEmpty(supplierAttr.getId())) {
+			message = "供应商属性更新成功";
+			SupplierAttrEntity t = supplierAttrService.get(SupplierAttrEntity.class, supplierAttr.getId());
 			try {
-				MyBeanUtils.copyBeanNotNull2Bean(supplier, t);
-				supplierService.saveOrUpdate(t);
+				MyBeanUtils.copyBeanNotNull2Bean(supplierAttr, t);
+				supplierAttrService.saveOrUpdate(t);
 				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 			} catch (Exception e) {
 				e.printStackTrace();
-				message = "供应商信息更新失败";
+				message = "供应商属性更新失败";
 			}
 		} else {
-			message = "供应商信息添加成功";
-			supplierService.save(supplier);
+			message = "供应商属性添加成功";
+			supplierAttrService.save(supplierAttr);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}
 		j.setMsg(message);
@@ -148,17 +142,17 @@ public class SupplierController extends BaseController {
 	}
 
 	/**
-	 * 供应商信息列表页面跳转
+	 * 供应商属性列表页面跳转
 	 * 
 	 * @return
 	 */
 	@RequestMapping(params = "addorupdate")
-	public ModelAndView addorupdate(SupplierEntity supplier, HttpServletRequest req) {
-		if (StringUtil.isNotEmpty(supplier.getId())) {
-			supplier = supplierService.getEntity(SupplierEntity.class, supplier.getId());
-			req.setAttribute("supplierPage", supplier);
+	public ModelAndView addorupdate(SupplierAttrEntity supplierAttr, HttpServletRequest req) {
+		if (StringUtil.isNotEmpty(supplierAttr.getId())) {
+			supplierAttr = supplierAttrService.getEntity(SupplierAttrEntity.class, supplierAttr.getId());
+			req.setAttribute("supplierAttrPage", supplierAttr);
 		}
-		return new ModelAndView("com/jeecg/basic/supplier");
+		return new ModelAndView("com/jeecg/basic/supplierAttr");
 	}
 	
 	@RequestMapping(value="/list/{pageNo}/{pageSize}", method = RequestMethod.GET)
@@ -167,17 +161,17 @@ public class SupplierController extends BaseController {
 		if(pageSize > Globals.MAX_PAGESIZE){
 			return Result.error("每页请求不能超过" + Globals.MAX_PAGESIZE + "条");
 		}
-		CriteriaQuery query = new CriteriaQuery(SupplierEntity.class);
+		CriteriaQuery query = new CriteriaQuery(SupplierAttrEntity.class);
 		query.setCurPage(pageNo<=0?1:pageNo);
 		query.setPageSize(pageSize<1?1:pageSize);
-		List<SupplierEntity> listSuppliers = this.supplierService.getListByCriteriaQuery(query,true);
-		return Result.success(listSuppliers);
+		List<SupplierAttrEntity> listSupplierAttrs = this.supplierAttrService.getListByCriteriaQuery(query,true);
+		return Result.success(listSupplierAttrs);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> get(@PathVariable("id") String id) {
-		SupplierEntity task = supplierService.get(SupplierEntity.class, id);
+		SupplierAttrEntity task = supplierAttrService.get(SupplierAttrEntity.class, id);
 		if (task == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
@@ -186,19 +180,19 @@ public class SupplierController extends BaseController {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody SupplierEntity supplier, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> create(@RequestBody SupplierAttrEntity supplierAttr, UriComponentsBuilder uriBuilder) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<SupplierEntity>> failures = validator.validate(supplier);
+		Set<ConstraintViolation<SupplierAttrEntity>> failures = validator.validate(supplierAttr);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
 
 		//保存
-		supplierService.save(supplier);
+		supplierAttrService.save(supplierAttr);
 
 		//按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
-		String id = supplier.getId();
-		URI uri = uriBuilder.path("/rest/supplierController/" + id).build().toUri();
+		String id = supplierAttr.getId();
+		URI uri = uriBuilder.path("/rest/supplierAttrController/" + id).build().toUri();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setLocation(uri);
 
@@ -206,15 +200,15 @@ public class SupplierController extends BaseController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@RequestBody SupplierEntity supplier) {
+	public ResponseEntity<?> update(@RequestBody SupplierAttrEntity supplierAttr) {
 		//调用JSR303 Bean Validator进行校验，如果出错返回含400错误码及json格式的错误信息.
-		Set<ConstraintViolation<SupplierEntity>> failures = validator.validate(supplier);
+		Set<ConstraintViolation<SupplierAttrEntity>> failures = validator.validate(supplierAttr);
 		if (!failures.isEmpty()) {
 			return new ResponseEntity(BeanValidators.extractPropertyAndMessage(failures), HttpStatus.BAD_REQUEST);
 		}
 
 		//保存
-		supplierService.saveOrUpdate(supplier);
+		supplierAttrService.saveOrUpdate(supplierAttr);
 
 		//按Restful约定，返回204状态码, 无内容. 也可以返回200状态码.
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -223,6 +217,6 @@ public class SupplierController extends BaseController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") String id) {
-		supplierService.deleteEntityById(SupplierEntity.class, id);
+		supplierAttrService.deleteEntityById(SupplierAttrEntity.class, id);
 	}
 }

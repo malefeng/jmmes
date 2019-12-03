@@ -1,21 +1,20 @@
 package org.jeecgframework.tag.core.easyui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspWriter;
-
 import org.jeecgframework.core.util.ContextHolderUtils;
 import org.jeecgframework.core.util.MutiLangUtil;
 import org.jeecgframework.core.util.SysThemesUtil;
 import org.jeecgframework.tag.core.JeecgTag;
 
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
+ *
  * 类描述：上传标签
- * 
+ *
  * 张代浩
  * @date： 日期：2012-12-7 时间：上午10:17:45
  * @version 1.0
@@ -26,7 +25,7 @@ public class UploadTag extends JeecgTag {
 	protected String uploader;//url
 	protected String name;//控件名称
 	protected String formData;//参数名称
-	protected String extend="";//上传文件的扩展名	
+	protected String extend="";//上传文件的扩展名
 	protected String buttonText="浏览";//按钮文本
 	protected boolean multi=true;//是否多文件
 	protected String queueID="filediv";//文件容器ID
@@ -42,10 +41,10 @@ public class UploadTag extends JeecgTag {
 
 	private String onUploadStart;//上传开始处理函数
 
-	
+
 	private String height="18";//自定义上传按钮高度
 	private String width="80";//自定义上传按钮宽度
-	
+
 	public boolean isOuthtml() {
 		return outhtml;
 	}
@@ -100,7 +99,7 @@ public class UploadTag extends JeecgTag {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getOnUploadStart() {
 		return onUploadStart;
 	}
@@ -172,21 +171,21 @@ public class UploadTag extends JeecgTag {
 				+"$(\'#"+id+"\').uploadify({"
 				+"buttonText:\'"+MutiLangUtil.getLang(buttonText)+"\',"
 				+"auto:"+auto+","
-				+"progressData:\'speed\'," 
+				+"progressData:\'speed\',"
 				+"multi:"+multi+","
 				+"height:"+height+","
 				+"width:"+width+","
-				+"overrideEvents:[\'onDialogClose\']," 
-				+"fileTypeDesc:\'文件格式:\'," 
+				+"overrideEvents:[\'onDialogClose\'],"
+				+"fileTypeDesc:\'文件格式:\',"
 				+"queueID:\'"+queueID+"\',"
 				+"fileTypeExts:\'"+extend+"\',"
 				+"fileSizeLimit:\'"+fileSizeLimit+"\',"
 				+"swf:\'plug-in/uploadify/uploadify.swf\',	"
-				+"uploader:\'"+getUploader()			
-						+"onUploadStart : function(file) { ");	
+				+"uploader:\'"+getUploader()
+						+"onUploadStart : function(file) { ");
 				if(onUploadStart==null || "".equals(onUploadStart)){
 					if (formData!=null) {
-						String[] paramnames=formData.split(",");				
+						String[] paramnames=formData.split(",");
 						for (int i = 0; i < paramnames.length; i++) {
 							String paramname=paramnames[i];
 
@@ -196,7 +195,7 @@ public class UploadTag extends JeecgTag {
 							}
 							sb.append("var "+fieldName+"=$(\'#"+paramname+"\').val();");
 
-						}				 
+						}
 				        sb.append("$(\'#"+id+"\').uploadify(\"settings\", \"formData\", {");
 				        for (int i = 0; i < paramnames.length; i++) {
 							String paramname=paramnames[i];
@@ -206,7 +205,7 @@ public class UploadTag extends JeecgTag {
 							}
 
 							if (i==paramnames.length-1) {
-								sb.append("'"+paramname+"':"+paramname+"");	
+								sb.append("'"+paramname+"':"+paramname+"");
 							}else{
 								sb.append("'"+paramname+"':"+paramname+",");
 							}
@@ -232,11 +231,11 @@ public class UploadTag extends JeecgTag {
 					sb.append(this.onUploadStart+"(file);");
 				}
 
-		       sb.append("} ," 	          
+		       sb.append("} ,"
 				+"onQueueComplete : function(queueData) { ");
 				if(dialog)
 				{
-				sb.append("var win = frameElement.api.opener;"  	  
+				sb.append("var win = frameElement.api.opener;"
 	            +"win.reloadTable();"
 	            +"win.tip(serverMsg);"
 
@@ -300,7 +299,7 @@ public class UploadTag extends JeecgTag {
 				+"}");
 		       sb.append("},"
 				+"onUploadProgress : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal) { "
-				//+"tip('<span>文件上传成功:'+totalBytesUploaded/1024 + ' KB 已上传 ,总数' + totalBytesTotal/1024 + ' KB.</span>');"  	  	             
+				//+"tip('<span>文件上传成功:'+totalBytesUploaded/1024 + ' KB 已上传 ,总数' + totalBytesTotal/1024 + ' KB.</span>');"
 				+"}"
 	   			+"});"
 				+"});");
@@ -311,18 +310,18 @@ public class UploadTag extends JeecgTag {
 		    	   for (int i = 0; i < idList.size(); i++) {
 		    		   String tempId = idList.get(i);
 		    		   sb.append("	$(\'#"+tempId+"\').uploadify('upload', '*');");
-					
+
 		    	   }
 		    	   sb.append("return flag;");
 		   			sb.append("}");
 		   			sb.append("function cancel() {");
 		   		 for (int i = 0; i < idList.size(); i++) {
 		    		   String tempId = idList.get(i);
-		   			sb.append("$(\'#"+tempId+"\').uploadify('cancel', '*');");	
+		   			sb.append("$(\'#"+tempId+"\').uploadify('cancel', '*');");
 		   		 }
-		   			sb.append("}");		
+		   			sb.append("}");
 		       }
-				sb.append("</script>");	
+				sb.append("</script>");
 
 		       sb.append("<span id=\""+id+"span\"><input type=\"file\" name=\""+name+"\" id=\""+id+"\" /></span>");
 		       if(view)
@@ -335,7 +334,7 @@ public class UploadTag extends JeecgTag {
 
 		return sb;
 	}
-	
+
 	/**
 	 * 获取上传路径,修改jsessionid传不到后台的bug jueyue --- 20130916
 	 * @return
@@ -343,7 +342,7 @@ public class UploadTag extends JeecgTag {
 	private String getUploader() {
 		return uploader+"&sessionId="+pageContext.getSession().getId()+"',";
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -353,7 +352,7 @@ public class UploadTag extends JeecgTag {
 	public void setExtend(String extend) {
 		this.extend = extend;
 	}
-	
+
 	public String getHeight() {
 		return height;
 	}
@@ -387,5 +386,5 @@ public class UploadTag extends JeecgTag {
 				.append("]");
 		return builder.toString();
 	}
-	
+
 }

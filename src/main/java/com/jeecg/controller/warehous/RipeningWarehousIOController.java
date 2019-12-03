@@ -59,7 +59,8 @@ public class RipeningWarehousIOController extends BaseController {
 	private Validator validator;
 	@Autowired
 	private DictionaryUtil dictionaryUtil;
-	
+	//熟成库存状态：出库
+	private final String IOTYPE_OUT = "2";
 
 
 	/**
@@ -133,6 +134,24 @@ public class RipeningWarehousIOController extends BaseController {
 		return j;
 	}
 
+	@RequestMapping(params = "outWareHous")
+	@ResponseBody
+	public AjaxJson outWareHous(String id, HttpServletRequest request){
+		String message = null;
+		AjaxJson j = new AjaxJson();
+		RipeningWarehousIOEntity t = systemService.get(RipeningWarehousIOEntity.class, id);
+		message = "成品出库成功";
+		t.setRipeningStoreType(IOTYPE_OUT);
+		try {
+			systemService.saveOrUpdate(t);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "成品出库失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
 
 	/**
 	 * 添加熟成出入库列表

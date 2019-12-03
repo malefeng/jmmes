@@ -1,4 +1,4 @@
-package com.jeecg.entity.checktask;
+package com.jeecg.entity.basic;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,21 +9,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.SequenceGenerator;
 
 /**   
  * @Title: Entity
- * @Description: 盘点任务
+ * @Description: 供应商属性
  * @author zhangdaihao
- * @date 2019-11-12 23:12:33
+ * @date 2019-11-14 00:17:02
  * @version V1.0   
  *
  */
 @Entity
-@Table(name = "t_check_task", schema = "")
+@Table(name = "t_supplier_attr_list", schema = "")
+@DynamicUpdate(true)
+@DynamicInsert(true)
 @SuppressWarnings("serial")
-public class CheckTaskEntity implements java.io.Serializable {
+public class SupplierAttrEntity implements java.io.Serializable {
 	/**id*/
 	private java.lang.String id;
 	/**创建人名称*/
@@ -44,32 +49,10 @@ public class CheckTaskEntity implements java.io.Serializable {
 	private java.lang.String sysCompanyCode;
 	/**流程状态*/
 	private java.lang.String bpmStatus;
-	/**盘点批次号*/
-	private java.lang.String checkBatch;
-	/**盘点类型*/
-	private java.lang.String checkType;
-	/**盘点仓库代码*/
-	private java.lang.String repositoryCode;
-	/**盘点仓库名称*/
-	private java.lang.String repositoryName;
-	/**盘点原料代码*/
-	private java.lang.String rawMaterialCode;
-	/**盘点原料名称*/
-	private java.lang.String rawMaterialName;
-	/**盘点成品代码*/
-	private java.lang.String productCode;
-	/**盘点成品名称*/
-	private java.lang.String productName;
-	/**盘点状态*/
-	private java.lang.String checkStatus;
-	/**计划盘点时间*/
-	private java.util.Date checkTimePlan;
-	/**实际盘点时间*/
-	private java.util.Date checkTimeReal;
-	/**计划盘点人*/
-	private java.lang.String checkPersonPlan;
-	/**实际盘点人*/
-	private java.lang.String checkPersonReal;
+	/**代码*/
+	private java.lang.String code;
+	/**名称*/
+	private java.lang.String name;
 	/**预留1*/
 	private java.lang.String attr1;
 	/**预留2*/
@@ -247,211 +230,35 @@ public class CheckTaskEntity implements java.io.Serializable {
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点批次号
+	 *@return: java.lang.String  代码
 	 */
-	@Column(name ="CHECK_BATCH",nullable=true,length=120)
-	public java.lang.String getCheckBatch(){
-		return this.checkBatch;
+	@Column(name ="CODE",nullable=true,length=120)
+	public java.lang.String getCode(){
+		return this.code;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点批次号
+	 *@param: java.lang.String  代码
 	 */
-	public void setCheckBatch(java.lang.String checkBatch){
-		this.checkBatch = checkBatch;
+	public void setCode(java.lang.String code){
+		this.code = code;
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点类型
+	 *@return: java.lang.String  名称
 	 */
-	@Column(name ="CHECK_TYPE",nullable=true,length=120)
-	public java.lang.String getCheckType(){
-		return this.checkType;
+	@Column(name ="NAME",nullable=true,length=120)
+	public java.lang.String getName(){
+		return this.name;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点类型
+	 *@param: java.lang.String  名称
 	 */
-	public void setCheckType(java.lang.String checkType){
-		this.checkType = checkType;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点仓库代码
-	 */
-	@Column(name ="REPOSITORY_CODE",nullable=true,length=120)
-	public java.lang.String getRepositoryCode(){
-		return this.repositoryCode;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点仓库代码
-	 */
-	public void setRepositoryCode(java.lang.String repositoryCode){
-		this.repositoryCode = repositoryCode;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点仓库名称
-	 */
-	@Column(name ="REPOSITORY_NAME",nullable=true,length=120)
-	public java.lang.String getRepositoryName(){
-		return this.repositoryName;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点仓库名称
-	 */
-	public void setRepositoryName(java.lang.String repositoryName){
-		this.repositoryName = repositoryName;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点原料代码
-	 */
-	@Column(name ="RAW_MATERIAL_CODE",nullable=true,length=120)
-	public java.lang.String getRawMaterialCode(){
-		return this.rawMaterialCode;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点原料代码
-	 */
-	public void setRawMaterialCode(java.lang.String rawMaterialCode){
-		this.rawMaterialCode = rawMaterialCode;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点原料名称
-	 */
-	@Column(name ="RAW_MATERIAL_NAME",nullable=true,length=120)
-	public java.lang.String getRawMaterialName(){
-		return this.rawMaterialName;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点原料名称
-	 */
-	public void setRawMaterialName(java.lang.String rawMaterialName){
-		this.rawMaterialName = rawMaterialName;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点成品代码
-	 */
-	@Column(name ="PRODUCT_CODE",nullable=true,length=120)
-	public java.lang.String getProductCode(){
-		return this.productCode;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点成品代码
-	 */
-	public void setProductCode(java.lang.String productCode){
-		this.productCode = productCode;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点成品名称
-	 */
-	@Column(name ="PRODUCT_NAME",nullable=true,length=120)
-	public java.lang.String getProductName(){
-		return this.productName;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点成品名称
-	 */
-	public void setProductName(java.lang.String productName){
-		this.productName = productName;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  盘点状态
-	 */
-	@Column(name ="CHECK_STATUS",nullable=true,length=120)
-	public java.lang.String getCheckStatus(){
-		return this.checkStatus;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  盘点状态
-	 */
-	public void setCheckStatus(java.lang.String checkStatus){
-		this.checkStatus = checkStatus;
-	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  计划盘点时间
-	 */
-	@Column(name ="CHECK_TIME_PLAN",nullable=true)
-	public java.util.Date getCheckTimePlan(){
-		return this.checkTimePlan;
-	}
-
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  计划盘点时间
-	 */
-	public void setCheckTimePlan(java.util.Date checkTimePlan){
-		this.checkTimePlan = checkTimePlan;
-	}
-	/**
-	 *方法: 取得java.util.Date
-	 *@return: java.util.Date  实际盘点时间
-	 */
-	@Column(name ="CHECK_TIME_REAL",nullable=true)
-	public java.util.Date getCheckTimeReal(){
-		return this.checkTimeReal;
-	}
-
-	/**
-	 *方法: 设置java.util.Date
-	 *@param: java.util.Date  实际盘点时间
-	 */
-	public void setCheckTimeReal(java.util.Date checkTimeReal){
-		this.checkTimeReal = checkTimeReal;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  计划盘点人
-	 */
-	@Column(name ="CHECK_PERSON_PLAN",nullable=true,length=120)
-	public java.lang.String getCheckPersonPlan(){
-		return this.checkPersonPlan;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  计划盘点人
-	 */
-	public void setCheckPersonPlan(java.lang.String checkPersonPlan){
-		this.checkPersonPlan = checkPersonPlan;
-	}
-	/**
-	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  实际盘点人
-	 */
-	@Column(name ="CHECK_PERSON_REAL",nullable=true,length=120)
-	public java.lang.String getCheckPersonReal(){
-		return this.checkPersonReal;
-	}
-
-	/**
-	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  实际盘点人
-	 */
-	public void setCheckPersonReal(java.lang.String checkPersonReal){
-		this.checkPersonReal = checkPersonReal;
+	public void setName(java.lang.String name){
+		this.name = name;
 	}
 	/**
 	 *方法: 取得java.lang.String

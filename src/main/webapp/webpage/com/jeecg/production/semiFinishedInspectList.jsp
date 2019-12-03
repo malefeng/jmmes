@@ -33,7 +33,11 @@
                     field: 'productionOrderNumber',
                     title: '生产订单号',
                     sortable: true
-                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true}, {
+                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true,
+                    formatter:function(value){
+                        return value&&value.length>20?value.substring(0,19)+"...":value;
+                    }
+                    }, {
                     field: 'opt',
                     title: '操作',
                     width: 100,
@@ -312,7 +316,7 @@
                     },
                     success: function (data) {
                         if (!!data&&!data.msg) {
-                            add('录入', 'semiFinishedInspectController.do?addorupdate&semiFinishedCode=' + data.semiFinishedSerino + "&semiFinishedName=" + data.semiFinishedName + "&productionOrderNumber=" + data.productionOrderNumber, 'semiFinishedInspectMainList', '80%', '80%')
+                            add('录入', 'semiFinishedInspectController.do?addorupdate&semiFinishedCode=' + data.semiFinishedSerino + "&semiFinishedName=" + data.semiFinishedName + "&productionOrderNumber=" + data.productionOrderNumber, 'semiFinishedInspectMainList', '100%', '100%')
                         }/*else if(!!data&&!!data.msg){
                             $.messager.show({
                                 msg: data.msg,
