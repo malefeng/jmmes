@@ -38,7 +38,6 @@
             <td class="value">
                 <input nullmsg="请填写收料单编号" errormsg="收料单编号格式不对" class="inputxt" id="receiptCode" name="receiptCode"
                        ignore="ignore" value="${purchaseReceiptPage.receiptCode}"/>
-                <a href='javascript:void(0)' id="getErpData" class='easyui-linkbutton'>&nbsp;&nbsp;数据同步&nbsp;&nbsp;</a>
                 <span class="Validform_checktip"></span>
             </td>
             <td align="right"><label class="Validform_label">收货组织:</label></td>
@@ -224,15 +223,5 @@
         LODOP.ADD_PRINT_HTM(300,'5%',"90%",400,generateTab(getTabData("purchaseReceiptNode_table")));
         LODOP.PREVIEW();
     }
-
-    $("#getErpData").click(function(){
-        var receiptCode = $("#receiptCode").val();
-        if(!receiptCode){
-            $.messager.alert('error','收料单编号不能为空!','info');
-        }
-        $.getJSON("purchaseReceiptController.do?getErpData&number="+receiptCode,function(data){
-            debugger
-        })
-    })
 </script>
 </body>

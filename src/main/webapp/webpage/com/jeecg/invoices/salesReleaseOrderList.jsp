@@ -332,9 +332,42 @@
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('录入','salesReleaseOrderController.do?addorupdate','salesReleaseOrderList','100%','100%')">录入</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','salesReleaseOrderController.do?addorupdate','salesReleaseOrderList','100%','100%')">编辑</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','salesReleaseOrderController.do?addorupdate','salesReleaseOrderList','100%','100%')">查看</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="copy()">同步数据</a>
                 </span>
                 <div style="clear:both"></div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function copy(){
+        $.messager.prompt("","请输入销售出库单号",function(data){
+            if (data != null) {
+                $.ajax({
+                    type: 'get',
+                    url: "salesReleaseOrderController.do?getErpData&number="+data,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        loadMask();
+                    },
+                    complete: function () {
+                        disLoadMask();
+                    },
+                    success: function (id) {
+                        if(!!id){
+                            add('编辑','salesReleaseOrderController.do?addorupdate&id='+id,'productionRequisitionList','100%','100%');
+                        }else{
+                            $.messager.show({
+                                msg:'未查询到有效数据',
+                                showType:'slide',
+                                showSpeed:'200',
+                                style:{color:'red'}
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

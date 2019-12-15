@@ -2,14 +2,14 @@ package com.jeecg.controller.invoices;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.FinishedOutLookDataBatchRunnable;
-import com.jeecg.entity.invoices.SalesReleaseNodeEntity;
-import com.jeecg.entity.invoices.SalesReleaseOrderEntity;
-import com.jeecg.entity.invoices.SalesReleaseOrgNodeEntity;
+import com.jeecg.constant.ERPApiCodeEnum;
+import com.jeecg.entity.invoices.*;
 import com.jeecg.entity.look.FinishedWarehousIOLookEntity;
 import com.jeecg.entity.warehous.FinishedWarehousIOEntity;
 import com.jeecg.page.invoices.SalesReleaseOrderPage;
 import com.jeecg.service.invoices.SalesReleaseOrderServiceI;
 import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.ERPApiUitl;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
@@ -215,7 +215,33 @@ public class SalesReleaseOrderController extends BaseController {
 		}
 		return new ModelAndView("com/jeecg/invoices/salesReleaseOrder");
 	}
-	
+
+	@RequestMapping(params = "getErpData")
+	@ResponseBody
+	public String getErpData(String number){
+		try {
+			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"Number\":\"%s\"}", number));
+			SalesReleaseOrderEntity salesReleaseOrderEntity = new SalesReleaseOrderEntity();
+			List<SalesReleaseOrgNodeEntity> salesReleaseOrgNodeEntityList = new ArrayList<>();
+			if(analysisErpData(res,salesReleaseOrderEntity,salesReleaseOrgNodeEntityList)){
+				salesReleaseOrderService.addMain(salesReleaseOrderEntity,new ArrayList<SalesReleaseNodeEntity>(), salesReleaseOrgNodeEntityList);
+				return salesReleaseOrderEntity.getId();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private boolean analysisErpData(String res, SalesReleaseOrderEntity salesReleaseOrderEntity, List<SalesReleaseOrgNodeEntity> salesReleaseOrderEntityList) {
+		Map resMap = JSONObject.parseObject(res, Map.class);
+		return translate(resMap,salesReleaseOrderEntity,salesReleaseOrderEntityList);
+	}
+
+	private boolean translate(Map resMap, SalesReleaseOrderEntity salesReleaseOrderEntity, List<SalesReleaseOrgNodeEntity> salesReleaseOrderEntityList) {
+		resMap.get("");
+		return true;
+	}
 	
 	/**
 	 * 加载明细列表[销售出库配料物料详情]

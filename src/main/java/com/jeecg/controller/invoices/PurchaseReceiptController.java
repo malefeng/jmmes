@@ -3,6 +3,7 @@ package com.jeecg.controller.invoices;
 import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.MaterialInLookDataBatchRunnable;
 import com.jeecg.constant.ERPApiCodeEnum;
+import com.jeecg.constant.ERPurTranslateMap;
 import com.jeecg.entity.invoices.PurchaseReceiptEntity;
 import com.jeecg.entity.invoices.PurchaseReceiptNodeEntity;
 import com.jeecg.entity.look.MaterialWarehouIOLookEntity;
@@ -196,8 +197,12 @@ public class PurchaseReceiptController extends BaseController {
 	@ResponseBody
 	public String getErpData(String number){
 		try {
-			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"FBillNo\":\"%s\"}", number));
-			PurchaseReceiptEntity purchaseReceipt = new PurchaseReceiptEntity();
+			Map paramMap = new HashMap();
+			paramMap.put("FormId",ERPApiCodeEnum.PUR.getCode());
+			paramMap.put("FieldKeys","FStockOrgId");
+			paramMap.put("FilterString",String.format("FBillNo='%s'",number));
+			String res = ERPApiUitl.list(JSONObject.toJSONString(paramMap));
+			PurchaseReceiptEntity purchaseReceipt = null;
 			List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList = new ArrayList<>();
 			if(analysisErpData(res,purchaseReceipt,purchaseReceiptNodeList)){
 				purchaseReceiptService.addMain(purchaseReceipt, purchaseReceiptNodeList);
@@ -209,22 +214,32 @@ public class PurchaseReceiptController extends BaseController {
 		return null;
 	}
 
-	private boolean analysisErpData(String res, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) {
-		Map resMap = JSONObject.parseObject(res, Map.class);
-		return translate(resMap,purchaseReceipt,purchaseReceiptNodeList);
-	}
+	private boolean analysisErpData(String res, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		List<List> result = StringUtils.toList(res);
+		String[] headKeys = ERPurTranslateMap.PUR_TRANSLATE_HEAD.values().toString().split(",");
+		String[] bodyKeys = ERPurTranslateMap.PUR_TRANSLATE_DETAIL.values().toString().split(",");
+		for (int i = 0; i < result.size(); i++) {
+			purchaseReceipt = purchaseReceipt==null?new PurchaseReceiptEntity():purchaseReceipt;
+			List inList = result.get(i);
+			if(headKeys.length+bodyKeys.length==inList.size()){
+				if(purchaseReceipt.getCreateTime()==null){
+					reflact(headKeys,purchaseReceipt,inList.subList(0,headKeys.length));
+				}
+				PurchaseReceiptNodeEntity purchaseReceiptNodeEntity = new PurchaseReceiptNodeEntity();
+				reflact(bodyKeys,purchaseReceiptNodeEntity,inList.subList(headKeys.length,inList.size()));
+				purchaseReceiptNodeList.add(purchaseReceiptNodeEntity);
+			}
 
-	private boolean translate(Map resMap, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) {
-		resMap.get("");
+		}
 		return true;
 	}
 
-	private boolean reflact(Map resMap,Object o,Map<String,String> translateMap) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	private boolean reflact(String[] propertys,Object o,List res) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Class cla = o.getClass();
-		for (Map.Entry<String,String> entry:translateMap.entrySet()) {
-			String methodName = "set"+ StringUtils.firstUpperCase(entry.getKey());
+		for (int i = 0; i < res.size(); i++) {
+			String methodName = "set"+ StringUtils.firstUpperCase(propertys[i]);
 			Method method = cla.getMethod(methodName,cla);
-			method.invoke(o,resMap.get(entry.getValue()));
+			method.invoke(o,res.get(i));
 		}
 		return true;
 	}

@@ -351,7 +351,7 @@
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="add('录入','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">录入</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">编辑</a>
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','purchaseReceiptController.do?addorupdate','purchaseReceiptList','100%','100%')">查看</a>
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="copy()">查看</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="copy()">同步数据</a>
                 </span>
                 <div style="clear:both"></div>
             </div>
@@ -374,7 +374,7 @@
                     },
                     success: function (id) {
                         if(!!id){
-                            update('编辑','purchaseReceiptController.do?addorupdate&id='+id,'purchaseReceiptList','100%','100%');
+                            add('编辑','purchaseReceiptController.do?addorupdate&id='+id,'purchaseReceiptList','100%','100%');
                         }else{
                             $.messager.show({
                                 msg:'未查询到有效数据',

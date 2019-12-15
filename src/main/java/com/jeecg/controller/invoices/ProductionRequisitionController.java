@@ -2,14 +2,14 @@ package com.jeecg.controller.invoices;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.ProductionLookDataBatchRunnable;
-import com.jeecg.entity.invoices.ProductionRequisitionEntity;
-import com.jeecg.entity.invoices.ProductionRequisitionNodeEntity;
-import com.jeecg.entity.invoices.ProductionRequisitionOrgNodeEntity;
+import com.jeecg.constant.ERPApiCodeEnum;
+import com.jeecg.entity.invoices.*;
 import com.jeecg.entity.look.ProductionParehousIOLookEntity;
 import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
 import com.jeecg.page.invoices.ProductionRequisitionPage;
 import com.jeecg.service.invoices.ProductionRequisitionServiceI;
 import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.ERPApiUitl;
 import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
@@ -251,6 +251,33 @@ public class ProductionRequisitionController extends BaseController {
 			req.setAttribute("productionRequisitionPage", productionRequisition);
 		}
 		return new ModelAndView("com/jeecg/invoices/productionRequisition");
+	}
+
+	@RequestMapping(params = "getErpData")
+	@ResponseBody
+	public String getErpData(String number){
+		try {
+			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"Number\":\"%s\"}", number));
+			ProductionRequisitionEntity productionRequisitionEntity = new ProductionRequisitionEntity();
+			List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList = new ArrayList<>();
+			if(analysisErpData(res,productionRequisitionEntity,productionRequisitionOrgNodeEntityList)){
+				productionRequisitionService.addMain(productionRequisitionEntity,new ArrayList(), productionRequisitionOrgNodeEntityList);
+				return productionRequisitionEntity.getId();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private boolean analysisErpData(String res, ProductionRequisitionEntity productionRequisitionEntity, List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList) {
+		Map resMap = JSONObject.parseObject(res, Map.class);
+		return translate(resMap,productionRequisitionEntity,productionRequisitionOrgNodeEntityList);
+	}
+
+	private boolean translate(Map resMap, ProductionRequisitionEntity productionRequisitionEntity, List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList) {
+		resMap.get("");
+		return true;
 	}
 	
 	

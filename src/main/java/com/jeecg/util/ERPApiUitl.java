@@ -2,6 +2,7 @@ package com.jeecg.util;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -159,10 +160,11 @@ public class ERPApiUitl {
         invoke("StatusConvert", formId, content);
     }
 
-    public static void list(String formId,String content) throws Exception {
+    public static String list(String content) throws Exception {
         if(login()){
-            invoke("list",formId,content);
+           return invoke("list",null,content);
         }
+        return null;
     }
 
     private static String invoke(String deal, String formId, String content)
@@ -170,7 +172,9 @@ public class ERPApiUitl {
         StringBuilder result = new StringBuilder();
         String sUrl = map.get(deal).toString();
         JSONArray jParas = new JSONArray();
-        jParas.add(formId);
+        if(StringUtils.isNotBlank(formId)){
+            jParas.add(formId);
+        }
         jParas.add(content);
 
         HttpURLConnection connectionInvoke = initUrlConn(sUrl, jParas);
