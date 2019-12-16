@@ -12,7 +12,7 @@ public class StringUtils {
 
     public static List<List> toList(String str){
         List result = new ArrayList();
-        str = str.substring(1,str.length()-1);
+        str = str.substring(1,str.length()-1).replace("\"","");
         String[] inner = str.split("],\\[");
         if(inner.length>1){
             for (int i = 0; i < inner.length; i++) {

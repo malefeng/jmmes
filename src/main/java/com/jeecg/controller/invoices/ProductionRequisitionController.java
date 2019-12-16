@@ -3,14 +3,14 @@ package com.jeecg.controller.invoices;
 import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.ProductionLookDataBatchRunnable;
 import com.jeecg.constant.ERPApiCodeEnum;
+import com.jeecg.constant.ERProTranslateMap;
+import com.jeecg.constant.ERSalTranslateMap;
 import com.jeecg.entity.invoices.*;
 import com.jeecg.entity.look.ProductionParehousIOLookEntity;
 import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
 import com.jeecg.page.invoices.ProductionRequisitionPage;
 import com.jeecg.service.invoices.ProductionRequisitionServiceI;
-import com.jeecg.util.DictionaryUtil;
-import com.jeecg.util.ERPApiUitl;
-import com.jeecg.util.MathUtil;
+import com.jeecg.util.*;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.*;
 
@@ -257,7 +258,13 @@ public class ProductionRequisitionController extends BaseController {
 	@ResponseBody
 	public String getErpData(String number){
 		try {
-			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"Number\":\"%s\"}", number));
+			Map paramMap = new HashMap();
+			String baseKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_HEAD_PARAM,",");
+			String detailKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_DETAIL_PARAM,",");
+			paramMap.put("FormId",ERPApiCodeEnum.SAL.getCode());
+			paramMap.put("FieldKeys",baseKeys+","+detailKeys);
+			paramMap.put("FilterString",String.format("FBillNo='%s'",number));
+			String res = ERPApiUitl.list(JSONObject.toJSONString(paramMap));
 			ProductionRequisitionEntity productionRequisitionEntity = new ProductionRequisitionEntity();
 			List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList = new ArrayList<>();
 			if(analysisErpData(res,productionRequisitionEntity,productionRequisitionOrgNodeEntityList)){
@@ -270,13 +277,22 @@ public class ProductionRequisitionController extends BaseController {
 		return null;
 	}
 
-	private boolean analysisErpData(String res, ProductionRequisitionEntity productionRequisitionEntity, List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList) {
-		Map resMap = JSONObject.parseObject(res, Map.class);
-		return translate(resMap,productionRequisitionEntity,productionRequisitionOrgNodeEntityList);
-	}
+	private boolean analysisErpData(String res, ProductionRequisitionEntity productionRequisitionEntity, List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		List<List> result = StringUtils.toList(res);
+		String[] headKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_HEAD_PROPERTY,",").split(",");
+		String[] bodyKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_DETAIL_PROPERTY,",").split(",");
+		for (int i = 0; i < result.size(); i++) {
+			List inList = result.get(i);
+			if(headKeys.length+bodyKeys.length==inList.size()){
+				if(productionRequisitionEntity.getReceiptCode()==null){
+					ReflactUtil.reflact(headKeys,ERProTranslateMap.TRANSLATE_HEAD_TYPE,productionRequisitionEntity,inList.subList(0,headKeys.length));
+				}
+				ProductionRequisitionOrgNodeEntity productionRequisitionOrgNodeEntity = new ProductionRequisitionOrgNodeEntity();
+				ReflactUtil.reflact(bodyKeys,ERProTranslateMap.TRANSLATE_DETAIL_TYPE,productionRequisitionOrgNodeEntity,inList.subList(headKeys.length,inList.size()));
+				productionRequisitionOrgNodeEntityList.add(productionRequisitionOrgNodeEntity);
+			}
 
-	private boolean translate(Map resMap, ProductionRequisitionEntity productionRequisitionEntity, List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeEntityList) {
-		resMap.get("");
+		}
 		return true;
 	}
 	

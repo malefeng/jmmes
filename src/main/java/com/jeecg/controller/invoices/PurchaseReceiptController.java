@@ -12,6 +12,7 @@ import com.jeecg.page.invoices.PurchaseReceiptPage;
 import com.jeecg.service.invoices.PurchaseReceiptServiceI;
 import com.jeecg.util.DictionaryUtil;
 import com.jeecg.util.ERPApiUitl;
+import com.jeecg.util.ReflactUtil;
 import com.jeecg.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
@@ -20,6 +21,7 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.DateUtils;
 import org.jeecgframework.core.util.ListUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.jwt.util.ResponseMessage;
@@ -43,6 +45,7 @@ import javax.validation.Validator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -198,11 +201,13 @@ public class PurchaseReceiptController extends BaseController {
 	public String getErpData(String number){
 		try {
 			Map paramMap = new HashMap();
+			String baseKeys = org.apache.commons.lang3.StringUtils.join(ERPurTranslateMap.TRANSLATE_HEAD_PARAM,",");
+			String detailKeys = org.apache.commons.lang3.StringUtils.join(ERPurTranslateMap.TRANSLATE_DETAIL_PARAM,",");
 			paramMap.put("FormId",ERPApiCodeEnum.PUR.getCode());
-			paramMap.put("FieldKeys","FStockOrgId");
+			paramMap.put("FieldKeys",baseKeys+","+detailKeys);
 			paramMap.put("FilterString",String.format("FBillNo='%s'",number));
 			String res = ERPApiUitl.list(JSONObject.toJSONString(paramMap));
-			PurchaseReceiptEntity purchaseReceipt = null;
+			PurchaseReceiptEntity purchaseReceipt = new PurchaseReceiptEntity();
 			List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList = new ArrayList<>();
 			if(analysisErpData(res,purchaseReceipt,purchaseReceiptNodeList)){
 				purchaseReceiptService.addMain(purchaseReceipt, purchaseReceiptNodeList);
@@ -216,30 +221,19 @@ public class PurchaseReceiptController extends BaseController {
 
 	private boolean analysisErpData(String res, PurchaseReceiptEntity purchaseReceipt, List<PurchaseReceiptNodeEntity> purchaseReceiptNodeList) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		List<List> result = StringUtils.toList(res);
-		String[] headKeys = ERPurTranslateMap.PUR_TRANSLATE_HEAD.values().toString().split(",");
-		String[] bodyKeys = ERPurTranslateMap.PUR_TRANSLATE_DETAIL.values().toString().split(",");
+		String[] headKeys = org.apache.commons.lang3.StringUtils.join(ERPurTranslateMap.TRANSLATE_HEAD_PROPERTY,",").split(",");
+		String[] bodyKeys = org.apache.commons.lang3.StringUtils.join(ERPurTranslateMap.TRANSLATE_DETAIL_PROPERTY,",").split(",");
 		for (int i = 0; i < result.size(); i++) {
-			purchaseReceipt = purchaseReceipt==null?new PurchaseReceiptEntity():purchaseReceipt;
 			List inList = result.get(i);
 			if(headKeys.length+bodyKeys.length==inList.size()){
 				if(purchaseReceipt.getCreateTime()==null){
-					reflact(headKeys,purchaseReceipt,inList.subList(0,headKeys.length));
+					ReflactUtil.reflact(headKeys,ERPurTranslateMap.TRANSLATE_HEAD_TYPE,purchaseReceipt,inList.subList(0,headKeys.length));
 				}
 				PurchaseReceiptNodeEntity purchaseReceiptNodeEntity = new PurchaseReceiptNodeEntity();
-				reflact(bodyKeys,purchaseReceiptNodeEntity,inList.subList(headKeys.length,inList.size()));
+				ReflactUtil.reflact(bodyKeys,ERPurTranslateMap.TRANSLATE_DETAIL_TYPE,purchaseReceiptNodeEntity,inList.subList(headKeys.length,inList.size()));
 				purchaseReceiptNodeList.add(purchaseReceiptNodeEntity);
 			}
 
-		}
-		return true;
-	}
-
-	private boolean reflact(String[] propertys,Object o,List res) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Class cla = o.getClass();
-		for (int i = 0; i < res.size(); i++) {
-			String methodName = "set"+ StringUtils.firstUpperCase(propertys[i]);
-			Method method = cla.getMethod(methodName,cla);
-			method.invoke(o,res.get(i));
 		}
 		return true;
 	}
