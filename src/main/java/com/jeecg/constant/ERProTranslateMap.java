@@ -16,14 +16,14 @@ public class ERProTranslateMap {
     static {
         TRANSLATE_HEAD = new HashMap(){{
            put("receiptCode","FBillNo");//领料单编号
-           put("requisitionDate","");//领料日期
+           put("requisitionDate","FDate");//领料日期
            put("requisitionWorkshopCode","FWorkShopId");//领料车间
            put("repositoryCode","FStockId0");//领料仓库
            put("repositoryManagerCode","FSTOCKERID");//仓管员
            put("acquirePersonCode","FPickerId");//领料人
            put("productionOrderNumber","");//生产订单号
            put("productionDispatchingNumber","");//生产派工单号---》根据生产订单号查询生产用料清单接口的编号
-           put("finishedCode","");//成品代码
+           put("finishedCode","FParentMaterialId");//成品代码
            put("finishedName","");//成品名称
            put("plannedProductionQuantity","");//计划生产数量
            put("plannedStartDate","");//计划开工日期
