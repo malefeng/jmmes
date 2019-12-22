@@ -1,16 +1,23 @@
 package com.jeecg.constant;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ERPurTranslateMap {
 
-    public static Map PUR_TRANSLATE_HEAD;
-    public static Map PUR_TRANSLATE_DETAIL;
+    public static Map TRANSLATE_HEAD;
+    public static String[] TRANSLATE_HEAD_PROPERTY;
+    public static String[] TRANSLATE_HEAD_PARAM;
+    public static Class[] TRANSLATE_HEAD_TYPE;
+    public static Map TRANSLATE_DETAIL;
+    public static String[] TRANSLATE_DETAIL_PROPERTY;
+    public static String[] TRANSLATE_DETAIL_PARAM;
+    public static Class[] TRANSLATE_DETAIL_TYPE;
 
     static {
-        PUR_TRANSLATE_HEAD = new HashMap(){{
+        /*
+        TRANSLATE_HEAD = new HashMap(){{
             //Result
+            put("receiptCode","FBillNo");//收料单编号
             put("receivingCompanyCode","FStockOrgId");//收货组织
             put("purchasingCompanyCode","FPurOrgId");//采购组织
 //            put("receiptDate","");//单据日期--采购日期
@@ -27,9 +34,16 @@ public class ERPurTranslateMap {
             put("acquireTime","FConfirmDate");//确认时间
             put("readPersonCode","FConfirmerId");//确认人
         }};
+        */
+        TRANSLATE_HEAD_PROPERTY = new String[]{"receiptCode","receivingCompanyCode","purchasingCompanyCode",
+                "receivingOrgCode","purchasingOrgCode","supplierCode","receivingPersonCode","purchasingPersonCode","verifierCode","createTime","acquireTime","readPersonCode"};
+        TRANSLATE_HEAD_PARAM = new String[]{"FBillNo","FStockOrgId","FPurOrgId","FReceiveDeptId","FPurDeptId",
+                "FSupplierId","FReceiverId","FPurchaserId","FApproverId","FApproveDate","FCreateDate","FConfirmDate"};
+        TRANSLATE_HEAD_TYPE = new Class[]{String.class,String.class,String.class,String.class,String.class,String.class,String.class,String.class,String.class,Date.class, Date.class,String.class};
 
-        PUR_TRANSLATE_DETAIL = new HashMap(){{
-            //Result.PUR_ReceiveEntry.
+        /*
+        TRANSLATE_DETAIL = new HashMap(){{
+            //Result.ReceiveEntry.
             put("rawMaterialCode","FMaterialId");//物料编码
 //            put("","");//物料代码
             put("rawMaterialName","FMaterialName");//物料名称
@@ -37,11 +51,15 @@ public class ERPurTranslateMap {
 //            put("","FUnitId");//单位
             put("actualArrivalNumber","FActlandQty");//实到数量
             put("actualReceivedNumber","FActReceiveQty");//实收数量
-            put("","FRejectQty");//拒收数量
+//            put("","FRejectQty");//拒收数量
             put("repositoryCode","FStockID");//仓库
 //            put("","");//库位
             put("inventoryStatus","FStockStatusId");//库存状态
-            put("","FRejectReason");//拒收原因
+            put("rejectionReason","FRejectReason");//拒收原因
         }};
+        */
+        TRANSLATE_DETAIL_PROPERTY = new String[]{"rawMaterialCode","rawMaterialName","rawMaterialSize","actualArrivalNumber","actualReceivedNumber","repositoryCode","inventoryStatus","rejectionReason"};
+        TRANSLATE_DETAIL_PARAM = new String[]{"FMaterialId","FMaterialName","FMateriaModel","FActlandQty","FActReceiveQty","FStockID","FStockStatusId","FRejectReason"};
+        TRANSLATE_DETAIL_TYPE = new Class[]{String.class,String.class,String.class,Double.class,Double.class,String.class,String.class,String.class};
     }
 }

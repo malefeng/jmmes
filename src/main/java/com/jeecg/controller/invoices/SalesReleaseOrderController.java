@@ -3,6 +3,7 @@ package com.jeecg.controller.invoices;
 import com.alibaba.fastjson.JSONObject;
 import com.jeecg.batch.FinishedOutLookDataBatchRunnable;
 import com.jeecg.constant.ERPApiCodeEnum;
+import com.jeecg.constant.ERSalTranslateMap;
 import com.jeecg.entity.invoices.*;
 import com.jeecg.entity.look.FinishedWarehousIOLookEntity;
 import com.jeecg.entity.warehous.FinishedWarehousIOEntity;
@@ -10,6 +11,8 @@ import com.jeecg.page.invoices.SalesReleaseOrderPage;
 import com.jeecg.service.invoices.SalesReleaseOrderServiceI;
 import com.jeecg.util.DictionaryUtil;
 import com.jeecg.util.ERPApiUitl;
+import com.jeecg.util.ReflactUtil;
+import com.jeecg.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
@@ -38,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.*;
 
@@ -220,7 +224,13 @@ public class SalesReleaseOrderController extends BaseController {
 	@ResponseBody
 	public String getErpData(String number){
 		try {
-			String res = ERPApiUitl.View(ERPApiCodeEnum.PUR.getCode(), String.format("{\"Number\":\"%s\"}", number));
+			Map paramMap = new HashMap();
+			String baseKeys = org.apache.commons.lang3.StringUtils.join(ERSalTranslateMap.TRANSLATE_HEAD_PARAM,",");
+			String detailKeys = org.apache.commons.lang3.StringUtils.join(ERSalTranslateMap.TRANSLATE_DETAIL_PARAM,",");
+			paramMap.put("FormId",ERPApiCodeEnum.SAL.getCode());
+			paramMap.put("FieldKeys",baseKeys+","+detailKeys);
+			paramMap.put("FilterString",String.format("FBillNo='%s'",number));
+			String res = ERPApiUitl.list(JSONObject.toJSONString(paramMap));
 			SalesReleaseOrderEntity salesReleaseOrderEntity = new SalesReleaseOrderEntity();
 			List<SalesReleaseOrgNodeEntity> salesReleaseOrgNodeEntityList = new ArrayList<>();
 			if(analysisErpData(res,salesReleaseOrderEntity,salesReleaseOrgNodeEntityList)){
@@ -233,13 +243,22 @@ public class SalesReleaseOrderController extends BaseController {
 		return null;
 	}
 
-	private boolean analysisErpData(String res, SalesReleaseOrderEntity salesReleaseOrderEntity, List<SalesReleaseOrgNodeEntity> salesReleaseOrderEntityList) {
-		Map resMap = JSONObject.parseObject(res, Map.class);
-		return translate(resMap,salesReleaseOrderEntity,salesReleaseOrderEntityList);
-	}
+	private boolean analysisErpData(String res, SalesReleaseOrderEntity salesReleaseOrderEntity, List<SalesReleaseOrgNodeEntity> salesReleaseOrgNodeEntityList) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		List<List> result = StringUtils.toList(res);
+		String[] headKeys = org.apache.commons.lang3.StringUtils.join(ERSalTranslateMap.TRANSLATE_HEAD_PROPERTY,",").split(",");
+		String[] bodyKeys = org.apache.commons.lang3.StringUtils.join(ERSalTranslateMap.TRANSLATE_DETAIL_PROPERTY,",").split(",");
+		for (int i = 0; i < result.size(); i++) {
+			List inList = result.get(i);
+			if(headKeys.length+bodyKeys.length==inList.size()){
+				if(salesReleaseOrderEntity.getReceiptCode()==null){
+					ReflactUtil.reflact(headKeys,ERSalTranslateMap.TRANSLATE_HEAD_TYPE,salesReleaseOrderEntity,inList.subList(0,headKeys.length));
+				}
+				SalesReleaseOrgNodeEntity salesReleaseOrgNodeEntity = new SalesReleaseOrgNodeEntity();
+				ReflactUtil.reflact(bodyKeys,ERSalTranslateMap.TRANSLATE_DETAIL_TYPE,salesReleaseOrgNodeEntity,inList.subList(headKeys.length,inList.size()));
+				salesReleaseOrgNodeEntityList.add(salesReleaseOrgNodeEntity);
+			}
 
-	private boolean translate(Map resMap, SalesReleaseOrderEntity salesReleaseOrderEntity, List<SalesReleaseOrgNodeEntity> salesReleaseOrderEntityList) {
-		resMap.get("");
+		}
 		return true;
 	}
 	
