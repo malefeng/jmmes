@@ -3,7 +3,8 @@ package com.jeecg.constant;
 public enum ERPApiCodeEnum {
     SAL("SAL_OUTSTOCK","销售出库单"),
     PUR("PUR_ReceiveBill","收料通知单"),
-    PRO("PRD_MO","生产领料单");
+    PUR_ORDER("PUR_ReceiveBill","收料通知单"),
+    PRO("PRD_PickMtrl","生产领料单");
     private String code;
     private String name;
 

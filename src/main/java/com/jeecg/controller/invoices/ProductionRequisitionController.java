@@ -261,7 +261,7 @@ public class ProductionRequisitionController extends BaseController {
 			Map paramMap = new HashMap();
 			String baseKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_HEAD_PARAM,",");
 			String detailKeys = org.apache.commons.lang3.StringUtils.join(ERProTranslateMap.TRANSLATE_DETAIL_PARAM,",");
-			paramMap.put("FormId",ERPApiCodeEnum.SAL.getCode());
+			paramMap.put("FormId",ERPApiCodeEnum.PRO.getCode());
 			paramMap.put("FieldKeys",baseKeys+","+detailKeys);
 			paramMap.put("FilterString",String.format("FBillNo='%s'",number));
 			String res = ERPApiUitl.list(JSONObject.toJSONString(paramMap));
@@ -286,6 +286,7 @@ public class ProductionRequisitionController extends BaseController {
 			if(headKeys.length+bodyKeys.length==inList.size()){
 				if(productionRequisitionEntity.getReceiptCode()==null){
 					ReflactUtil.reflact(headKeys,ERProTranslateMap.TRANSLATE_HEAD_TYPE,productionRequisitionEntity,inList.subList(0,headKeys.length));
+					productionRequisitionEntity.setAcquireTime(new Date());
 				}
 				ProductionRequisitionOrgNodeEntity productionRequisitionOrgNodeEntity = new ProductionRequisitionOrgNodeEntity();
 				ReflactUtil.reflact(bodyKeys,ERProTranslateMap.TRANSLATE_DETAIL_TYPE,productionRequisitionOrgNodeEntity,inList.subList(headKeys.length,inList.size()));

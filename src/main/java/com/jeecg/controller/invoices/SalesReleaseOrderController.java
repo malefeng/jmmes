@@ -252,6 +252,7 @@ public class SalesReleaseOrderController extends BaseController {
 			if(headKeys.length+bodyKeys.length==inList.size()){
 				if(salesReleaseOrderEntity.getReceiptCode()==null){
 					ReflactUtil.reflact(headKeys,ERSalTranslateMap.TRANSLATE_HEAD_TYPE,salesReleaseOrderEntity,inList.subList(0,headKeys.length));
+					salesReleaseOrderEntity.setAcquireTime(new Date());
 				}
 				SalesReleaseOrgNodeEntity salesReleaseOrgNodeEntity = new SalesReleaseOrgNodeEntity();
 				ReflactUtil.reflact(bodyKeys,ERSalTranslateMap.TRANSLATE_DETAIL_TYPE,salesReleaseOrgNodeEntity,inList.subList(headKeys.length,inList.size()));
