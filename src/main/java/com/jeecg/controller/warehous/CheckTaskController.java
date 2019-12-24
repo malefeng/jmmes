@@ -12,10 +12,12 @@ import org.jeecgframework.core.common.hibernate.qbc.CriteriaQuery;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
 import org.jeecgframework.tag.core.easyui.TagUtil;
+import org.jeecgframework.web.system.pojo.base.TSUser;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -82,6 +84,10 @@ public class CheckTaskController extends BaseController {
 	@RequestMapping(params = "datagrid")
 	public void datagrid(CheckTaskEntity checkTask,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
 		CriteriaQuery cq = new CriteriaQuery(CheckTaskEntity.class, dataGrid);
+		TSUser user = ResourceUtil.getSessionUser();
+		if(!"admin".equals(user.getUserName())){
+			checkTask.setCheckPersonPlan(user.getUserName());
+		}
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, checkTask);
 		this.checkTaskService.getDataGridReturn(cq, true);

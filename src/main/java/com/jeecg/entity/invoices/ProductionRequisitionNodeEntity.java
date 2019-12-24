@@ -1,5 +1,6 @@
 package com.jeecg.entity.invoices;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -47,6 +48,7 @@ public class ProductionRequisitionNodeEntity implements java.io.Serializable {
 	/**生产订单号*/
 	private java.lang.String productionOrderNumber;
 	/**原料入库时间*/
+	@JSONField(format="yyyy-MM-dd")
 	private java.util.Date warehousingDate;
 	/**生产领料单主键*/
 	private java.lang.String inspectId;

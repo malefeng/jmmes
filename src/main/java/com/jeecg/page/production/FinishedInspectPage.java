@@ -61,6 +61,16 @@ public class FinishedInspectPage implements java.io.Serializable {
 	private java.lang.String productionOrderNumber;
 	/**首末检记录表*/
 	private java.lang.String inspectLogSheet;
+	/**检验结果*/
+	private String result;
+	/**批次号*/
+	private String batchNo;
+	/**总数量*/
+	private int count;
+	/**合格数量*/
+	private int qualifiedCount;
+	/**不合格数量*/
+	private int unQualifiedCount;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -181,5 +191,45 @@ public class FinishedInspectPage implements java.io.Serializable {
 	 */
 	public void setInspectLogSheet(java.lang.String inspectLogSheet){
 		this.inspectLogSheet = inspectLogSheet;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public int getQualifiedCount() {
+		return qualifiedCount;
+	}
+
+	public void setQualifiedCount(int qualifiedCount) {
+		this.qualifiedCount = qualifiedCount;
+	}
+
+	public int getUnQualifiedCount() {
+		return unQualifiedCount;
+	}
+
+	public void setUnQualifiedCount(int unQualifiedCount) {
+		this.unQualifiedCount = unQualifiedCount;
 	}
 }

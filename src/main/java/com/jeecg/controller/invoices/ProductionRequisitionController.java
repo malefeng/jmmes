@@ -115,7 +115,7 @@ public class ProductionRequisitionController extends BaseController {
 	}
 
 	/**
-	 * 根据条件查询未开始生产的领料单信息
+	 * 根据条件查询未销售的领料单信息
 	 * @return
 	 */
 	@RequestMapping(params = "getUnproductedListByParam")
