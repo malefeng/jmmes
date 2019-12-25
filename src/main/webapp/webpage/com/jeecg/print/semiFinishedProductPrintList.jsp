@@ -306,6 +306,8 @@
         <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">批 次 号：<input
                 type="text" id="batchNo"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
+            半成品次数：<input type="text" id="times"></div>
+        <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             首检次数：<input type="text" id="firstTimes"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             末检次数：<input type="text" id="lastTimes"></div>
@@ -337,8 +339,9 @@
     function inputParam(id) {
         printId = id;
         $("#batchNo").val("");
-        $("#firstTimes").val(1);
-        $("#lastTimes").val(1);
+        $("#times").val(1);
+        $("#firstTimes").val(3);
+        $("#lastTimes").val(3);
         loadTakeMaterilNumberMsg();
         $('#win').window({
             title: '请输入打印信息',
@@ -346,7 +349,7 @@
             minimizable: false,
             maximizable: false,
             width: 300,
-            height: 350,
+            height: 370,
             modal: true
         });
     }
@@ -365,6 +368,7 @@
     })
 
     function print(id, batchNo) {
+        var times = $("#times").val();
         var firstTimes = $("#firstTimes").val();
         var lastTimes = $("#lastTimes").val();
         var productionDispatchingNumber = $("#productionDispatchingNumber option:selected").val();
@@ -373,6 +377,7 @@
         $.getJSON("semiFinishedProductPrintController.do?getPrintData", {
             id: id,
             batchNo: batchNo,
+            times: times,
             firstTimes: firstTimes,
             lastTimes: lastTimes,
             takeMaterilNumber: takeMaterilNumber,

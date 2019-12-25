@@ -32,7 +32,7 @@
                     sortable: true
                 }, {
                     field: 'requisitionDate', title: '领料日期', sortable: true, formatter: function (value, rec, index) {
-                        return new Date().format('yyyy-MM-dd hh:mm:ss', value);
+                        return new Date(value).format('yyyy-MM-dd hh:mm:ss');
                     }
                 }, {field: 'requisitionWorkshopCode',
                     title: '领料车间',
