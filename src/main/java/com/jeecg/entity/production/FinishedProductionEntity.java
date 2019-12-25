@@ -46,10 +46,10 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	private java.lang.String productionOrderNumber;
 	/**生产领料单号*/
 	private java.lang.String takeMaterilNumber;
-	/**预留1*/
-	private java.lang.String attr1;
-	/**预留2*/
-	private java.lang.String attr2;
+	/**是否需要熟成*/
+	private java.lang.Integer needRipening;
+	/**熟成时长*/
+	private java.lang.Integer ripeningHours;
 	/**预留3*/
 	private java.lang.String attr3;
 	/**预留4*/
@@ -288,35 +288,35 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  预留1
+	 *@return: java.lang.String  是否需要熟成
 	 */
-	@Column(name ="ATTR1",nullable=true,length=120)
-	public java.lang.String getAttr1(){
-		return this.attr1;
+	@Column(name ="NEED_RIPENING",nullable=true,length=120)
+	public java.lang.Integer getNeedRipening(){
+		return this.needRipening;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  预留1
+	 *@param: java.lang.String  是否需要熟成
 	 */
-	public void setAttr1(java.lang.String attr1){
-		this.attr1 = attr1;
+	public void setNeedRipening(java.lang.Integer needRipening){
+		this.needRipening = needRipening;
 	}
 	/**
 	 *方法: 取得java.lang.String
-	 *@return: java.lang.String  预留2
+	 *@return: java.lang.String  熟成时长
 	 */
-	@Column(name ="ATTR2",nullable=true,length=120)
-	public java.lang.String getAttr2(){
-		return this.attr2;
+	@Column(name ="RIPENING_HOURS",nullable=true,length=120)
+	public java.lang.Integer getRipeningHours(){
+		return this.ripeningHours;
 	}
 
 	/**
 	 *方法: 设置java.lang.String
-	 *@param: java.lang.String  预留2
+	 *@param: java.lang.String  熟成时长
 	 */
-	public void setAttr2(java.lang.String attr2){
-		this.attr2 = attr2;
+	public void setRipeningHours(java.lang.Integer ripeningHours){
+		this.ripeningHours = ripeningHours;
 	}
 	/**
 	 *方法: 取得java.lang.String

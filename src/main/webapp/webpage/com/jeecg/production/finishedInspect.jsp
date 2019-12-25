@@ -78,7 +78,7 @@
  </head>
  <body style="overflow-y: hidden" scroll="no">
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="finishedInspectController.do?save">
-			<input id="id" name="id" type="hidden" value="${finishedInspectMainPage.id }">
+	  <input id="id" name="id" type="hidden" value="${finishedInspectMainPage.id }">
 	  <ul class="top_title">
 		  <li>
 			  <a href="javascrip:;" name="">成品编号:</a>
@@ -93,7 +93,8 @@
 		  <li>
 			  <a href="javascrip:;" name="">生产派工单号:</a>
 			  <a href="javascrip:;">${finishedInspectMainPage.productionOrderNumber}</a>
-			  <input type="hidden" name="productionOrderNumber" value="${finishedInspectMainPage.productionOrderNumber}">
+			  <input type="hidden" name="productionOrderNumber"
+					 value="${finishedInspectMainPage.productionOrderNumber}">
 		  </li>
 		  <li>
 			  <a href="javascrip:;" name="">总数量:</a>
@@ -112,7 +113,9 @@
 		  </li>
 		  <li>
 			  <a href="javascrip:;" name="">首末检记录表:</a>
-			  <t:webUploader name="inspectLogSheet" displayTxt="true" pathValues="${finishedInspectMainPage.inspectLogSheet}"  extensions="xlsx" bizType="semifinished"></t:webUploader>
+			  <t:webUploader name="inspectLogSheet" displayTxt="true"
+							 pathValues="${finishedInspectMainPage.inspectLogSheet}" extensions="xlsx"
+							 bizType="semifinished"></t:webUploader>
 		  </li>
 		  <li>
 		  </li>

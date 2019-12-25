@@ -23,26 +23,26 @@ public class JeecgOneToMainUtil {
 	public static void main(String[] args) {
 		//第一步：设置主表配置
 		CodeParamEntity codeParamEntityIn = new CodeParamEntity();
-		codeParamEntityIn.setTableName("t_check_task");//表名
-		codeParamEntityIn.setEntityName("CheckTask");	 //实体名
-		codeParamEntityIn.setEntityPackage("warehous");	 //包名
-		codeParamEntityIn.setFtlDescription("盘点任务");	 //描述
+		codeParamEntityIn.setTableName("t_finished_inspect_item");//表名
+		codeParamEntityIn.setEntityName("FinishedInspectItem");	 //实体名
+		codeParamEntityIn.setEntityPackage("production");	 //包名
+		codeParamEntityIn.setFtlDescription("成品检测");	 //描述
 
 		//第二步：设置子表集合配置
 		List<SubTableEntity> subTabParamIn = new ArrayList<SubTableEntity>();
 		//[1].子表一
 		SubTableEntity po = new SubTableEntity();
-		po.setTableName("t_check_node_list");//表名
-		po.setEntityName("CheckNode");	    //实体名
-		po.setEntityPackage("warehous");	        //包名
-		po.setFtlDescription("盘点明细表");       //描述
+		po.setTableName("t_finished_inspect_item_node");//表名
+		po.setEntityName("FinishedInspectItemNode");	    //实体名
+		po.setEntityPackage("production");	        //包名
+		po.setFtlDescription("成品检验明细");       //描述
 		//子表外键参数配置
 		/*说明:
 		 * a) 子表引用主表主键ID作为外键，外键字段必须以_ID结尾;
 		 * b) 主表和子表的外键字段名字，必须相同（除主键ID外）;
 		 * c) 多个外键字段，采用逗号分隔;
 		 */
-		po.setForeignKeys(new String[]{"check_batch"});
+		po.setForeignKeys(new String[]{"finished_code"});
 		subTabParamIn.add(po);
 		//[2].子表二
 		/*SubTableEntity po2 = new SubTableEntity();
