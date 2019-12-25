@@ -3,8 +3,6 @@
 <t:base type="jquery,easyui,tools,DatePicker,print"></t:base>
 <div class="easyui-layout" fit="true">
     <div region="center" style="padding:0px;border:0px">
-
-
         <script type="text/javascript">$(function () {
             storage = $.localStorage;
             if (!storage) storage = $.cookieStorage;
@@ -311,6 +309,8 @@
         <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">批 次 号：<input
                 type="text" id="batchNo"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
+            成品码次数：<input type="text" id="times"></div>
+        <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             首检次数：<input type="text" id="firstTimes"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             末检次数：<input type="text" id="lastTimes"></div>
@@ -343,8 +343,9 @@
         printId = id;
         //初始化弹出框内容
         $("#batchNo").val("");
-        $("#firstTimes").val(1);
-        $("#lastTimes").val(1);
+        $("#times").val(1);
+        $("#firstTimes").val(3);
+        $("#lastTimes").val(3);
         $("#productionDispatchingNumber").val("")
         $("#productionDispatchingNumber").html("<option>请选择<\/option>");
         $("#takeMaterilNumber").val("");
@@ -356,7 +357,7 @@
             minimizable: false,
             maximizable: false,
             width: 300,
-            height: 350,
+            height: 370,
             modal: true
         });
     }
@@ -375,6 +376,7 @@
     })
 
     function printData(id, batchNo) {
+        var times = $("#times").val();
         var firstTimes = $("#firstTimes").val();
         var lastTimes = $("#lastTimes").val();
         var productionDispatchingNumber = $("#productionDispatchingNumber option:selected").val();
@@ -383,6 +385,7 @@
         $.getJSON("finishedProductPrintController.do?getPrintData", {
             id: id,
             batchNo: batchNo,
+            times: times,
             firstTimes: firstTimes,
             lastTimes: lastTimes,
             takeMaterilNumber: takeMaterilNumber,

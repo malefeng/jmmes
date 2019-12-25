@@ -91,10 +91,10 @@ public class SemiFinishedProductPrintController extends BaseController {
 
 	@RequestMapping(params = "getPrintData")
 	@ResponseBody
-	public Object getPrintData(String id, String batchNo, int firstTimes,int lastTimes,String takeMaterilNumber,String productionDispatchingNumber,String productionOrderNumber ){
+	public Object getPrintData(String id, String batchNo,int times, int firstTimes,int lastTimes,String takeMaterilNumber,String productionDispatchingNumber,String productionOrderNumber ){
 		List toSaveList = new ArrayList();
 		List result = new ArrayList();
-		generatePrintData(id, batchNo, firstTimes, lastTimes, toSaveList, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
+		generatePrintData(id, batchNo,times, firstTimes, lastTimes, toSaveList, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
 		//保存打印记录
 		qrCodeServiceI.batchSave(toSaveList);
 		return result;
@@ -142,7 +142,7 @@ public class SemiFinishedProductPrintController extends BaseController {
 		return null;
 	}
 
-	private void generatePrintData(String id, String batchNo, int firstTimes, int lastTimes, List toSaveList, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
+	private void generatePrintData(String id, String batchNo,int times, int firstTimes, int lastTimes, List toSaveList, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
 		QRCodeEntity qrCodeEntity = new QRCodeEntity();
 		SemiFinishedProductEntity semiFinishedProductEntity = semiFinishedProductPrintService.get(SemiFinishedProductEntity.class,id);
 		//二维码代码待维护
@@ -184,8 +184,10 @@ public class SemiFinishedProductPrintController extends BaseController {
 
 		//二维码图片展示信息：编号,代码,领料单号,生产派工单,22
 		String qrCodeStr = qrCode.concat(",").concat(semiFinishedProductEntity.getSemiFinishedCode()).concat(",").concat(takeMaterilNumber).concat(",").concat(productionDispatchingNumber).concat(",22");
-
-		result.add(generateContent(qrCodeStr, keys, values));
+		Map map = generateContent(qrCodeStr, keys, values);
+		for (int i = 0; i < times; i++) {
+			result.add(map);
+		}
 		//半成品首检码信息
 		for (int i = 0; i < firstTimes; i++) {
 			qrCodeEntity  = qrCodeEntity.clone();

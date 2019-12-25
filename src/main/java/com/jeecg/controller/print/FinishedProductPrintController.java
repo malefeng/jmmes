@@ -82,10 +82,10 @@ public class FinishedProductPrintController extends BaseController {
 
 	@RequestMapping(params = "getPrintData")
 	@ResponseBody
-	public Object getPrintData(String id, String batchNo,int firstTimes,int lastTimes,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber){
+	public Object getPrintData(String id, String batchNo,int times,int firstTimes,int lastTimes,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber){
 		List toSave = new ArrayList();
 		List result = new ArrayList();
-		generatePrintData(id, batchNo, firstTimes, lastTimes, toSave, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
+		generatePrintData(id, batchNo,times, firstTimes, lastTimes, toSave, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
 		qrCodeServiceI.batchSave(toSave);
 		return result;
 	}
@@ -132,7 +132,7 @@ public class FinishedProductPrintController extends BaseController {
 		return null;
 	}
 
-	private void generatePrintData(String id, String batchNo, int firstTimes,int lastTimes, List toSave, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
+	private void generatePrintData(String id, String batchNo,int times, int firstTimes,int lastTimes, List toSave, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
 		QRCodeEntity qrCodeEntity = new QRCodeEntity();
 		FinishedProductEntity finishedProductPrintEntity = finishedProductPrintService.get(FinishedProductEntity.class,id);
 		//二维码代码待维护
@@ -170,9 +170,11 @@ public class FinishedProductPrintController extends BaseController {
 		values[5] = qrCodeEntity.getMaterialSize();
 		//二维码图片展示信息：编号,代码,领料单号,生产派工单号,33
 		String qrCodeStr = qrCode.concat(",").concat(finishedProductPrintEntity.getFinishedCode()).concat(",").concat(takeMaterilNumber).concat(",").concat(productionDispatchingNumber).concat(",33");
-		result.add(generateContent(qrCodeStr, keys, values));
-		//同一个成品码输出两次
-		result.add(generateContent(qrCodeStr, keys, values));
+		Map map = generateContent(qrCodeStr, keys, values);
+		for (int i = 0; i < times; i++) {
+			//同一个成品码打印times次
+			result.add(map);
+		}
 
 		//成品首检码信息
 		for (int i = 0; i < firstTimes; i++) {
