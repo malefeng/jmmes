@@ -11,7 +11,7 @@
             $('#semiFinishedInspectList').datagrid({
                 idField: 'id',
                 title: '半成品首末检',
-                url: 'semiFinishedInspectController.do?datagrid&field=id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
+                url: 'semiFinishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
                 fit: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -33,7 +33,13 @@
                     field: 'productionOrderNumber',
                     title: '生产订单号',
                     sortable: true
-                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true,
+                },
+                    {field: 'result', title: '检验结果', sortable: true},
+                    {field: 'batchNo', title: '批号', sortable: true},
+                    {field: 'count', title: '数量', sortable: true},
+                    {field: 'qualifiedCount', title: '合格数量数量', sortable: true},
+                    {field: 'unQualifiedCount', title: '不合格数量', sortable: true},
+                    {field: 'inspectLogSheet', title: '首末检记录表', sortable: true,
                     formatter:function(value){
                         return value&&value.length>20?value.substring(0,19)+"...":value;
                     }
@@ -222,7 +228,7 @@
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
                 $('#semiFinishedInspectList').datagrid({
-                    url: 'semiFinishedInspectController.do?datagrid&field=id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
+                    url: 'semiFinishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
                     pageNumber: 1
                 });
             }
@@ -231,7 +237,7 @@
         function dosearch(params) {
             var jsonparams = $.parseJSON(params);
             $('#semiFinishedInspectList').datagrid({
-                url: 'semiFinishedInspectController.do?datagrid&field=id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
+                url: 'semiFinishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
                 queryParams: jsonparams
             });
         }
@@ -269,7 +275,7 @@
                 $(this).attr('checked', false);
             });
             $('#semiFinishedInspectList').datagrid({
-                url: 'semiFinishedInspectController.do?datagrid&field=id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
+                url: 'semiFinishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,semiFinishedCode,semiFinishedName,productionOrderNumber,inspectLogSheet,',
                 pageNumber: 1
             });
         }</script>

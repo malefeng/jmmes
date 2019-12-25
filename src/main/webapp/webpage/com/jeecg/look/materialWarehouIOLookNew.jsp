@@ -26,12 +26,12 @@
 			 /*width: 95%;*/
 			 height: 20px;
 			 line-height: 20px;
-			 font-size: 18px;
+			 font-size: 20px;
 		 }
 		 .table, .table * {
 			 margin: 0 auto;
 			 padding: 0;
-			 font-size: 12px;
+			 font-size: 18px;
 			 font-family: Arial, 宋体, Helvetica, sans-serif;
 		 }
 

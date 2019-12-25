@@ -90,6 +90,48 @@ public class FinishedProductPrintController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping(params = "rePrint")
+	@ResponseBody
+	public Object rePrint(String qrCode){
+		QRCodeEntity qrCodeEntity = qrCodeServiceI.findUniqueByProperty(QRCodeEntity.class, "number", qrCode);
+		String sql = "from QRCodeEntity where number contains ?";
+		List<QRCodeEntity> qrCodeEntitys = qrCodeServiceI.findHql(sql, qrCode);
+		if(qrCodeEntitys!=null&&qrCodeEntitys.size()>0){
+			List result = new ArrayList(qrCodeEntitys.size());
+			for (QRCodeEntity codeEntity : qrCodeEntitys) {
+				//明文key
+				String[] keys = new String[6];
+				//明文value
+				String[] values = new String[6];
+				//二维码类型
+				keys[0] = "类型";
+				values[0] = "33-成品";
+				//批次
+				keys[1] = "批次";
+				values[1] = codeEntity.getBatchNo();
+				//编号
+				keys[2] = "编号";
+				values[2] = qrCodeEntity.getNumber();
+				//代码
+				keys[3] = "代码";
+				values[3] = qrCodeEntity.getCode();
+				//名称
+				keys[4] = "名称";
+				values[4] = qrCodeEntity.getMaterialName();
+				//规格型号
+				keys[5] = "规格型号";
+				values[5] = qrCodeEntity.getMaterialSize();
+				String qrCodeStr = qrCodeEntity.getNumber();
+				if(qrCode.equals(qrCodeStr)){
+					qrCodeStr = qrCode.concat(",").concat(qrCodeEntity.getCode()).concat(",").concat("").concat(",").concat(qrCodeEntity.getOrderNumber()).concat(",33");
+				}
+				result.add(generateContent(qrCodeStr, keys, values));
+			}
+			return result;
+		}
+		return null;
+	}
+
 	private void generatePrintData(String id, String batchNo, int firstTimes,int lastTimes, List toSave, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
 		QRCodeEntity qrCodeEntity = new QRCodeEntity();
 		FinishedProductEntity finishedProductPrintEntity = finishedProductPrintService.get(FinishedProductEntity.class,id);

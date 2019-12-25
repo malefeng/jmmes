@@ -37,6 +37,7 @@ import javax.validation.Validator;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 /**   
@@ -135,6 +136,34 @@ public class FinishedInspectController extends BaseController {
 		String message = null;
 		List<FinishedFirstInspectEntity> finishedFirstInspectList =  finishedInspectPage.getFinishedFirstInspectList();
 		List<FinishedLastInspectEntity> finishedLastInspectList =  finishedInspectPage.getFinishedLastInspectList();
+		int count = 0,qualifiedCount = 0,unQualifiedCount = 0;
+		if(finishedFirstInspectList!=null&&finishedFirstInspectList.size()>0){
+			for (FinishedFirstInspectEntity finishedFirstInspectEntity : finishedFirstInspectList) {
+				count++;
+				if(finishedFirstInspectEntity.getFirstInspectResult()==1){
+					qualifiedCount++;
+				}else{
+					unQualifiedCount++;
+				}
+			}
+		}
+		if(finishedLastInspectList!=null&&finishedLastInspectList.size()>0){
+			Date date = null;
+			for (FinishedLastInspectEntity finishedLastInspectEntity : finishedLastInspectList) {
+				if(date==null||date.compareTo(finishedLastInspectEntity.getLastInspectDate())>0){
+					finishedInspect.setResult(finishedLastInspectEntity.getLastInspectResult()==1?"OK":"NG");
+				}
+				count++;
+				if(finishedLastInspectEntity.getLastInspectResult()==1){
+					qualifiedCount++;
+				}else{
+					unQualifiedCount++;
+				}
+			}
+		}
+		finishedInspect.setCount(count);
+		finishedInspect.setQualifiedCount(qualifiedCount);
+		finishedInspect.setUnQualifiedCount(unQualifiedCount);
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(finishedInspect.getId())) {
 			message = "更新成功";

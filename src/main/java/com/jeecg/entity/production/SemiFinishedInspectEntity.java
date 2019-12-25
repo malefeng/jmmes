@@ -32,6 +32,16 @@ public class SemiFinishedInspectEntity implements java.io.Serializable {
 	private java.lang.String productionOrderNumber;
 	/**首末检记录表*/
 	private java.lang.String inspectLogSheet;
+	/**检验结果*/
+	private String result;
+	/**批次号*/
+	private String batchNo;
+	/**总数量*/
+	private int count;
+	/**合格数量*/
+	private int qualifiedCount;
+	/**不合格数量*/
+	private int unQualifiedCount;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -164,5 +174,69 @@ public class SemiFinishedInspectEntity implements java.io.Serializable {
 	 */
 	public void setInspectLogSheet(java.lang.String inspectLogSheet){
 		this.inspectLogSheet = inspectLogSheet;
+	}
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  检验结果
+	 */
+	@Column(name ="RESULT",nullable=true,length=32)
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  检验结果
+	 */
+	@Column(name ="BATCH_NO",nullable=true,length=32)
+	public String getBatchNo() {
+		return batchNo;
+	}
+
+	public void setBatchNo(String batchNo) {
+		this.batchNo = batchNo;
+	}
+
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  总数量
+	 */
+	@Column(name ="COUNT",nullable=true,precision=10,scale=0)
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  合格数量
+	 */
+	@Column(name ="QUALIFIED_COUNT",nullable=true,precision=10,scale=0)
+	public int getQualifiedCount() {
+		return qualifiedCount;
+	}
+
+	public void setQualifiedCount(int qualifiedCount) {
+		this.qualifiedCount = qualifiedCount;
+	}
+
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  不合格数量
+	 */
+	@Column(name ="UNQUALIFIED_COUNT",nullable=true,precision=10,scale=0)
+	public int getUnQualifiedCount() {
+		return unQualifiedCount;
+	}
+
+	public void setUnQualifiedCount(int unQualifiedCount) {
+		this.unQualifiedCount = unQualifiedCount;
 	}
 }

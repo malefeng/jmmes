@@ -156,7 +156,9 @@ public class SalesReleaseOrderController extends BaseController {
 		if(StringUtil.isNotEmpty(remainData)){
 			List<FinishedWarehousIOEntity> result = new ArrayList<FinishedWarehousIOEntity>();
 			Map<String,Integer> remainDataMap = JSONObject.parseObject(remainData,Map.class);
-			String hql = "from FinishedWarehousIOEntity where ioType = 1 and finishedCode = ? order by warehousingDate";
+			int screen = remainDataMap.get("screen")==null?0:remainDataMap.get("screen");
+			remainDataMap.remove("screen");
+			String hql = "from FinishedWarehousIOEntity where ioType = 1 and finishedCode = ? and finishedNumber>="+screen+" order by warehousingDate";
 			Query query = systemService.getSession().createQuery(hql);
 			for (Map.Entry<String,Integer> entry: remainDataMap.entrySet()) {
 				query.setMaxResults(entry.getValue()).setParameter(0,entry.getKey());
@@ -252,6 +254,7 @@ public class SalesReleaseOrderController extends BaseController {
 			if(headKeys.length+bodyKeys.length==inList.size()){
 				if(salesReleaseOrderEntity.getReceiptCode()==null){
 					ReflactUtil.reflact(headKeys,ERSalTranslateMap.TRANSLATE_HEAD_TYPE,salesReleaseOrderEntity,inList.subList(0,headKeys.length));
+					salesReleaseOrderEntity.setAcquireTime(new Date());
 				}
 				SalesReleaseOrgNodeEntity salesReleaseOrgNodeEntity = new SalesReleaseOrgNodeEntity();
 				ReflactUtil.reflact(bodyKeys,ERSalTranslateMap.TRANSLATE_DETAIL_TYPE,salesReleaseOrgNodeEntity,inList.subList(headKeys.length,inList.size()));

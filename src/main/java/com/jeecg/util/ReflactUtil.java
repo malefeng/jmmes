@@ -17,7 +17,7 @@ public class ReflactUtil {
             Method method = cla.getMethod(methodName,types[i]);
             Object param = res.get(i);
             if(types[i] == Date.class){
-                param = DateUtils.str2Date(res.get(i).replace("T"," "),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));
+                param = DateUtils.str2Date(res.get(i).replace("T"," "),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             }else if(types[i] == Double.class){
                 param = MathUtil.toDouble(res.get(i));
             }

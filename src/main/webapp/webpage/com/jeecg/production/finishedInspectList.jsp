@@ -11,7 +11,7 @@
             $('#finishedInspectList').datagrid({
                 idField: 'id',
                 title: '成品首末检',
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                url: 'finishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
                 fit: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -25,12 +25,20 @@
                 striped: true,
                 showFooter: true,
                 frozenColumns: [[]],
-                columns: [[{field: 'id', title: '编号', hidden: true, sortable: true}, {
+                columns: [[{field: 'id', title: '编号', hidden: true, sortable: true},
+                    {
                     field: 'finishedCode',
                     title: '成品编号',
                     sortable: true
-                }, {field: 'finishedName', title: '成品名称', sortable: true},
-                    {field: 'productionOrderNumber', title: '生产订单号', sortable: true}, {
+                    },
+                    {field: 'finishedName', title: '成品名称', sortable: true},
+                    {field: 'productionOrderNumber', title: '生产订单号', sortable: true},
+                    {field: 'result', title: '检验结果', sortable: true},
+                    {field: 'batchNo', title: '批号', sortable: true},
+                    {field: 'count', title: '数量', sortable: true},
+                    {field: 'qualifiedCount', title: '合格数量数量', sortable: true},
+                    {field: 'unQualifiedCount', title: '不合格数量', sortable: true},
+                    {
                     field: 'inspectLogSheet',
                     title: '首末检记录表',
                     sortable: true,
@@ -219,7 +227,7 @@
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
                 $('#finishedInspectList').datagrid({
-                    url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                    url: 'finishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
                     pageNumber: 1
                 });
             }
@@ -228,7 +236,7 @@
         function dosearch(params) {
             var jsonparams = $.parseJSON(params);
             $('#finishedInspectList').datagrid({
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                url: 'finishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
                 queryParams: jsonparams
             });
         }
@@ -266,7 +274,7 @@
                 $(this).attr('checked', false);
             });
             $('#finishedInspectList').datagrid({
-                url: 'finishedInspectController.do?datagrid&field=id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
+                url: 'finishedInspectController.do?datagrid&field=result,batchNo,count,qualifiedCount,unQualifiedCount,id,finishedCode,finishedName,salesOrderNumber,productionOrderNumber,inspectLogSheet,',
                 pageNumber: 1
             });
         }</script>
@@ -287,8 +295,8 @@
             <div style="border-bottom-width:0;" class="datagrid-toolbar">
                 <span style="float:left;">
                     <a href="#" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addNew()">录入</a>
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','finishedInspectController.do?addorupdate','finishedInspectList',null,null)">编辑</a>
-                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','finishedInspectController.do?addorupdate','finishedInspectList',null,null)">查看</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="update('编辑','finishedInspectController.do?addorupdate','finishedInspectList','100%','100%')">编辑</a>
+                    <a href="#" class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="detail('查看','finishedInspectController.do?addorupdate','finishedInspectList','100%','100%')">查看</a>
                 </span>
                 <div style="clear:both"></div>
             </div>
