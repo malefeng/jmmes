@@ -1,9 +1,7 @@
 package com.jeecg.controller.production;
 
 import com.jeecg.entity.basic.SemiFinishedProductEntity;
-import com.jeecg.entity.production.SemiFinishedFirstInspectEntity;
-import com.jeecg.entity.production.SemiFinishedInspectEntity;
-import com.jeecg.entity.production.SemiFinishedLastInspectEntity;
+import com.jeecg.entity.production.*;
 import com.jeecg.page.production.SemiFinishedInspectPage;
 import com.jeecg.service.basic.SemiFinishedProductServiceI;
 import com.jeecg.service.production.SemiFinishedInspectServiceI;
@@ -36,6 +34,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 /**   
@@ -134,6 +133,34 @@ public class SemiFinishedInspectController extends BaseController {
 		String message = null;
 		List<SemiFinishedFirstInspectEntity> semiFinishedFirstInspectList =  semiFinishedInspectPage.getSemiFinishedFirstInspectList();
 		List<SemiFinishedLastInspectEntity> semiFinishedLastInspectList =  semiFinishedInspectPage.getSemiFinishedLastInspectList();
+		int count = 0,qualifiedCount = 0,unQualifiedCount = 0;
+		if(semiFinishedFirstInspectList!=null&&semiFinishedFirstInspectList.size()>0){
+			for (SemiFinishedFirstInspectEntity semiFinishedFirstInspect : semiFinishedFirstInspectList) {
+				count++;
+				if(semiFinishedFirstInspect.getFirstInspectResult()==1){
+					qualifiedCount++;
+				}else{
+					unQualifiedCount++;
+				}
+			}
+		}
+		if(semiFinishedLastInspectList!=null&&semiFinishedLastInspectList.size()>0){
+			Date date = null;
+			for (SemiFinishedLastInspectEntity semiFinishedLastInspect : semiFinishedLastInspectList) {
+				if(date==null||date.compareTo(semiFinishedLastInspect.getLastInspectDate())>0){
+					semiFinishedInspect.setResult(semiFinishedLastInspect.getLastInspectResult()==1?"OK":"NG");
+				}
+				count++;
+				if(semiFinishedLastInspect.getLastInspectResult()==1){
+					qualifiedCount++;
+				}else{
+					unQualifiedCount++;
+				}
+			}
+		}
+		semiFinishedInspect.setCount(count);
+		semiFinishedInspect.setQualifiedCount(qualifiedCount);
+		semiFinishedInspect.setUnQualifiedCount(unQualifiedCount);
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(semiFinishedInspect.getId())) {
 			message = "更新成功";

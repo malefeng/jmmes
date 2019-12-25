@@ -48,6 +48,8 @@ public class QRCodeEntity implements java.io.Serializable {
 	private java.lang.String sysCompanyCode;
 	/**有效性*/
 	private java.lang.Integer isValid;
+	/**米数*/
+	private int rawMaterialNumber;
 
 	/**
 	 *方法: 取得java.lang.String
@@ -278,10 +280,27 @@ public class QRCodeEntity implements java.io.Serializable {
 		this.isValid = isValid;
 	}
 
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  数量
+	 */
+	@Column(name ="RAW_MATERIAL_NUMBER",nullable=true,precision=10,scale=0)
+	public java.lang.Integer getRawMaterialNumber(){
+		return this.rawMaterialNumber;
+	}
+
+	/**
+	 *方法: 设置java.lang.Integer
+	 *@param: java.lang.Integer  数量
+	 */
+	public void setRawMaterialNumber(java.lang.Integer rawMaterialNumber){
+		this.rawMaterialNumber = rawMaterialNumber;
+	}
+
 	public QRCodeEntity() {
 	}
 
-	public QRCodeEntity( String code, String number,String orderNumber,  String materialSize, String materialName, String qrCodeType, String materialType, String batchNo) {
+	public QRCodeEntity( String code, String number,String orderNumber,  String materialSize, String materialName, String qrCodeType, String materialType, String batchNo,int rawMaterialNumber) {
 		this.code = code;
 		this.number = number;
 		this.orderNumber = orderNumber;
@@ -290,9 +309,10 @@ public class QRCodeEntity implements java.io.Serializable {
 		this.qrCodeType = qrCodeType;
 		this.materialType = materialType;
 		this.batchNo = batchNo;
+		this.rawMaterialNumber = rawMaterialNumber;
 	}
 
 	public QRCodeEntity clone(){
-		return new QRCodeEntity(this.code,this.number,this.orderNumber,this.materialSize,this.materialName,this.qrCodeType,this.materialType,this.batchNo);
+		return new QRCodeEntity(this.code,this.number,this.orderNumber,this.materialSize,this.materialName,this.qrCodeType,this.materialType,this.batchNo,this.rawMaterialNumber);
 	}
 }

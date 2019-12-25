@@ -151,6 +151,17 @@
                            value="<fmt:formatDate value='${salesReleaseOrderPage.acquireTime}' type="date" pattern="yyyy-MM-dd hh:mm:ss"/>"/>
                     <span class="Validform_checktip"></span>
                 </td>
+                <td align="right"><label class="Validform_label">配货条件:</label></td>
+                <td class="value">
+                    <select id="screen">
+                        <option value="0">请选择</option>
+                        <option value="1">大于400M</option>
+                        <option value="2">大于500M</option>
+                        <option value="3">大于2000M</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td data-print="false" colspan="2" style="text-align: center">
                     <button type="button" onclick="print_html()" class="ui_buttons">打印</button>
                     <button type="button" onclick="dosing()" class="ui_buttons">配货</button>
@@ -266,6 +277,7 @@
     }
     function dosing(){
         var remainData = CountRemaining("salesReleaseNode_table",3,null,"salesReleaseOrgNode_table",2,9);
+        remainData["screen"] = parseInt($("#screen option:selected").val());
         if (JSON.stringify(remainData) != JSON.stringify({})){
             $.getJSON("salesReleaseOrderController.do?dosing",{remainData:JSON.stringify(remainData)},function(data){
                 if(!!data&&data.length>0){

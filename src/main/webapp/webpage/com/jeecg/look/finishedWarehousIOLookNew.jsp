@@ -26,12 +26,12 @@
             /*width: 95%;*/
             height: 20px;
             line-height: 20px;
-            font-size: 18px;
+            font-size: 20px;
         }
         .table, .table * {
             margin: 0 auto;
             padding: 0;
-            font-size: 12px;
+            font-size: 18px;
             font-family: Arial, 宋体, Helvetica, sans-serif;
         }
 
@@ -43,7 +43,7 @@
 
         .table-tr {
             display: table-row;
-            height: 18px;
+            height: 20px;
         }
 
         .table-th {
@@ -84,8 +84,8 @@
             <div class="table-th">物料名称</div>
             <div class="table-th">规格型号</div>
             <div class="table-th">客户</div>
-            <div class="table-th">应发数量</div>
-            <div class="table-th">实发数量</div>
+            <div class="table-th">应发米数</div>
+            <div class="table-th">实发米数</div>
             <div class="table-th">发货率（%）</div>
             <div class="table-th">发货完成时间</div>
         </div>

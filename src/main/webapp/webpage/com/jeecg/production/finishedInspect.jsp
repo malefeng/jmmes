@@ -96,6 +96,21 @@
 			  <input type="hidden" name="productionOrderNumber" value="${finishedInspectMainPage.productionOrderNumber}">
 		  </li>
 		  <li>
+			  <a href="javascrip:;" name="">总数量:</a>
+			  <a href="javascrip:;">${finishedInspectMainPage.count}</a>
+			  <input type="hidden" name="count" value="${finishedInspectMainPage.count}">
+		  </li>
+		  <li>
+			  <a href="javascrip:;" name="">合格数量:</a>
+			  <a href="javascrip:;">${finishedInspectMainPage.qualifiedCount}</a>
+			  <input type="hidden" name="qualifiedCount" value="${finishedInspectMainPage.qualifiedCount}">
+		  </li>
+		  <li>
+			  <a href="javascrip:;" name="">不合格数量:</a>
+			  <a href="javascrip:;">${finishedInspectMainPage.unQualifiedCount}</a>
+			  <input type="hidden" name="unQualifiedCount" value="${finishedInspectMainPage.unQualifiedCount}">
+		  </li>
+		  <li>
 			  <a href="javascrip:;" name="">首末检记录表:</a>
 			  <t:webUploader name="inspectLogSheet" displayTxt="true" pathValues="${finishedInspectMainPage.inspectLogSheet}"  extensions="xlsx" bizType="semifinished"></t:webUploader>
 		  </li>
