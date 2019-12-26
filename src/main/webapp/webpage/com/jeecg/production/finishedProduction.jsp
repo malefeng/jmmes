@@ -98,7 +98,21 @@
 				<input nullmsg="请填写生产领料单号" errormsg="生产领料单号格式不对" class="inputxt" id="takeMaterilNumber" name="takeMaterilNumber" ignore="ignore"	value="${finishedProductionPage.takeMaterilNumber}" />
 				<span class="Validform_checktip"></span>
 			</td>
+			<td align="right"><label class="Validform_label">是否需要熟成:</label></td>
+			<td class="value">
+				<select id="needRipening" name="needRipening" value="${finishedProductionPage.needRipening}">
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
 			</tr>
+				<tr id="ripeningHours_line">
+					<td align="right"><label class="Validform_label">熟成时长:</label></td>
+					<td class="value">
+						<input nullmsg="请填写生产领料单号" errormsg="生产领料单号格式不对" class="inputxt" id="ripeningHours" name="ripeningHours" ignore="ignore" value="${finishedProductionPage.ripeningHours}" />
+						<span class="Validform_checktip"></span>
+					</td>
+				</tr>
 			</table>
 			<div style="width: auto;height: 200px;">
 				<%-- 增加一个div，用于调节页面大小，否则默认太小 --%>
@@ -126,3 +140,15 @@
 		 </tbody>
 		</table>
  </body>
+<script>
+	$("#needRipening").change(function(){
+		var val = $("#needRipening option:selected").val();
+		if(val=="0"){
+			$("#ripeningHours").val("");
+			$("#ripeningHours_line").hide();
+		}else{
+			$("#ripeningHours").removeAttr("disable");
+			$("#ripeningHours_line").show();
+		}
+	})
+</script>

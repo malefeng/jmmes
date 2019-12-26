@@ -1,6 +1,7 @@
 package com.jeecg.controller.production;
 
 import com.jeecg.api.production.FinishedProductionDTO;
+import com.jeecg.entity.production.FinishedInspectItemEntity;
 import com.jeecg.entity.production.FinishedProductionEntity;
 import com.jeecg.entity.production.FinishedProductionNodeEntity;
 import com.jeecg.page.production.FinishedProductionPage;
@@ -76,7 +77,6 @@ public class FinishedProductionController extends BaseController {
 
 	/**
 	 * api列表数据查询接口
-	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/apiList/{finishedSerino}")
@@ -91,7 +91,6 @@ public class FinishedProductionController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -132,7 +131,6 @@ public class FinishedProductionController extends BaseController {
 	/**
 	 * 添加成品生产列表
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -149,6 +147,15 @@ public class FinishedProductionController extends BaseController {
 			message = "添加成功";
 			finishedProductionService.addMain(finishedProduction, finishedProductionNodeList);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			//如果不需要熟成，则生成成品检验数据
+			if(finishedProduction.getNeedRipening()!=1){
+				FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+				finishedInspectItemEntity.setFinishedCode(finishedProduction.getFinishedCode());
+				finishedInspectItemEntity.setFinishedName(finishedProduction.getFinishedName());
+				finishedInspectItemEntity.setProductionDispatchingNumber(finishedProduction.getProductionOrderNumber());
+				finishedInspectItemEntity.setSalesOrderNumber(finishedProduction.getFinishedSerino());
+				systemService.save(finishedInspectItemEntity);
+			}
 		}
 		j.setMsg(message);
 		return j;

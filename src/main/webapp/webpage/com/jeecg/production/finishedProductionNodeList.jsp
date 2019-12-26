@@ -28,11 +28,11 @@
 	<tr bgcolor="#E6E6E6">
 		<td align="center" bgcolor="#EEEEEE">序号</td>
 		<td align="center" bgcolor="#EEEEEE">操作</td>
-				  <td align="left" bgcolor="#EEEEEE">成分编码</td>
-				  <td align="left" bgcolor="#EEEEEE">成分代码</td>
-				  <td align="left" bgcolor="#EEEEEE">成分名称</td>
-				  <td align="left" bgcolor="#EEEEEE">成分类型</td>
-				  <td align="left" bgcolor="#EEEEEE">成分批次</td>
+				  <td align="left" bgcolor="#EEEEEE">成品编码</td>
+				  <td align="left" bgcolor="#EEEEEE">成品代码</td>
+				  <td align="left" bgcolor="#EEEEEE">成品名称</td>
+				  <td align="left" bgcolor="#EEEEEE">成品类型</td>
+				  <td align="left" bgcolor="#EEEEEE">成品批次</td>
 				  <td align="left" bgcolor="#EEEEEE">规格型号</td>
 				  <td align="left" bgcolor="#EEEEEE">数量</td>
 				  <td align="left" bgcolor="#EEEEEE">单位</td>

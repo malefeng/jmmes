@@ -184,3 +184,14 @@
 			</table>
 		</t:formvalid>
  </body>
+<script>
+	$("#productSerino").change(function(){
+		var productSerino = $("#productSerino").val();
+		$.get("ripeningWarehousIOController.do?needRepening?productSerino="+productSerino,function(data){
+			if(!!data||!data.success){
+				$("#productSerino").val("");
+				$.messager.alert('error', data.msg, 'info');
+			}
+		})
+	})
+</script>

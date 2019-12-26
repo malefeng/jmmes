@@ -1,5 +1,8 @@
 package com.jeecg.controller.warehous;
 
+import com.jeecg.entity.production.FinishedInspectItemEntity;
+import com.jeecg.entity.production.FinishedProductionEntity;
+import com.jeecg.entity.production.SemiFinishedProductionEntity;
 import com.jeecg.entity.warehous.RipeningWarehousIOEntity;
 import com.jeecg.service.warehous.RipeningWarehousIOServiceI;
 import com.jeecg.util.DictionaryUtil;
@@ -178,8 +181,42 @@ public class RipeningWarehousIOController extends BaseController {
 			message = "熟成出入库列表添加成功";
 			ripeningWarehousIOService.save(ripeningWarehousIO);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			//成品出库时，生成成品检验数据
+			if("2".equals(ripeningWarehousIO.getRipeningProType())&&"2".equals(ripeningWarehousIO.getRipeningStoreType())){
+				FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+				finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductCode());
+				finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
+				finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
+				finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
+				systemService.save(finishedInspectItemEntity);
+			}
 		}
 		j.setMsg(message);
+		return j;
+	}
+
+
+	/**
+	 * 检测是否需要熟成
+	 * @param productSerino
+	 * @return
+	 */
+	@RequestMapping(params = "needRepening")
+	@ResponseBody
+	public AjaxJson needRepening(String productSerino){
+		AjaxJson j = new AjaxJson();
+		FinishedProductionEntity finishedSerino = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", productSerino);
+		if(finishedSerino!=null&&finishedSerino.getNeedRipening()==1){
+			j.setSuccess(true);
+			return j;
+		}
+		SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", productSerino);
+		if(semiFinishedProductionEntity!=null&&semiFinishedProductionEntity.getNeedRipening()==1){
+			j.setSuccess(true);
+			return j;
+		}
+		j.setSuccess(true);
+		j.setMsg("该产品不存在或无需熟成");
 		return j;
 	}
 
