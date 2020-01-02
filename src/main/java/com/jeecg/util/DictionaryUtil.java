@@ -57,6 +57,10 @@ public class DictionaryUtil {
             case "checkType" : return getDicList("","check_type","");//盘点类型
             case "checkStaut" : return getDicList("","checkStaut","");//盘点状态
             case "materType" : return getDicList("","mater_type","");//物资类型
+            case "maintType" : return getDicList("","maintType","");//维护类型
+            case "maintWay" : return getDicList("","maintWay","");//维护方式
+            case "maintState" : return getDicList("","maintState","");//维护状态
+            case "maintRes" : return getDicList("","maintRes","");//维护结果
             default:
                 return null;
         }
