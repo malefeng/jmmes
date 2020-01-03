@@ -171,7 +171,10 @@ public class FinishedProductPrintController extends BaseController {
 			values[5] = qrCodeEntity.getMaterialSize();
 			//二维码图片展示信息：编号,代码,领料单号,生产派工单号,33
 			String qrCodeStr = qrCode.concat(",").concat(finishedProductPrintEntity.getFinishedCode()).concat(",").concat(takeMaterilNumber).concat(",").concat(productionDispatchingNumber).concat(",33");
-			result.add(generateContent(qrCodeStr, keys, values));
+            Map map = generateContent(qrCodeStr, keys, values);
+            //一次需打印两个相同的成品码
+            result.add(map);
+            result.add(map);
 
 
 			//成品首检码信息
