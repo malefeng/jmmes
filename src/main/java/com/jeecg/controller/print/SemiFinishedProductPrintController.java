@@ -145,70 +145,70 @@ public class SemiFinishedProductPrintController extends BaseController {
 	private void generatePrintData(String id, String batchNo,int times, int firstTimes, int lastTimes, List toSaveList, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
 		QRCodeEntity qrCodeEntity = new QRCodeEntity();
 		SemiFinishedProductEntity semiFinishedProductEntity = semiFinishedProductPrintService.get(SemiFinishedProductEntity.class,id);
-		//二维码代码待维护
-		String qrCode = sequenceServiceI.getqrCode("semiFinished");
-		//生产派工单
-		qrCodeEntity.setOrderNumber(productionDispatchingNumber);
-		qrCodeEntity.setNumber(qrCode);
-		qrCodeEntity.setCode(semiFinishedProductEntity.getSemiFinishedCode());
-		qrCodeEntity.setMaterialSize(semiFinishedProductEntity.getSemiFinishedSize());
-		qrCodeEntity.setMaterialName(semiFinishedProductEntity.getSemiFinishedName());
-		//二维码类型
-		qrCodeEntity.setQrCodeType("2");
-		qrCodeEntity.setMaterialType(semiFinishedProductEntity.getMaterialType());
-		qrCodeEntity.setBatchNo(batchNo);
-		toSaveList.add(qrCodeEntity);
-		//半成品码信息
-		//明文key
-		Object[] keys = new Object[6];
-		//明文value
-		Object[] values = new Object[6];
-		//二维码类型
-		keys[0] = "类型";
-		values[0] = "22-半成品";
-		//批次
-		keys[1] = "批次";
-		values[1] = batchNo;
-		//编号
-		keys[2] = "编号";
-		values[2] = qrCode;
-		//代码
-		keys[3] = "代码";
-		values[3] = qrCodeEntity.getCode();
-		//名称
-		keys[4] = "名称";
-		values[4] = qrCodeEntity.getMaterialName();
-		//规格型号
-		keys[5] = "规格型号";
-		values[5] = qrCodeEntity.getMaterialSize();
+		for (int k = 0; k < times; k++) {
+			//二维码代码待维护
+			String qrCode = sequenceServiceI.getqrCode("semiFinished");
+			//生产派工单
+			qrCodeEntity.setOrderNumber(productionDispatchingNumber);
+			qrCodeEntity.setNumber(qrCode);
+			qrCodeEntity.setCode(semiFinishedProductEntity.getSemiFinishedCode());
+			qrCodeEntity.setMaterialSize(semiFinishedProductEntity.getSemiFinishedSize());
+			qrCodeEntity.setMaterialName(semiFinishedProductEntity.getSemiFinishedName());
+			//二维码类型
+			qrCodeEntity.setQrCodeType("2");
+			qrCodeEntity.setMaterialType(semiFinishedProductEntity.getMaterialType());
+			qrCodeEntity.setBatchNo(batchNo);
+			toSaveList.add(qrCodeEntity);
+			//半成品码信息
+			//明文key
+			Object[] keys = new Object[6];
+			//明文value
+			Object[] values = new Object[6];
+			//二维码类型
+			keys[0] = "类型";
+			values[0] = "22-半成品";
+			//批次
+			keys[1] = "批次";
+			values[1] = batchNo;
+			//编号
+			keys[2] = "编号";
+			values[2] = qrCode;
+			//代码
+			keys[3] = "代码";
+			values[3] = qrCodeEntity.getCode();
+			//名称
+			keys[4] = "名称";
+			values[4] = qrCodeEntity.getMaterialName();
+			//规格型号
+			keys[5] = "规格型号";
+			values[5] = qrCodeEntity.getMaterialSize();
 
-		//二维码图片展示信息：编号,代码,领料单号,生产派工单,22
-		String qrCodeStr = qrCode.concat(",").concat(semiFinishedProductEntity.getSemiFinishedCode()).concat(",").concat(takeMaterilNumber).concat(",").concat(productionDispatchingNumber).concat(",22");
-		Map map = generateContent(qrCodeStr, keys, values);
-		for (int i = 0; i < times; i++) {
-			result.add(map);
-		}
-		//半成品首检码信息
-		for (int i = 0; i < firstTimes; i++) {
-			qrCodeEntity  = qrCodeEntity.clone();
-			//半成品编号规则+2位序列号，序列号从11开始
-			values[2] = qrCode + (11+i);
-			values[0] = 22+""+(11+i)+"-半成品首检码";
-			qrCodeEntity.setNumber(qrCode + (11+i));
-			qrCodeEntity.setQrCodeType("3");
-			toSaveList.add(qrCodeEntity);
-			result.add(generateContent(String.valueOf(values[2]), keys, values));
-		}
-		//半成品末检码信息
-		for (int i = 0; i < lastTimes; i++) {
-			qrCodeEntity  = qrCodeEntity.clone();
-			//半成品编号规则+2位序列号，序列号从91开始
-			values[2] = qrCode + (91+i);
-			values[0] = 22+""+(91+i)+"-半成品末检码";
-			qrCodeEntity.setNumber(qrCode + (91+i));
-			qrCodeEntity.setQrCodeType("4");
-			toSaveList.add(qrCodeEntity);
-			result.add(generateContent(String.valueOf(values[2]), keys, values));
+			//二维码图片展示信息：编号,代码,领料单号,生产派工单,22
+			String qrCodeStr = qrCode.concat(",").concat(semiFinishedProductEntity.getSemiFinishedCode()).concat(",").concat(takeMaterilNumber).concat(",").concat(productionDispatchingNumber).concat(",22");
+			result.add(generateContent(qrCodeStr, keys, values));
+
+			//半成品首检码信息
+			for (int i = 0; i < firstTimes; i++) {
+				qrCodeEntity  = qrCodeEntity.clone();
+				//半成品编号规则+2位序列号，序列号从11开始
+				values[2] = qrCode + (11+i);
+				values[0] = 22+""+(11+i)+"-半成品首检码";
+				qrCodeEntity.setNumber(qrCode + (11+i));
+				qrCodeEntity.setQrCodeType("3");
+				toSaveList.add(qrCodeEntity);
+				result.add(generateContent(String.valueOf(values[2]), keys, values));
+			}
+			//半成品末检码信息
+			for (int i = 0; i < lastTimes; i++) {
+				qrCodeEntity  = qrCodeEntity.clone();
+				//半成品编号规则+2位序列号，序列号从91开始
+				values[2] = qrCode + (91+i);
+				values[0] = 22+""+(91+i)+"-半成品末检码";
+				qrCodeEntity.setNumber(qrCode + (91+i));
+				qrCodeEntity.setQrCodeType("4");
+				toSaveList.add(qrCodeEntity);
+				result.add(generateContent(String.valueOf(values[2]), keys, values));
+			}
 		}
 	}
 
