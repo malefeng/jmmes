@@ -52,6 +52,9 @@ function generateTr(tr,data,tabId,properArrs1,properArrs2){
         var tagName = tabId+"[#index#]."+proper1;
         var dom = tr.find("[name='"+tagName+"']");
         var val = data[proper2];
+        if(proper1=="warehousingDate"){
+            val = val.substring(0,10);
+        }
         if(!!val){
             dom.val(val);
         }
