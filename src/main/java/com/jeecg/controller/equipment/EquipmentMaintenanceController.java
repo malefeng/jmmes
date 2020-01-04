@@ -80,6 +80,13 @@ public class EquipmentMaintenanceController extends BaseController {
 		return new ModelAndView("com/jeecg/equipment/equipmentMaintenanceList");
 	}
 
+
+	@RequestMapping(value = "/apiList/{maintenanceBatch}")
+	@ResponseBody
+	public List apiList(@PathVariable("maintenanceBatch") String maintenanceBatch){
+		return equipmentMaintenanceService.findByProperty(EquipmentMaintenanceEntity.class,"maintenanceBatch",maintenanceBatch);
+	}
+
 	/**
 	 * easyui AJAX请求数据
 	 * 
@@ -145,6 +152,11 @@ public class EquipmentMaintenanceController extends BaseController {
 		}
 		j.setMsg(message);
 		return j;
+	}
+
+	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
+	public void apiSave(@RequestBody EquipmentMaintenanceEntity equipmentMaintenanceEntity){
+		equipmentMaintenanceService.save(equipmentMaintenanceEntity);
 	}
 
 	/**

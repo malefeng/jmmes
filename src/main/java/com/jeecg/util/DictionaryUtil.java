@@ -20,7 +20,7 @@ public class DictionaryUtil {
     @Autowired
     private SystemService service;
 
-    private Map getDicList(String tab, String keyProperty, String valProperty){
+    private Map<String,String> getDicList(String tab, String keyProperty, String valProperty){
         List<DictEntity> dictEntities = service.queryDict(tab, keyProperty, valProperty);
         if(dictEntities!=null&& dictEntities.size()>0){
             Map result = new HashMap(dictEntities.size());
@@ -64,6 +64,14 @@ public class DictionaryUtil {
             default:
                 return null;
         }
+    }
+
+    public String getVal(String dicType,String key){
+        Map<String,String> dicMap = getDicList(dicType);
+        if(dicMap!=null){
+            return dicMap.get(key);
+        }
+        return null;
     }
 
     public boolean writeDicList(HttpServletRequest request, String ... dicTypes){

@@ -133,34 +133,19 @@ public class SemiFinishedInspectController extends BaseController {
 		String message = null;
 		List<SemiFinishedFirstInspectEntity> semiFinishedFirstInspectList =  semiFinishedInspectPage.getSemiFinishedFirstInspectList();
 		List<SemiFinishedLastInspectEntity> semiFinishedLastInspectList =  semiFinishedInspectPage.getSemiFinishedLastInspectList();
-		int count = 0,qualifiedCount = 0,unQualifiedCount = 0;
-		if(semiFinishedFirstInspectList!=null&&semiFinishedFirstInspectList.size()>0){
-			for (SemiFinishedFirstInspectEntity semiFinishedFirstInspect : semiFinishedFirstInspectList) {
-				count++;
-				if(semiFinishedFirstInspect.getFirstInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
-				}
-			}
-		}
-		if(semiFinishedLastInspectList!=null&&semiFinishedLastInspectList.size()>0){
+		if(semiFinishedLastInspectList!=null&&semiFinishedLastInspectList.size()>0) {
 			Date date = null;
+			SemiFinishedLastInspectEntity lastInspectEntity = new SemiFinishedLastInspectEntity();
 			for (SemiFinishedLastInspectEntity semiFinishedLastInspect : semiFinishedLastInspectList) {
-				if(date==null||date.compareTo(semiFinishedLastInspect.getLastInspectDate())>0){
-					semiFinishedInspect.setResult(semiFinishedLastInspect.getLastInspectResult()==1?"OK":"NG");
-				}
-				count++;
-				if(semiFinishedLastInspect.getLastInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
+				if (date == null || date.compareTo(semiFinishedLastInspect.getLastInspectDate()) > 0) {
+					lastInspectEntity = semiFinishedLastInspect;
 				}
 			}
+			semiFinishedInspect.setResult(lastInspectEntity.getLastInspectResult() == 1 ? "OK" : "NG");
+			semiFinishedInspect.setCount(lastInspectEntity.getCount());
+			semiFinishedInspect.setQualifiedCount(lastInspectEntity.getQualifiedCount());
+			semiFinishedInspect.setUnQualifiedCount(lastInspectEntity.getUnqualifiedCount());
 		}
-		semiFinishedInspect.setCount(count);
-		semiFinishedInspect.setQualifiedCount(qualifiedCount);
-		semiFinishedInspect.setUnQualifiedCount(unQualifiedCount);
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(semiFinishedInspect.getId())) {
 			message = "更新成功";

@@ -9,46 +9,42 @@
             $('#finishedProductPrintList').datagrid({
                 idField: 'id',
                 title: '成品码',
-                url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,finishedName,materialType,finishedSize,finishedNumber,finishedUnitCode,',
+                url: 'finishedProductPrintController.do?datagrid&field=id,finishedCode,finishedName,materialType,finishedSize,finishedNumber,finishedUnitCode,createDate',
                 fit: true,
-                rownumbers: true,
                 loadMsg: '数据加载中...',
                 pageSize: 10,
                 pagination: true,
                 pageList: [10, 20, 30],
-                sortOrder: 'desc',
+                sortName:"createDate",
+                sortOrder:"desc",
                 rownumbers: true,
                 singleSelect: true,
                 fitColumns: true,
                 striped: true,
                 showFooter: true,
                 frozenColumns: [[]],
-                columns: [[{field: 'id', title: '编号', hidden: true, sortable: true}, {
+                columns: [[{field: 'id', title: '编号', hidden: true},
+                    {
                     field: 'finishedCode',
                     title: '成品代码',
-                    width: 120,
-                    sortable: true
+                    width: 120
                 }, {
                     field: 'finishedName',
                     title: '成品名称',
-                    width: 120,
-                    sortable: true
+                    width: 120
                 }, {
                     field: 'materialType',
                     title: '物料类型',
                     width: 120,
-                    sortable: true,
                     formatter:function (value){return ${matTypeDic}[value]}
-                }, {field: 'finishedSize', title: '规格', width: 120, sortable: true}, {
+                }, {field: 'finishedSize', title: '规格', width: 120}, {
                     field: 'finishedNumber',
                     title: '数量',
-                    width: 120,
-                    sortable: true
+                    width: 120
                 }, {
                     field: 'finishedUnitCode',
                     title: '单位',
                     width: 120,
-                    sortable: true,
                     formatter: function (value){return ${unitDic}[value]}
                 }, {
                     field: 'opt', title: '操作', width: 100, formatter: function (value, rec, index) {

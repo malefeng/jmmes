@@ -136,34 +136,19 @@ public class FinishedInspectController extends BaseController {
 		String message = null;
 		List<FinishedFirstInspectEntity> finishedFirstInspectList =  finishedInspectPage.getFinishedFirstInspectList();
 		List<FinishedLastInspectEntity> finishedLastInspectList =  finishedInspectPage.getFinishedLastInspectList();
-		int count = 0,qualifiedCount = 0,unQualifiedCount = 0;
-		if(finishedFirstInspectList!=null&&finishedFirstInspectList.size()>0){
-			for (FinishedFirstInspectEntity finishedFirstInspectEntity : finishedFirstInspectList) {
-				count++;
-				if(finishedFirstInspectEntity.getFirstInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
-				}
-			}
-		}
 		if(finishedLastInspectList!=null&&finishedLastInspectList.size()>0){
 			Date date = null;
+			FinishedLastInspectEntity lastInspectEntity = new FinishedLastInspectEntity();
 			for (FinishedLastInspectEntity finishedLastInspectEntity : finishedLastInspectList) {
 				if(date==null||date.compareTo(finishedLastInspectEntity.getLastInspectDate())>0){
-					finishedInspect.setResult(finishedLastInspectEntity.getLastInspectResult()==1?"OK":"NG");
-				}
-				count++;
-				if(finishedLastInspectEntity.getLastInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
+					lastInspectEntity = finishedLastInspectEntity;
 				}
 			}
+			finishedInspect.setResult(lastInspectEntity.getLastInspectResult()==1?"OK":"NG");
+			finishedInspect.setCount(lastInspectEntity.getCount());
+			finishedInspect.setQualifiedCount(lastInspectEntity.getQualifiedCount());
+			finishedInspect.setUnQualifiedCount(lastInspectEntity.getUnqualifiedCount());
 		}
-		finishedInspect.setCount(count);
-		finishedInspect.setQualifiedCount(qualifiedCount);
-		finishedInspect.setUnQualifiedCount(unQualifiedCount);
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(finishedInspect.getId())) {
 			message = "更新成功";

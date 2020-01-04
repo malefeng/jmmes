@@ -50,6 +50,8 @@ public class QRCodeEntity implements java.io.Serializable {
 	private java.lang.Integer isValid;
 	/**米数*/
 	private int rawMaterialNumber;
+	/**单位*/
+	private String unit;
 
 	/**
 	 *方法: 取得java.lang.String
@@ -293,14 +295,27 @@ public class QRCodeEntity implements java.io.Serializable {
 	 *方法: 设置java.lang.Integer
 	 *@param: java.lang.Integer  数量
 	 */
-	public void setRawMaterialNumber(java.lang.Integer rawMaterialNumber){
+	public void setRawMaterialNumber(int rawMaterialNumber) {
 		this.rawMaterialNumber = rawMaterialNumber;
+	}
+
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  数量
+	 */
+	@Column(name ="UNIT",nullable=true,precision=10,scale=0)
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public QRCodeEntity() {
 	}
 
-	public QRCodeEntity( String code, String number,String orderNumber,  String materialSize, String materialName, String qrCodeType, String materialType, String batchNo,int rawMaterialNumber) {
+	public QRCodeEntity( String code, String number,String orderNumber,  String materialSize, String materialName, String qrCodeType, String materialType, String batchNo,int rawMaterialNumber,String unit) {
 		this.code = code;
 		this.number = number;
 		this.orderNumber = orderNumber;
@@ -310,9 +325,10 @@ public class QRCodeEntity implements java.io.Serializable {
 		this.materialType = materialType;
 		this.batchNo = batchNo;
 		this.rawMaterialNumber = rawMaterialNumber;
+		this.unit = unit;
 	}
 
 	public QRCodeEntity clone(){
-		return new QRCodeEntity(this.code,this.number,this.orderNumber,this.materialSize,this.materialName,this.qrCodeType,this.materialType,this.batchNo,this.rawMaterialNumber);
+		return new QRCodeEntity(this.code,this.number,this.orderNumber,this.materialSize,this.materialName,this.qrCodeType,this.materialType,this.batchNo,this.rawMaterialNumber,this.unit);
 	}
 }

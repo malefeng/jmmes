@@ -98,9 +98,9 @@ public class PurchaseReceiptNodeController extends BaseController {
 			String rawMaterialCode = qrCodeEntity.getCode();
 			List result = new ArrayList();
 			//明文key
-			Object[] keys = new Object[6];
+			Object[] keys = new Object[8];
 			//明文value
-			Object[] values = new Object[6];
+			Object[] values = new Object[8];
 			//二维码类型
 			keys[0] = "类型";
 			values[0] = "11-原料";
@@ -119,9 +119,14 @@ public class PurchaseReceiptNodeController extends BaseController {
 			//规格型号
 			keys[5] = "规格型号";
 			values[5] = qrCodeEntity.getMaterialSize();
-			//米数
-			keys[6] = "米数";
-			values[6] = qrCodeEntity.getRawMaterialNumber();
+			//单位
+			keys[6] = "单位";
+			String unitCode = qrCodeEntity.getUnit();
+			String unitStr = dictionaryUtil.getVal("unitDic", unitCode);
+			values[6] = unitStr;
+			//数量
+			keys[7] = "米数";
+			values[7] = qrCodeEntity.getRawMaterialNumber();
 			result.add(generateContent(qrCode.concat(",").concat(rawMaterialCode).concat(",11"), keys, values));
 			return result;
 		}
@@ -145,6 +150,7 @@ public class PurchaseReceiptNodeController extends BaseController {
 				qrCodeEntity.setMaterialType(rawMaterial.getRawMaterialType());
 				qrCodeEntity.setBatchNo(batchNo);
 				qrCodeEntity.setRawMaterialNumber(rawMaterial.getRawMaterialNumber());
+				qrCodeEntity.setUnit(rawMaterial.getRawMaterialUnit());
 				//计算打印个数
 				int times = (int)Math.ceil(purchaseReceiptNodeEntity.getActualReceivedNumber()/(double)rawMaterial.getRawMaterialNumber());
 				for (int i = 0; i<times; i++){
@@ -154,9 +160,9 @@ public class PurchaseReceiptNodeController extends BaseController {
 					qrCodeEntity.setNumber(qrCode);
 					toSaveList.add(qrCodeEntity);
 					//明文key
-					Object[] keys = new Object[7];
+					Object[] keys = new Object[8];
 					//明文value
-					Object[] values = new Object[7];
+					Object[] values = new Object[8];
 					//二维码类型
 					keys[0] = "类型";
 					values[0] = "11-原料";
@@ -175,9 +181,14 @@ public class PurchaseReceiptNodeController extends BaseController {
 					//规格型号
 					keys[5] = "规格型号";
 					values[5] = rawMaterial.getRawMaterialSize();
-					//米数
-					keys[6] = "米数";
-					values[6] = rawMaterial.getRawMaterialNumber();
+					//单位
+					keys[6] = "单位";
+					String unitCode = qrCodeEntity.getUnit();
+					String unitStr = dictionaryUtil.getVal("unitDic", unitCode);
+					values[6] = unitStr;
+					//数量
+					keys[7] = "米数";
+					values[7] = qrCodeEntity.getRawMaterialNumber();
 
 					result.add(generateContent(qrCode.concat(",").concat(rawMaterial.getRawMaterialCode()).concat(",11"), keys, values));
 					//同一个原料码输出两次

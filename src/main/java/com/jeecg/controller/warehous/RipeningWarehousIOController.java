@@ -6,6 +6,7 @@ import com.jeecg.entity.production.SemiFinishedProductionEntity;
 import com.jeecg.entity.warehous.RipeningWarehousIOEntity;
 import com.jeecg.service.warehous.RipeningWarehousIOServiceI;
 import com.jeecg.util.DictionaryUtil;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -25,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,8 +35,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -163,16 +167,31 @@ public class RipeningWarehousIOController extends BaseController {
 	 */
 	@RequestMapping(params = "save")
 	@ResponseBody
+	@Transactional
 	public AjaxJson save(RipeningWarehousIOEntity ripeningWarehousIO, HttpServletRequest request) {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(ripeningWarehousIO.getId())) {
+			if(!couldRepening(ripeningWarehousIO)){
+				message = "产品熟成时长不足，请稍后再试";
+				j.setMsg(message);
+				return j;
+			}
 			message = "熟成出入库列表更新成功";
 			RipeningWarehousIOEntity t = ripeningWarehousIOService.get(RipeningWarehousIOEntity.class, ripeningWarehousIO.getId());
 			try {
 				MyBeanUtils.copyBeanNotNull2Bean(ripeningWarehousIO, t);
 				ripeningWarehousIOService.saveOrUpdate(t);
 				systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+				//成品出库时，生成成品检验数据
+				if("2".equals(ripeningWarehousIO.getRipeningProType())&&"2".equals(ripeningWarehousIO.getRipeningStoreType())){
+					FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+					finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductCode());
+					finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
+					finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
+					finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
+					systemService.save(finishedInspectItemEntity);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = "熟成出入库列表更新失败";
@@ -181,20 +200,41 @@ public class RipeningWarehousIOController extends BaseController {
 			message = "熟成出入库列表添加成功";
 			ripeningWarehousIOService.save(ripeningWarehousIO);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
-			//成品出库时，生成成品检验数据
-			if("2".equals(ripeningWarehousIO.getRipeningProType())&&"2".equals(ripeningWarehousIO.getRipeningStoreType())){
-				FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
-				finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductCode());
-				finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
-				finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
-				finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
-				systemService.save(finishedInspectItemEntity);
-			}
 		}
 		j.setMsg(message);
 		return j;
 	}
 
+
+	/**
+	 * 判读是都可以熟成出库：true-可以，false-不可以
+	 * @param ripeningWarehousIO
+	 * @return
+	 */
+	private boolean couldRepening(RipeningWarehousIOEntity ripeningWarehousIO){
+		if("2".equals(ripeningWarehousIO.getRipeningStoreType())){//熟成出库时，判断熟成时间是否满足
+			if("2".equals(ripeningWarehousIO.getRipeningProType())){//成品出库
+				FinishedProductionEntity finishedProductionEntity = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductCode());
+				Date createDate = finishedProductionEntity.getCreateDate();
+				Double ripeningHours = finishedProductionEntity.getRipeningHours();
+				//需要熟成，且熟成时间不为空
+				if("1".equals(finishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+					createDate = DateUtils.addMinutes(createDate, (int) (finishedProductionEntity.getRipeningHours()*60));
+					return createDate.compareTo(new Date())>=0;
+				}
+			}else if("1".equals(ripeningWarehousIO.getRipeningProType())){
+				SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductCode());
+				Date createDate = semiFinishedProductionEntity.getCreateDate();
+				Double ripeningHours = semiFinishedProductionEntity.getRipeningHours();
+				//需要熟成，且熟成时间不为空
+				if("1".equals(semiFinishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+					createDate = DateUtils.addMinutes(createDate, (int) (semiFinishedProductionEntity.getRipeningHours()*60));
+					return createDate.compareTo(new Date())>=0;
+				}
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 检测是否需要熟成
@@ -222,7 +262,10 @@ public class RipeningWarehousIOController extends BaseController {
 
 	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
 	@ResponseBody
-	public void apiSave(@RequestBody RipeningWarehousIOEntity ripeningWarehousIO){
+	public void apiSave(@RequestBody RipeningWarehousIOEntity ripeningWarehousIO,HttpServletResponse response) throws IOException {
+		if(!couldRepening(ripeningWarehousIO)){
+			response.sendError(202,"产品熟成时长不足，请稍后再试");
+		}
 		ripeningWarehousIOService.saveOrUpdate(ripeningWarehousIO);
 	}
 
