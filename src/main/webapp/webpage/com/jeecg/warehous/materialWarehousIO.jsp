@@ -30,7 +30,7 @@
  </head>
  <body>
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" tiptype="1" action="materialWarehousIOController.do?save">
-			<input id="id" name="+" type="hidden" value="${materialWarehousIOPage.id }">
+			<input id="id" name="id" type="hidden" value="${materialWarehousIOPage.id }">
 			<table cellpadding="0" cellspacing="1" class="formtable">
 			<tr>
 			<td align="right"><label class="Validform_label">原料编号:</label></td>

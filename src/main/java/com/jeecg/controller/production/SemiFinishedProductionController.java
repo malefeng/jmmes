@@ -116,7 +116,7 @@ public class SemiFinishedProductionController extends BaseController {
 		allEntitys.add(semiFinishedProduction);
 		List<SemiFinishedProductionNodeEntity> semiFinishedProductionNodeList =  systemService.findByProperty(SemiFinishedProductionNodeEntity.class,"semiFinishedSerino",semiFinishedProduction.getSemiFinishedSerino());
 		if(!ListUtils.isNullOrEmpty(semiFinishedProductionNodeList)){
-			allEntitys.add(semiFinishedProductionNodeList);
+			allEntitys.addAll(semiFinishedProductionNodeList);
 		}
 		message = "删除成功";
 		semiFinishedProductionService.deleteAllEntitie(allEntitys);
