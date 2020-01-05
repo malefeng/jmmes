@@ -79,12 +79,20 @@ public class PurchaseReceiptNodeController extends BaseController {
 		TagUtil.datagrid(response, dataGrid);
 	}
 
+
+	public Object getPrintDataByPurchaseNum(String purchaseNum){
+		List result = new ArrayList();
+		String sql = "select  from ";
+		purchaseReceiptNodeService.findForJdbc(sql,new Object[]{purchaseNum});
+		return result;
+	}
+
 	@RequestMapping(params = "getPrintData")
 	@ResponseBody
-	public Object getPrintData(String id, String batchNo){
+	public Object getPrintData(String id){
 		List toSaveList = new ArrayList();
 		List result = new ArrayList();
-		generatePrintData(id, batchNo, toSaveList, result);
+		generatePrintData(id, toSaveList, result);
 		//保存打印记录
 		purchaseReceiptNodeService.batchSave(toSaveList);
 		return result;
@@ -125,7 +133,7 @@ public class PurchaseReceiptNodeController extends BaseController {
 			String unitStr = dictionaryUtil.getVal("unitDic", unitCode);
 			values[6] = unitStr;
 			//数量
-			keys[7] = "米数";
+			keys[7] = "数量";
 			values[7] = qrCodeEntity.getRawMaterialNumber();
 			result.add(generateContent(qrCode.concat(",").concat(rawMaterialCode).concat(",11"), keys, values));
 			return result;
@@ -133,12 +141,13 @@ public class PurchaseReceiptNodeController extends BaseController {
 		return null;
 	}
 
-	private void generatePrintData(String id, String batchNo, List toSaveList, List result) {
+	private void generatePrintData(String id, List toSaveList, List result) {
 		PurchaseReceiptNodeEntity purchaseReceiptNodeEntity =purchaseReceiptNodeService.get(PurchaseReceiptNodeEntity.class,id);
 		if(purchaseReceiptNodeEntity!=null){
 			PurchaseReceiptEntity purchaseReceiptEntity = purchaseReceiptNodeService.get(PurchaseReceiptEntity.class,purchaseReceiptNodeEntity.getInspectId());
 			List<RawMaterialEntity> rawMaterialList = purchaseReceiptNodeService.findByProperty(RawMaterialEntity.class,"rawMaterialCode",purchaseReceiptNodeEntity.getRawMaterialCode());
 			if(rawMaterialList!=null&&rawMaterialList.size()>0){
+				String batchNo = purchaseReceiptNodeEntity.getAttr1();
 				RawMaterialEntity rawMaterial = rawMaterialList.get(0);
 				//生成打印信息
 				QRCodeEntity qrCodeEntity = new QRCodeEntity();
@@ -187,7 +196,7 @@ public class PurchaseReceiptNodeController extends BaseController {
 					String unitStr = dictionaryUtil.getVal("unitDic", unitCode);
 					values[6] = unitStr;
 					//数量
-					keys[7] = "米数";
+					keys[7] = "数量";
 					values[7] = qrCodeEntity.getRawMaterialNumber();
 
 					result.add(generateContent(qrCode.concat(",").concat(rawMaterial.getRawMaterialCode()).concat(",11"), keys, values));

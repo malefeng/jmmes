@@ -186,10 +186,11 @@ public class RipeningWarehousIOController extends BaseController {
 				//成品出库时，生成成品检验数据
 				if("2".equals(ripeningWarehousIO.getRipeningProType())&&"2".equals(ripeningWarehousIO.getRipeningStoreType())){
 					FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
-					finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductCode());
+					finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductSerino());
 					finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
 					finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
 					finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
+					finishedInspectItemEntity.setStatus("2");
 					systemService.save(finishedInspectItemEntity);
 				}
 			} catch (Exception e) {
@@ -214,22 +215,22 @@ public class RipeningWarehousIOController extends BaseController {
 	private boolean couldRepening(RipeningWarehousIOEntity ripeningWarehousIO){
 		if("2".equals(ripeningWarehousIO.getRipeningStoreType())){//熟成出库时，判断熟成时间是否满足
 			if("2".equals(ripeningWarehousIO.getRipeningProType())){//成品出库
-				FinishedProductionEntity finishedProductionEntity = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductCode());
+				FinishedProductionEntity finishedProductionEntity = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductSerino());
 				Date createDate = finishedProductionEntity.getCreateDate();
 				Double ripeningHours = finishedProductionEntity.getRipeningHours();
 				//需要熟成，且熟成时间不为空
-				if("1".equals(finishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+				if(1 == finishedProductionEntity.getNeedRipening()&&createDate!=null&&ripeningHours!=null){
 					createDate = DateUtils.addMinutes(createDate, (int) (finishedProductionEntity.getRipeningHours()*60));
-					return createDate.compareTo(new Date())>=0;
+					return createDate.compareTo(new Date())<=0;
 				}
 			}else if("1".equals(ripeningWarehousIO.getRipeningProType())){
-				SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductCode());
+				SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", ripeningWarehousIO.getProductSerino());
 				Date createDate = semiFinishedProductionEntity.getCreateDate();
 				Double ripeningHours = semiFinishedProductionEntity.getRipeningHours();
 				//需要熟成，且熟成时间不为空
-				if("1".equals(semiFinishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+				if(1 == semiFinishedProductionEntity.getNeedRipening()&&createDate!=null&&ripeningHours!=null){
 					createDate = DateUtils.addMinutes(createDate, (int) (semiFinishedProductionEntity.getRipeningHours()*60));
-					return createDate.compareTo(new Date())>=0;
+					return createDate.compareTo(new Date())<=0;
 				}
 			}
 		}
@@ -265,6 +266,17 @@ public class RipeningWarehousIOController extends BaseController {
 	public void apiSave(@RequestBody RipeningWarehousIOEntity ripeningWarehousIO,HttpServletResponse response) throws IOException {
 		if(!couldRepening(ripeningWarehousIO)){
 			response.sendError(202,"产品熟成时长不足，请稍后再试");
+			return;
+		}
+		//成品出库时，生成成品检验数据
+		if("2".equals(ripeningWarehousIO.getRipeningProType())&&"2".equals(ripeningWarehousIO.getRipeningStoreType())){
+			FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+			finishedInspectItemEntity.setFinishedCode(ripeningWarehousIO.getProductSerino());
+			finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
+			finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
+			finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
+			finishedInspectItemEntity.setStatus("2");
+			systemService.save(finishedInspectItemEntity);
 		}
 		ripeningWarehousIOService.saveOrUpdate(ripeningWarehousIO);
 	}

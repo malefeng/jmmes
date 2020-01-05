@@ -5,6 +5,7 @@ import com.jeecg.entity.production.*;
 import com.jeecg.page.production.SemiFinishedInspectPage;
 import com.jeecg.service.basic.SemiFinishedProductServiceI;
 import com.jeecg.service.production.SemiFinishedInspectServiceI;
+import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -79,7 +80,6 @@ public class SemiFinishedInspectController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -124,7 +124,6 @@ public class SemiFinishedInspectController extends BaseController {
 	/**
 	 * 添加半成品首末检
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -141,10 +140,17 @@ public class SemiFinishedInspectController extends BaseController {
 					lastInspectEntity = semiFinishedLastInspect;
 				}
 			}
-			semiFinishedInspect.setResult(lastInspectEntity.getLastInspectResult() == 1 ? "OK" : "NG");
-			semiFinishedInspect.setCount(lastInspectEntity.getCount());
-			semiFinishedInspect.setQualifiedCount(lastInspectEntity.getQualifiedCount());
-			semiFinishedInspect.setUnQualifiedCount(lastInspectEntity.getUnqualifiedCount());
+			semiFinishedInspect.setResult(lastInspectEntity.getLastInspectResult()!=null&&lastInspectEntity.getLastInspectResult() == 1 ? "OK" : "NG");
+			semiFinishedInspect.setCount(MathUtil.toInt(lastInspectEntity.getCount()));
+			semiFinishedInspect.setQualifiedCount(MathUtil.toInt(lastInspectEntity.getQualifiedCount()));
+			semiFinishedInspect.setUnQualifiedCount(MathUtil.toInt(lastInspectEntity.getUnqualifiedCount()));
+		}
+		//获取批次号
+		if(StringUtil.isNotEmpty(semiFinishedInspect.getSemiFinishedCode())){
+			List<SemiFinishedProductionEntity> semiFinishedProductionEntityList = systemService.findByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", semiFinishedInspect.getSemiFinishedCode());
+			if(semiFinishedProductionEntityList!=null&&semiFinishedProductionEntityList.size()>0){
+				semiFinishedInspect.setBatchNo(semiFinishedProductionEntityList.get(0).getBatchNumber());
+			}
 		}
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(semiFinishedInspect.getId())) {

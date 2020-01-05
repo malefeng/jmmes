@@ -152,6 +152,9 @@
 				<td align="left"><t:dictSelect field="finishedLastInspectList[#index#].lastInspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="finishedLastInspectList[#index#].lastInspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				<td align="left"><input class="inspectDate" name="finishedLastInspectList[#index#].lastInspectDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input class="inspectTimes" name="finishedLastInspectList[#index#].count" maxlength="" type="text" style="width:120px;"></td>
+				  <td align="left"><input class="inspectTimes" name="finishedLastInspectList[#index#].qualifiedCount" maxlength="" type="text" style="width:120px;"></td>
+				  <td align="left"><input class="inspectTimes" name="finishedLastInspectList[#index#].unqualifiedCount" maxlength="" type="text" style="width:120px;"></td>
 			</tr>
 		 </tbody>
 		</table>

@@ -37,7 +37,7 @@
                     {field: 'result', title: '检验结果', sortable: true},
                     {field: 'batchNo', title: '批号', sortable: true},
                     {field: 'count', title: '数量', sortable: true},
-                    {field: 'qualifiedCount', title: '合格数量数量', sortable: true},
+                    {field: 'qualifiedCount', title: '合格数量', sortable: true},
                     {field: 'unQualifiedCount', title: '不合格数量', sortable: true},
                     {field: 'inspectLogSheet', title: '首末检记录表', sortable: true,
                     formatter:function(value){

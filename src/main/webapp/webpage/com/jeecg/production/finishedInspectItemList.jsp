@@ -11,7 +11,7 @@
             $('#finishedInspectItemList').datagrid({
                 idField: 'id',
                 title: '成品检测',
-                url: 'finishedInspectItemController.do?datagrid&field=id,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
+                url: 'finishedInspectItemController.do?datagrid&field=id,status,batchNo,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
                 fit: true,
                 rownumbers: true,
                 loadMsg: '数据加载中...',
@@ -34,12 +34,26 @@
                     field: 'productionDispatchingNumber',
                     title: '生产派工单号',
                     sortable: true
-                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true}, {
+                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true}, 
+                    {
+                    field: 'result',
+                    title: '检验状态',
+                    sortable: true,
+                        formatter:function(val){
+                        return ${checkState}[val]
+                    }
+                },
+                    {
                     field: 'result',
                     title: '检验结果',
                     sortable: true,
-                        format:function(val){ return val==1?"通过":"未通过" }
-                }, {field: 'count', title: '总数量', sortable: true}, {
+                        formatter:function(val){
+                        return val==1?"通过":"未通过"
+                    }
+                },
+                    {field: 'batchNo', title: '批号', sortable: true},
+                    {field: 'count', title: '总数量', sortable: true},
+                    {
                     field: 'qualifiedCount',
                     title: '合格数量',
                     sortable: true
@@ -228,7 +242,7 @@
                     queryParams[$(this).attr('name')] = $(this).val();
                 });
                 $('#finishedInspectItemList').datagrid({
-                    url: 'finishedInspectItemController.do?datagrid&field=id,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
+                    url: 'finishedInspectItemController.do?datagrid&field=id,status,batchNo,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
                     pageNumber: 1
                 });
             }
@@ -237,7 +251,7 @@
         function dosearch(params) {
             var jsonparams = $.parseJSON(params);
             $('#finishedInspectItemList').datagrid({
-                url: 'finishedInspectItemController.do?datagrid&field=id,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
+                url: 'finishedInspectItemController.do?datagrid&field=id,status,batchNo,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
                 queryParams: jsonparams
             });
         }
@@ -275,7 +289,7 @@
                 $(this).attr('checked', false);
             });
             $('#finishedInspectItemList').datagrid({
-                url: 'finishedInspectItemController.do?datagrid&field=id,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
+                url: 'finishedInspectItemController.do?datagrid&field=id,status,batchNo,sysOrgCode,sysCompanyCode,bpmStatus,finishedCode,finishedName,salesOrderNumber,productionDispatchingNumber,inspectLogSheet,result,count,qualifiedCount,unqualifiedCount,',
                 pageNumber: 1
             });
         }</script>

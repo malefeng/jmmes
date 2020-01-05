@@ -1,4 +1,5 @@
 package com.jeecg.controller.equipment;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,10 +82,22 @@ public class EquipmentMaintenanceController extends BaseController {
 	}
 
 
-	@RequestMapping(value = "/apiList/{maintenanceBatch}")
+	@RequestMapping(value = "/apiList")
 	@ResponseBody
-	public List apiList(@PathVariable("maintenanceBatch") String maintenanceBatch){
-		return equipmentMaintenanceService.findByProperty(EquipmentMaintenanceEntity.class,"maintenanceBatch",maintenanceBatch);
+	public List apiList(@RequestBody EquipmentMaintenanceEntity equipmentMaintenance){
+		String equipmentNumber = equipmentMaintenance.getEquipmentNumber();
+		String planMaintenancePerson = equipmentMaintenance.getPlanMaintenancePerson();
+		String hql = "from EquipmentMaintenanceEntity where 1=1";
+		List param = new ArrayList();
+		if(StringUtil.isNotEmpty(equipmentNumber)){
+			hql += " and equipmentNumber = ?";
+			param.add(equipmentNumber);
+		}
+		if(StringUtil.isNotEmpty(planMaintenancePerson)){
+			hql += " and planMaintenancePerson = ?";
+			param.add(planMaintenancePerson);
+		}
+		return  equipmentMaintenanceService.findHql(hql, param.toArray());
 	}
 
 	/**

@@ -1,12 +1,11 @@
 package com.jeecg.controller.production;
 
 import com.jeecg.entity.basic.FinishedProductEntity;
-import com.jeecg.entity.production.FinishedFirstInspectEntity;
-import com.jeecg.entity.production.FinishedInspectEntity;
-import com.jeecg.entity.production.FinishedLastInspectEntity;
+import com.jeecg.entity.production.*;
 import com.jeecg.page.production.FinishedInspectPage;
 import com.jeecg.service.basic.FinishedProductServiceI;
 import com.jeecg.service.production.FinishedInspectServiceI;
+import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -82,7 +81,6 @@ public class FinishedInspectController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -127,7 +125,6 @@ public class FinishedInspectController extends BaseController {
 	/**
 	 * 添加成品首末检
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -144,10 +141,17 @@ public class FinishedInspectController extends BaseController {
 					lastInspectEntity = finishedLastInspectEntity;
 				}
 			}
-			finishedInspect.setResult(lastInspectEntity.getLastInspectResult()==1?"OK":"NG");
-			finishedInspect.setCount(lastInspectEntity.getCount());
-			finishedInspect.setQualifiedCount(lastInspectEntity.getQualifiedCount());
-			finishedInspect.setUnQualifiedCount(lastInspectEntity.getUnqualifiedCount());
+			finishedInspect.setResult((lastInspectEntity.getLastInspectResult()!=null&&lastInspectEntity.getLastInspectResult()==1)?"OK":"NG");
+			finishedInspect.setCount(MathUtil.toInt(lastInspectEntity.getCount()));
+			finishedInspect.setQualifiedCount(MathUtil.toInt(lastInspectEntity.getQualifiedCount()));
+			finishedInspect.setUnQualifiedCount(MathUtil.toInt(lastInspectEntity.getUnqualifiedCount()));
+		}
+		//获取批次号
+		if(StringUtil.isNotEmpty(finishedInspect.getFinishedCode())){
+			List<FinishedProductionEntity> finishedProductionEntityList = systemService.findByProperty(FinishedProductionEntity.class, "finishedSerino", finishedInspect.getFinishedCode());
+			if(finishedProductionEntityList!=null&&finishedProductionEntityList.size()>0){
+				finishedInspect.setBatchNo(finishedProductionEntityList.get(0).getFinishedBatch());
+			}
 		}
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(finishedInspect.getId())) {

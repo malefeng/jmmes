@@ -107,8 +107,8 @@
         </li>
         <li>
             <a href="javascrip:;" name="">不合格数量:</a>
-            <a href="javascrip:;">${finishedInspectItemPage.unQualifiedCount}</a>
-            <input type="hidden" name="unQualifiedCount" value="${finishedInspectItemPage.unQualifiedCount}">
+            <a href="javascrip:;">${finishedInspectItemPage.unqualifiedCount}</a>
+            <input type="hidden" name="unQualifiedCount" value="${finishedInspectItemPage.unqualifiedCount}">
         </li>
         <li>
             <a href="javascrip:;" name="">首末检记录表:</a>
@@ -142,8 +142,10 @@
         <td align="left"><t:dictSelect field="finishedInspectItemNodeList[#index#].inspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
         <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectDate" maxlength="" type="text"
                                 style="width:120px;"></td>
-        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectNumber" maxlength="32" type="text"
-                                style="width:120px;"></td>
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectNumber" maxlength="32" type="text" style="width:120px;"></td>
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].count" maxlength="32" type="text" style="width:120px;"></td>
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].qualifiedCount" maxlength="32" type="text" style="width:120px;"></td>
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].unqualifiedCount" maxlength="32" type="text" style="width:120px;"></td>
     </tr>
     </tbody>
 </table>

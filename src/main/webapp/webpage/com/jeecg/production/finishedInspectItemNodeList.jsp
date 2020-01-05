@@ -33,6 +33,9 @@
 				  <td align="left" bgcolor="#EEEEEE">检验结果</td>
 				  <td align="left" bgcolor="#EEEEEE">检验时间</td>
 				  <td align="left" bgcolor="#EEEEEE">检验编号</td>
+				  <td align="left" bgcolor="#EEEEEE">总数量</td>
+				  <td align="left" bgcolor="#EEEEEE">合格数量</td>
+				  <td align="left" bgcolor="#EEEEEE">不合格数量</td>
 	</tr>
 	<tbody id="add_finishedInspectItemNode_table">	
 	<c:if test="${fn:length(finishedInspectItemNodeList)  <= 0 }">
@@ -44,6 +47,9 @@
 				<td align="left"><t:dictSelect field="finishedInspectItemNodeList[0].inspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				  <td align="left"><input name="finishedInspectItemNodeList[0].inspectDate" maxlength="" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="finishedInspectItemNodeList[0].inspectNumber" maxlength="32" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedInspectItemNodeList[0].count" maxlength="32" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedInspectItemNodeList[0].qualifiedCount" maxlength="32" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="finishedInspectItemNodeList[0].unqualifiedCount" maxlength="32" type="text" style="width:120px;" ></td>
    			</tr>
 	</c:if>
 	<c:if test="${fn:length(finishedInspectItemNodeList)  > 0 }">
@@ -57,6 +63,9 @@
 				<td align="left"><t:dictSelect field="finishedInspectItemNodeList[${stuts.index }].firstInspectResult" defaultVal="${poVal.inspectResult }" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				   <td align="left"><input name="finishedInspectItemNodeList[${stuts.index }].inspectDate" maxlength="" value="${poVal.inspectDate }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="finishedInspectItemNodeList[${stuts.index }].inspectNumber" maxlength="32" value="${poVal.inspectNumber }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="finishedInspectItemNodeList[${stuts.index }].count" maxlength="32" value="${poVal.count }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="finishedInspectItemNodeList[${stuts.index }].qualifiedCount" maxlength="32" value="${poVal.qualifiedCount }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="finishedInspectItemNodeList[${stuts.index }].unqualifiedCount" maxlength="32" value="${poVal.unqualifiedCount }" type="text" style="width:120px;"></td>
    			</tr>
 		</c:forEach>
 	</c:if>	

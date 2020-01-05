@@ -79,7 +79,7 @@
                             return '';
                         }
                         var href = '';
-                        href += "<a href='#'   class='ace_button'  onclick=inputParam('" + rec.id + "','" + index + "')> 打印</a>&nbsp;";
+                        href += "<a href='#'   class='ace_button'  onclick=print('" + rec.id + "','" + index + "')> 打印</a>&nbsp;";
                         return href;
                     }
                 }]],
@@ -350,6 +350,7 @@
     var printId;
     //打印
     function inputParam(id) {
+
         printId = id;
         $("#batchNo").val("");
         $('#win').window({
@@ -377,8 +378,8 @@
         $('#win').window('close');
     })
 
-    function print(id, batchNo) {
-        $.getJSON("purchaseReceiptNodeController.do?getPrintData", {id: id, batchNo: batchNo}, function (data) {
+    function print(id) {
+        $.getJSON("purchaseReceiptNodeController.do?getPrintData", {id: id}, function (data) {
             if (!!data) {
                 printQRCode(data);
             } else {

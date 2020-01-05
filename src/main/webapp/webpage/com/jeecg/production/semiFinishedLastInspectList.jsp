@@ -33,6 +33,9 @@
 				  <td align="left" bgcolor="#EEEEEE">末检状态</td>
 				  <td align="left" bgcolor="#EEEEEE">末检时间</td>
 				  <td align="left" bgcolor="#EEEEEE">末检结果</td>
+				  <td align="left" bgcolor="#EEEEEE">总数量</td>
+				  <td align="left" bgcolor="#EEEEEE">合格数量</td>
+				  <td align="left" bgcolor="#EEEEEE">不合格数量</td>
 	</tr>
 	<tbody id="add_semiFinishedLastInspect_table">	
 	<c:if test="${fn:length(semiFinishedLastInspectList)  <= 0 }">
@@ -44,6 +47,9 @@
 				<td align="left"><t:dictSelect field="semiFinishedLastInspectList[0].lastInspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="semiFinishedLastInspectList[0].lastInspectDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
 				<td align="left"><t:dictSelect field="semiFinishedLastInspectList[0].lastInspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
+				  <td align="left"><input name="semiFinishedLastInspectList[0].count" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="semiFinishedLastInspectList[0].qualifiedCount" maxlength="" type="text" style="width:120px;" ></td>
+				  <td align="left"><input name="semiFinishedLastInspectList[0].unqualifiedCount" maxlength="" type="text" style="width:120px;" ></td>
    			</tr>
 	</c:if>
 	<c:if test="${fn:length(semiFinishedLastInspectList)  > 0 }">
@@ -57,6 +63,9 @@
 				<td align="left"><t:dictSelect field="semiFinishedLastInspectList[${stuts.index }].lastInspectState" defaultVal="${poVal.lastInspectState }" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="semiFinishedLastInspectList[${stuts.index }].lastInspectDate" class="Wdate" value="${poVal.lastInspectDate }" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
 				<td align="left"><t:dictSelect field="semiFinishedLastInspectList[${stuts.index }].lastInspectResult" defaultVal="${poVal.lastInspectResult }" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
+				   <td align="left"><input name="semiFinishedLastInspectList[${stuts.index }].count" maxlength="" value="${poVal.count }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="semiFinishedLastInspectList[${stuts.index }].qualifiedCount" maxlength="" value="${poVal.qualifiedCount }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="semiFinishedLastInspectList[${stuts.index }].unqualifiedCount" maxlength="" value="${poVal.unqualifiedCount }" type="text" style="width:120px;"></td>
    			</tr>
 		</c:forEach>
 	</c:if>	

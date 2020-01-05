@@ -5,8 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jeecg.entity.production.FinishedFirstInspectEntity;
-import com.jeecg.entity.production.FinishedLastInspectEntity;
+import com.jeecg.entity.production.*;
+import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
@@ -40,11 +41,10 @@ import java.net.URI;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jeecg.entity.production.FinishedInspectItemEntity;
 import com.jeecg.page.production.FinishedInspectItemPage;
 import com.jeecg.service.production.FinishedInspectItemServiceI;
-import com.jeecg.entity.production.FinishedInspectItemNodeEntity;
-/**   
+
+/**
  * @Title: Controller
  * @Description: 成品检测
  * @author zhangdaihao
@@ -66,6 +66,8 @@ public class FinishedInspectItemController extends BaseController {
 	private SystemService systemService;
 	@Autowired
 	private Validator validator;
+	@Autowired
+	private DictionaryUtil dictionaryUtil;
 	
 	
 	/**
@@ -75,6 +77,8 @@ public class FinishedInspectItemController extends BaseController {
 	 */
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
+
+		dictionaryUtil.writeDicList(request,"checkState");
 		return new ModelAndView("com/jeecg/production/finishedInspectItemList");
 	}
 
@@ -134,13 +138,23 @@ public class FinishedInspectItemController extends BaseController {
 					lastInspectEntity = finishedInspectItemNodeEntity;
 				}
 			}
-			finishedInspectItem.setResult("1".equals(lastInspectEntity.getInspectResult())?"OK":"NG");
-			finishedInspectItem.setCount(lastInspectEntity.getCount());
-			finishedInspectItem.setQualifiedCount(lastInspectEntity.getQualifiedCount());
-			finishedInspectItem.setUnqualifiedCount(lastInspectEntity.getUnqualifiedCount());
+			finishedInspectItem.setResult(lastInspectEntity.getInspectResult());
+			finishedInspectItem.setCount(MathUtil.toInt(lastInspectEntity.getCount()));
+			finishedInspectItem.setQualifiedCount(MathUtil.toInt(lastInspectEntity.getQualifiedCount()));
+			finishedInspectItem.setUnqualifiedCount(MathUtil.toInt(lastInspectEntity.getUnqualifiedCount()));
 		}
-
+		//获取批次号
+		if(StringUtil.isNotEmpty(finishedInspectItem.getFinishedCode())){
+			List<FinishedProductionEntity> finishedProductionEntityList = systemService.findByProperty(FinishedProductionEntity.class, "finishedSerino", finishedInspectItem.getFinishedCode());
+			if(finishedProductionEntityList!=null&&finishedProductionEntityList.size()>0){
+				finishedInspectItem.setBatchNo(finishedProductionEntityList.get(0).getFinishedBatch());
+			}
+		}
 		AjaxJson j = new AjaxJson();
+		if(finishedInspectItemNodeList!=null&&finishedInspectItemNodeList.size()>0){
+			//标记为已检验
+			finishedInspectItem.setStatus("2");
+		}
 		if (StringUtil.isNotEmpty(finishedInspectItem.getId())) {
 			message = "更新成功";
 			finishedInspectItemService.updateMain(finishedInspectItem, finishedInspectItemNodeList);

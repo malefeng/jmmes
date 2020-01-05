@@ -61,6 +61,7 @@ public class DictionaryUtil {
             case "maintWay" : return getDicList("","maintWay","");//维护方式
             case "maintState" : return getDicList("","maintState","");//维护状态
             case "maintRes" : return getDicList("","maintRes","");//维护结果
+            case "checkState" : return getDicList("","checkState","");//检验状态
             default:
                 return null;
         }
