@@ -1,10 +1,13 @@
 package com.jeecg.controller.equipment;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeecg.entity.qrcode.QRCodeEntity;
+import com.jeecg.service.common.SequenceServiceI;
 import com.jeecg.util.DictionaryUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
@@ -35,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
-import java.util.Set;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.net.URI;
@@ -66,6 +69,8 @@ public class EquipmentController extends BaseController {
 	private Validator validator;
 	@Autowired
 	private DictionaryUtil dictionaryUtil;
+	@Autowired
+	private SequenceServiceI sequenceServiceI;
 	
 
 
@@ -78,6 +83,101 @@ public class EquipmentController extends BaseController {
 	public ModelAndView list(HttpServletRequest request) {
 		dictionaryUtil.writeDicList(request,"userDic","suplDic");
 		return new ModelAndView("com/jeecg/equipment/equipmentList");
+	}
+
+	@RequestMapping(params = "printList")
+	public ModelAndView printList(HttpServletRequest request) {
+		dictionaryUtil.writeDicList(request,"userDic","suplDic");
+		return new ModelAndView("com/jeecg/print/equipmentPrintList");
+	}
+
+	@RequestMapping(params = "getPrintData")
+	@ResponseBody
+	public List getPrintData(String id){
+		List toSaveList = new ArrayList();
+		List result = new ArrayList();
+		generatePrintData(id, toSaveList, result);
+		//保存打印记录
+		systemService.batchSave(toSaveList);
+		return result;
+	}
+
+	@RequestMapping(params = "rePrint")
+	@ResponseBody
+	public Object rePrint(String qrCode){
+		QRCodeEntity qrCodeEntity = systemService.findUniqueByProperty(QRCodeEntity.class, "number", qrCode);
+		if(null!=qrCodeEntity){
+			String rawMaterialCode = qrCodeEntity.getCode();
+			List result = new ArrayList();
+			//明文key
+			Object[] keys = new Object[5];
+			//明文value
+			Object[] values = new Object[5];
+			//二维码类型
+			keys[0] = "类型";
+			values[0] = "99-设备";
+			//二维码编号
+			keys[1] = "二维码编号";
+			values[1] = qrCodeEntity.getNumber();
+			//设备编号
+			keys[2] = "设备编号";
+			values[2] = qrCodeEntity.getCode();
+			//二维码类型
+			keys[3] = "设备名称";
+			values[3] = qrCodeEntity.getMaterialName();
+			//二维码类型
+			keys[4] = "设备型号";
+			values[4] = qrCodeEntity.getMaterialSize();
+			result.add(generateContent(qrCode.concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
+			return result;
+		}
+		return null;
+	}
+
+	private void generatePrintData(String id, List toSaveList, List result) {
+		EquipmentEntity equipmentEntity =systemService.get(EquipmentEntity.class,id);
+		if(equipmentEntity!=null){
+			//二维码代码
+			String qrCode = sequenceServiceI.getqrCode("finishedItem");
+			QRCodeEntity qrCodeEntity = new QRCodeEntity();
+			qrCodeEntity.setNumber(qrCode);
+			qrCodeEntity.setQrCodeType("9");
+			qrCodeEntity.setCode(equipmentEntity.getEquipmentNumber());
+			qrCodeEntity.setMaterialName(equipmentEntity.getEquipmentName());
+			qrCodeEntity.setMaterialSize(equipmentEntity.getEquipmentSize());
+			toSaveList.add(qrCodeEntity);
+			//明文key
+			Object[] keys = new Object[5];
+			//明文value
+			Object[] values = new Object[5];
+			//二维码类型
+			keys[0] = "类型";
+			values[0] = "99-设备";
+			//二维码编号
+			keys[1] = "二维码编号";
+			values[1] = qrCodeEntity.getNumber();
+			//设备编号
+			keys[2] = "设备编号";
+			values[2] = qrCodeEntity.getCode();
+			//二维码类型
+			keys[3] = "设备名称";
+			values[3] = qrCodeEntity.getMaterialName();
+			//二维码类型
+			keys[4] = "设备型号";
+			values[4] = qrCodeEntity.getMaterialSize();
+
+			result.add(generateContent(qrCode.concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
+		}
+	}
+
+
+	private Map generateContent(String qrCode, Object[] keys, Object[] values) {
+		Map contenMap;
+		contenMap = new HashMap();
+		contenMap.put("pubKey", StringUtils.join(keys, ","));
+		contenMap.put("pubVal", StringUtils.join(values, ","));
+		contenMap.put("secData", qrCode);
+		return contenMap;
 	}
 
 	/**

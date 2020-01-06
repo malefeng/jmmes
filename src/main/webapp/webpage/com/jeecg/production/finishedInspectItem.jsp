@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>成品检测</title>
-    <t:base type="jquery,easyui,tools,DatePicker"></t:base>
+    <t:base type="jquery,easyui,tools,DatePicker,bootstrap-table"></t:base>
     <script type="text/javascript">
+        var now = new Date().dateFormat("yyyy-MM-dd");
         //初始化下标
-        function resetTrNum(tableId) {w
+        function resetTrNum(tableId) {
             $tbody = $("#" + tableId + "");
             $tbody.find('>tr').each(function (i) {
                 $(':input, select', this).each(function () {
@@ -24,6 +25,11 @@
                     }
                 });
                 $(this).find('div[name=\'xh\']').html(i + 1);
+                $(this).find('input[class=\'inspectTimes\']').val(i+1);
+                var data =  $(this).find('input[class=\'Wdate\']');
+                if(!data.val()){
+                    data.val(now);
+                }
             });
         }
     </script>
@@ -111,7 +117,7 @@
             <input type="hidden" name="unQualifiedCount" value="${finishedInspectItemPage.unqualifiedCount}">
         </li>
         <li>
-            <a href="javascrip:;" name="">首末检记录表:</a>
+            <a href="javascrip:;" name="">检验记录表:</a>
             <t:webUploader name="inspectLogSheet" displayTxt="true"
                            pathValues="${finishedInspectItemPage.inspectLogSheet}" extensions="xlsx"
                            bizType="semifinished"></t:webUploader>
@@ -136,11 +142,11 @@
             <div style="width: 25px;" name="xh"></div>
         </td>
         <td align="center"><input style="width:20px;" type="checkbox" name="ck"/></td>
-        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectTimes" maxlength="32" type="text"
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectTimes" class="inspectTimes" maxlength="32" type="text"
                                 style="width:120px;"></td>
         <td align="left"><t:dictSelect field="finishedInspectItemNodeList[#index#].inspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
         <td align="left"><t:dictSelect field="finishedInspectItemNodeList[#index#].inspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
-        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectDate" maxlength="" type="text"
+        <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text"
                                 style="width:120px;"></td>
         <td align="left"><input name="finishedInspectItemNodeList[#index#].inspectNumber" maxlength="32" type="text" style="width:120px;"></td>
         <td align="left"><input name="finishedInspectItemNodeList[#index#].count" maxlength="32" type="text" style="width:120px;"></td>

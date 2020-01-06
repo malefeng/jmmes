@@ -37,6 +37,7 @@ public class SequenceServiceImpl implements SequenceServiceI {
                 case "material": result = "11"+date+StringUtils.leftPad(sequnce,4,"0"); break;
                 case "semiFinished": result = "22"+date+StringUtils.leftPad(sequnce,4,"0"); break;
                 case "finished": result = "33"+date+StringUtils.leftPad(sequnce,4,"0"); break;
+                case "finishedItem": result = "99"+date+StringUtils.leftPad(sequnce,4,"0"); break;
                 default: return result;
             }
         }

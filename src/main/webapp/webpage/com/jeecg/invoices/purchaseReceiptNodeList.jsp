@@ -32,6 +32,7 @@
 				  <td align="left" bgcolor="#EEEEEE">原料名称</td>
 				  <td align="left" bgcolor="#EEEEEE">规格型号</td>
 				  <td align="left" bgcolor="#EEEEEE">单位</td>
+				  <td align="left" bgcolor="#EEEEEE">批号</td>
 				  <td align="left" bgcolor="#EEEEEE">实到数量</td>
 				  <td align="left" bgcolor="#EEEEEE">实收数量</td>
 				  <td align="left" bgcolor="#EEEEEE">拒收数量</td>
@@ -49,6 +50,7 @@
 				<td align="left" class="select_rawMaterialName"><t:dictSelect field="purchaseReceiptNodeList[0].rawMaterialName" dictTable="t_raw_material_list" dictField="raw_material_name" dictText="raw_material_name" hasLabel="false" type="list"></t:dictSelect></td>
 				  <td align="left"><input name="purchaseReceiptNodeList[0].rawMaterialSize" maxlength="120" type="text" style="width:120px;" ></td>
 				  <td align="left"><t:dictSelect field="purchaseReceiptNodeList[0].rawMaterialUnit" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
+				  <td align="left"><input name="purchaseReceiptNodeList[0].attr1" maxlength="" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="purchaseReceiptNodeList[0].actualArrivalNumber" maxlength="" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="purchaseReceiptNodeList[0].actualReceivedNumber" maxlength="" type="text" style="width:120px;" ></td>
 				  <td align="left"><input name="purchaseReceiptNodeList[0].rejectionNumber" maxlength="" type="text" style="width:120px;" ></td>
@@ -68,6 +70,7 @@
 				<td class="select_rawMaterialName" align="left"><t:dictSelect field="purchaseReceiptNodeList[${stuts.index }].rawMaterialName" defaultVal="${poVal.rawMaterialName }" dictTable="t_raw_material_list" dictField="raw_material_name" dictText="raw_material_name" hasLabel="false" type="list"></t:dictSelect></td>
 				   <td align="left"><input name="purchaseReceiptNodeList[${stuts.index }].rawMaterialSize" maxlength="120" value="${poVal.rawMaterialSize }" type="text" style="width:120px;"></td>
 				    <td align="left"><t:dictSelect field="purchaseReceiptNodeList[${stuts.index }].rawMaterialUnit" defaultVal="${poVal.rawMaterialUnit }" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
+				   <td align="left"><input name="purchaseReceiptNodeList[${stuts.index }].attr1" maxlength="" value="${poVal.attr1 }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="purchaseReceiptNodeList[${stuts.index }].actualArrivalNumber" maxlength="" value="${poVal.actualArrivalNumber }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="purchaseReceiptNodeList[${stuts.index }].actualReceivedNumber" maxlength="" value="${poVal.actualReceivedNumber }" type="text" style="width:120px;"></td>
 				   <td align="left"><input name="purchaseReceiptNodeList[${stuts.index }].rejectionNumber" maxlength="" value="${poVal.rejectionNumber }" type="text" style="width:120px;"></td>

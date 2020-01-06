@@ -148,7 +148,7 @@ public class FinishedProductionController extends BaseController {
 			finishedProductionService.addMain(finishedProduction, finishedProductionNodeList);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 			//如果不需要熟成，则生成成品检验数据
-			if(finishedProduction.getNeedRipening()!=1){
+			if(!"1".equals(finishedProduction.getNeedRipening())){
 				FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
 				finishedInspectItemEntity.setFinishedCode(finishedProduction.getFinishedCode());
 				finishedInspectItemEntity.setFinishedName(finishedProduction.getFinishedName());

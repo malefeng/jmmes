@@ -34,7 +34,7 @@
                     field: 'productionDispatchingNumber',
                     title: '生产派工单号',
                     sortable: true
-                }, {field: 'inspectLogSheet', title: '首末检记录表', sortable: true}, 
+                }, {field: 'inspectLogSheet', title: '检验记录表', sortable: true},
                     {
                     field: 'result',
                     title: '检验状态',

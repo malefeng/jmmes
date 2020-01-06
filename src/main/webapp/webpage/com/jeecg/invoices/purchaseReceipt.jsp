@@ -190,6 +190,8 @@
                                 style="width:120px;"></td>
         <td align="left"><t:dictSelect field="purchaseReceiptNodeList[#index#].rawMaterialUnit" typeGroupCode="unit"
                                        readonly="true"></t:dictSelect></td>
+        <td align="left"><input name="purchaseReceiptNodeList[#index#].attr1" maxlength="" type="text"
+                                style="width:120px;"></td>
         <td align="left"><input name="purchaseReceiptNodeList[#index#].actualArrivalNumber" maxlength="" type="text"
                                 style="width:120px;"></td>
         <td align="left"><input name="purchaseReceiptNodeList[#index#].actualReceivedNumber" maxlength="" type="text"

@@ -307,6 +307,8 @@
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             成品码次数：<input type="text" id="times"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
+            成品检检次数：<input type="text" id="itemTimes"></div>
+        <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             首检次数：<input type="text" id="firstTimes"></div>
         <div style="display: flex;justify-content: space-between; align-items: center;height: 40px; width: 100%;">
             末检次数：<input type="text" id="lastTimes"></div>
@@ -340,6 +342,7 @@
         //初始化弹出框内容
         $("#batchNo").val("");
         $("#times").val(1);
+        $("#itemTimes").val(3);
         $("#firstTimes").val(3);
         $("#lastTimes").val(3);
         $("#productionDispatchingNumber").val("")
@@ -373,6 +376,7 @@
 
     function printData(id, batchNo) {
         var times = $("#times").val();
+        var itemTimes = $("#itemTimes").val();
         var firstTimes = $("#firstTimes").val();
         var lastTimes = $("#lastTimes").val();
         var productionDispatchingNumber = $("#productionDispatchingNumber option:selected").val();
@@ -381,6 +385,7 @@
         $.getJSON("finishedProductPrintController.do?getPrintData", {
             id: id,
             batchNo: batchNo,
+            times: times,
             times: times,
             firstTimes: firstTimes,
             lastTimes: lastTimes,

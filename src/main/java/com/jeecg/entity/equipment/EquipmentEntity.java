@@ -49,7 +49,7 @@ public class EquipmentEntity implements java.io.Serializable {
 	private java.lang.String sysCompanyCode;
 	/**流程状态*/
 	private java.lang.String bpmStatus;
-	/**设备型号*/
+	/**设备编号*/
 	private java.lang.String equipmentNumber;
 	/**设备名称*/
 	private java.lang.String equipmentName;

@@ -87,9 +87,24 @@ public class PurchaseReceiptNodeController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping(params = "getPrintDataByreceiptCode")
+	@ResponseBody
+	public List getPrintDataByreceiptCode(String receiptCode){
+		List result = new ArrayList();
+		String sql = "select n.id from t_purchase_receipt_node n LEFT JOIN t_purchase_receipt_list p on n.inspect_id = p.id where p.RECEIPT_CODE = ?";
+		List<Map<String, Object>> ids = purchaseReceiptNodeService.findForJdbc(sql, new Object[]{receiptCode});
+		if(ids!=null&&ids.size()>0){
+			for (Map<String, Object> id : ids) {
+				List list = getPrintData((String) id.get("id"));
+				result.addAll(list);
+			}
+		}
+		return result;
+	}
+
 	@RequestMapping(params = "getPrintData")
 	@ResponseBody
-	public Object getPrintData(String id){
+	public List getPrintData(String id){
 		List toSaveList = new ArrayList();
 		List result = new ArrayList();
 		generatePrintData(id, toSaveList, result);

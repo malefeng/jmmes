@@ -317,6 +317,7 @@
                     <input type="text" name="createDate_end"  style="width: 120px" class="Wdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
                 </span>
                 <a href="#" class="easyui-linkbutton" style="float: right" onclick="purchaseReceiptNodeListsearch();" plain="true" icon="icon-search">查询</a>
+                <a href="#" class="easyui-linkbutton" style="float: right" onclick="printByreceiptCode();" plain="true" icon="icon-search">批量打印</a>
                 <a href="#" class="easyui-linkbutton" style="float: right" onclick="rePrint();" plain="true" icon="icon-search">重打</a>
             </div>
             <div style="height:0px;">
@@ -328,8 +329,8 @@
 </div>
 <div id="win" style="padding: 0 10px;">
     <div style=" display: flex; flex-direction: column; justify-content: space-between; align-items: center">
-        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">批 次 号：<input
-                type="text" id="batchNo"></div>
+        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">收料单号：<input
+                type="text" id="receiptCode"></div>
     </div>
     <div style="height: 30px;  display: flex; justify-content: space-between;  align-items: center">
         <button id="wind_submit" style="height: 30px">确认</button>
@@ -346,13 +347,23 @@
         <button id="rp_close" style="height: 30px">取消</button>
     </div>
 </div>
+<div id="bp" style="padding: 0 10px;">
+    <div style=" display: flex; flex-direction: column; justify-content: space-between; align-items: center">
+        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">收料单号：<input
+                type="text" id="purchaseNum"></div>
+    </div>
+    <div style="height: 30px;  display: flex; justify-content: space-between;  align-items: center">
+        <button id="bp_submit" style="height: 30px">确认</button>
+        <button id="bp_close" style="height: 30px">取消</button>
+    </div>
+</div>
 <script>
     var printId;
     //打印
     function inputParam(id) {
 
         printId = id;
-        $("#batchNo").val("");
+        $("#receiptCode").val("");
         $('#win').window({
             title: '请输入打印信息',
             collapsible: false,
@@ -365,13 +376,14 @@
     }
     //提交打印
     $("#wind_submit").click(function () {
-        var batchNo = $("#batchNo").val();
-        if (!batchNo) {
-            $.messager.alert('error', '批次号不能为空!', 'info');
+        var receiptCode = $("#receiptCode").val();
+        if (!receiptCode) {
+            $.messager.alert('error', '收料单号不能为空!', 'info');
             return false;
         }
         $('#win').window('close');
-        print(printId, batchNo);
+        print(receiptCode);
+
     })
     //取消打印
     $("#wind_close").click(function () {
@@ -414,6 +426,27 @@
     })
     function doRePrint(qrCode) {
         $.getJSON("purchaseReceiptNodeController.do?rePrint", {qrCode: qrCode}, function (data) {
+            if (!!data) {
+                printQRCode(data);
+            } else {
+                $.messager.alert('error', '无有效数据!', 'info');
+            }
+        })
+    }
+
+
+    function printByreceiptCode(receiptCode){
+        $("#receiptCode").val("");
+        $('#win').window({
+            title: '请输入打印信息',
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            width: 300,
+            height: 130,
+            modal: true
+        });
+        $.getJSON("purchaseReceiptNodeController.do?getPrintDataByreceiptCode", {receiptCode: receiptCode}, function (data) {
             if (!!data) {
                 printQRCode(data);
             } else {

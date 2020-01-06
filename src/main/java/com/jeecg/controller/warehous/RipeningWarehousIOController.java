@@ -6,6 +6,7 @@ import com.jeecg.entity.production.SemiFinishedProductionEntity;
 import com.jeecg.entity.warehous.RipeningWarehousIOEntity;
 import com.jeecg.service.warehous.RipeningWarehousIOServiceI;
 import com.jeecg.util.DictionaryUtil;
+import com.jeecg.util.MathUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
@@ -217,10 +218,10 @@ public class RipeningWarehousIOController extends BaseController {
 			if("2".equals(ripeningWarehousIO.getRipeningProType())){//成品出库
 				FinishedProductionEntity finishedProductionEntity = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", ripeningWarehousIO.getProductSerino());
 				Date createDate = finishedProductionEntity.getCreateDate();
-				Double ripeningHours = finishedProductionEntity.getRipeningHours();
+				Double ripeningHours = MathUtil.toDouble(finishedProductionEntity.getRipeningHours());
 				//需要熟成，且熟成时间不为空
-				if(1 == finishedProductionEntity.getNeedRipening()&&createDate!=null&&ripeningHours!=null){
-					createDate = DateUtils.addMinutes(createDate, (int) (finishedProductionEntity.getRipeningHours()*60));
+				if("1".equals(finishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+					createDate = DateUtils.addMinutes(createDate, (int) (MathUtil.toInt(finishedProductionEntity.getRipeningHours())*60));
 					return createDate.compareTo(new Date())<=0;
 				}
 			}else if("1".equals(ripeningWarehousIO.getRipeningProType())){
@@ -247,7 +248,7 @@ public class RipeningWarehousIOController extends BaseController {
 	public AjaxJson needRepening(String productSerino){
 		AjaxJson j = new AjaxJson();
 		FinishedProductionEntity finishedSerino = systemService.findUniqueByProperty(FinishedProductionEntity.class, "finishedSerino", productSerino);
-		if(finishedSerino!=null&&finishedSerino.getNeedRipening()==1){
+		if(finishedSerino!=null&&"1".equals(finishedSerino.getNeedRipening())){
 			j.setSuccess(true);
 			return j;
 		}
