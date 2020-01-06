@@ -82,10 +82,10 @@ public class FinishedProductPrintController extends BaseController {
 
 	@RequestMapping(params = "getPrintData")
 	@ResponseBody
-	public Object getPrintData(String id, String batchNo,int times,int firstTimes,int lastTimes,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber){
+	public Object getPrintData(String id, String batchNo,int times,int itemTimes,int firstTimes,int lastTimes,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber){
 		List toSave = new ArrayList();
 		List result = new ArrayList();
-		generatePrintData(id, batchNo,times, firstTimes, lastTimes, toSave, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
+		generatePrintData(id, batchNo,times,itemTimes, firstTimes, lastTimes, toSave, result,takeMaterilNumber,productionOrderNumber,productionDispatchingNumber);
 		qrCodeServiceI.batchSave(toSave);
 		return result;
 	}
@@ -132,7 +132,7 @@ public class FinishedProductPrintController extends BaseController {
 		return null;
 	}
 
-	private void generatePrintData(String id, String batchNo,int times, int firstTimes,int lastTimes, List toSave, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
+	private void generatePrintData(String id, String batchNo,int times,int itemTimes, int firstTimes,int lastTimes, List toSave, List result,String takeMaterilNumber,String productionOrderNumber,String productionDispatchingNumber) {
 		QRCodeEntity qrCodeEntity = new QRCodeEntity();
 		FinishedProductEntity finishedProductPrintEntity = finishedProductPrintService.get(FinishedProductEntity.class,id);
 		for (int k = 0; k < times; k++) {
@@ -176,6 +176,18 @@ public class FinishedProductPrintController extends BaseController {
             result.add(map);
             result.add(map);
 
+            //成品检码信息
+			for (int i = 0; i < itemTimes; i++) {
+				qrCodeEntity  = qrCodeEntity.clone();
+				//成品编号规则+2位序列号，序列号从11开始
+				values[2] = qrCode + (51+i);
+				values[0] = 44+""+(51+i)+"-成品检码";
+				qrCodeEntity.setNumber(qrCode + (51+i));
+				//二维码类型：
+				qrCodeEntity.setQrCodeType("8");
+				toSave.add(qrCodeEntity);
+				result.add(generateContent(String.valueOf(values[2]), keys, values));
+			}
 
 			//成品首检码信息
 			for (int i = 0; i < firstTimes; i++) {

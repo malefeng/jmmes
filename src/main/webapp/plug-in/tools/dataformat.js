@@ -26,11 +26,11 @@ Date.prototype.format = function (format,value) {
 		"S" : date.getMilliseconds()
 		// millisecond
 	};
-	
+
 	if (/(y+)/.test(format)) {
 		format = format.replace(RegExp.$1, strdata.substr(4-RegExp.$1.length,RegExp.$1.length));
 	}
-	
+
 	for (var k in o) {
 		if (new RegExp("(" + k + ")").test(format)) {
 			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
@@ -38,6 +38,22 @@ Date.prototype.format = function (format,value) {
 	}
 	return format;
 };
+
+Date.prototype.dateFormat = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 
 /**
  * 列表文件图片 列格式化方法

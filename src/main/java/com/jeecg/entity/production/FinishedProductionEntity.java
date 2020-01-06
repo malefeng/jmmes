@@ -47,9 +47,9 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	/**生产领料单号*/
 	private java.lang.String takeMaterilNumber;
 	/**是否需要熟成*/
-	private java.lang.Integer needRipening;
+	private java.lang.String needRipening;
 	/**熟成时长*/
-	private java.lang.Double ripeningHours;
+	private java.lang.String ripeningHours;
 	/**预留3*/
 	private java.lang.String attr3;
 	/**预留4*/
@@ -291,7 +291,7 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	 *@return: java.lang.String  是否需要熟成
 	 */
 	@Column(name ="NEED_RIPENING",nullable=true,length=120)
-	public java.lang.Integer getNeedRipening(){
+	public java.lang.String getNeedRipening(){
 		return this.needRipening;
 	}
 
@@ -299,7 +299,7 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	 *方法: 设置java.lang.String
 	 *@param: java.lang.String  是否需要熟成
 	 */
-	public void setNeedRipening(java.lang.Integer needRipening){
+	public void setNeedRipening(java.lang.String needRipening){
 		this.needRipening = needRipening;
 	}
 	/**
@@ -307,7 +307,7 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	 *@return: java.lang.String  熟成时长
 	 */
 	@Column(name ="RIPENING_HOURS",nullable=true,length=120)
-	public java.lang.Double getRipeningHours(){
+	public java.lang.String getRipeningHours(){
 		return this.ripeningHours;
 	}
 
@@ -315,7 +315,7 @@ public class FinishedProductionEntity implements java.io.Serializable {
 	 *方法: 设置java.lang.String
 	 *@param: java.lang.String  熟成时长
 	 */
-	public void setRipeningHours(java.lang.Double ripeningHours){
+	public void setRipeningHours(java.lang.String ripeningHours){
 		this.ripeningHours = ripeningHours;
 	}
 	/**

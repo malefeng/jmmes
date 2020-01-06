@@ -140,15 +140,6 @@ public class FinishedWarehousIOController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(finishedWarehousIO.getId())) {
-			//判断是否成品检
-			List<FinishedInspectItemEntity> finishedInspectItemEntities = systemService.findByProperty(FinishedInspectItemEntity.class, "finishedCode", finishedWarehousIO.getFinishedSerino());
-			if(finishedInspectItemEntities!=null&&finishedInspectItemEntities.size()>0){
-				if(!StringUtil.equals("1",finishedInspectItemEntities.get(0).getStatus())){
-					message="该成品未检验，不允许入库";
-					j.setMsg(message);
-					return j;
-				}
-			}
 			message = "成品出入库更新成功";
 			FinishedWarehousIOEntity t = finishedWarehousIOService.get(FinishedWarehousIOEntity.class, finishedWarehousIO.getId());
 			try {
@@ -160,6 +151,15 @@ public class FinishedWarehousIOController extends BaseController {
 				message = "成品出入库更新失败";
 			}
 		} else {
+			//判断是否成品检
+			List<FinishedInspectItemEntity> finishedInspectItemEntities = systemService.findByProperty(FinishedInspectItemEntity.class, "finishedCode", finishedWarehousIO.getFinishedSerino());
+			if(finishedInspectItemEntities!=null&&finishedInspectItemEntities.size()>0){
+				if(!StringUtil.equals("1",finishedInspectItemEntities.get(0).getStatus())){
+					message="该成品未检验，不允许入库";
+					j.setMsg(message);
+					return j;
+				}
+			}
 			message = "成品出入库添加成功";
 			finishedWarehousIOService.save(finishedWarehousIO);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
