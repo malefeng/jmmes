@@ -227,10 +227,10 @@ public class RipeningWarehousIOController extends BaseController {
 			}else if("1".equals(ripeningWarehousIO.getRipeningProType())){
 				SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", ripeningWarehousIO.getProductSerino());
 				Date createDate = semiFinishedProductionEntity.getCreateDate();
-				Double ripeningHours = semiFinishedProductionEntity.getRipeningHours();
+				Double ripeningHours = MathUtil.toDouble(semiFinishedProductionEntity.getRipeningHours());
 				//需要熟成，且熟成时间不为空
-				if(1 == semiFinishedProductionEntity.getNeedRipening()&&createDate!=null&&ripeningHours!=null){
-					createDate = DateUtils.addMinutes(createDate, (int) (semiFinishedProductionEntity.getRipeningHours()*60));
+				if(1 == MathUtil.toInt(semiFinishedProductionEntity.getNeedRipening())&&createDate!=null&&ripeningHours!=null){
+					createDate = DateUtils.addMinutes(createDate, (int) (MathUtil.toDouble(semiFinishedProductionEntity.getRipeningHours())*60));
 					return createDate.compareTo(new Date())<=0;
 				}
 			}
@@ -253,7 +253,7 @@ public class RipeningWarehousIOController extends BaseController {
 			return j;
 		}
 		SemiFinishedProductionEntity semiFinishedProductionEntity = systemService.findUniqueByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", productSerino);
-		if(semiFinishedProductionEntity!=null&&semiFinishedProductionEntity.getNeedRipening()==1){
+		if(semiFinishedProductionEntity!=null&&MathUtil.toInt(semiFinishedProductionEntity.getNeedRipening())==1){
 			j.setSuccess(true);
 			return j;
 		}

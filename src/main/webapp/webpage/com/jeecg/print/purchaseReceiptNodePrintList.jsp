@@ -329,12 +329,13 @@
 </div>
 <div id="win" style="padding: 0 10px;">
     <div style=" display: flex; flex-direction: column; justify-content: space-between; align-items: center">
-        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">收料单号：<input
-                type="text" id="receiptCode"></div>
+        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">收料单号：
+            <t:dictSelect field="receiptCode" id="receiptCode" dictTable="t_purchase_receipt_list" dictField="receipt_code" dictText="receipt_code" hasLabel="false" type="list"></t:dictSelect>
+        </div>
     </div>
     <div style="height: 30px;  display: flex; justify-content: space-between;  align-items: center">
-        <button id="wind_submit" style="height: 30px">确认</button>
-        <button id="wind_close" style="height: 30px">取消</button>
+        <button id="bp_submit" style="height: 30px">确认</button>
+        <button id="bp_close" style="height: 30px">取消</button>
     </div>
 </div>
 <div id="rp" style="padding: 0 10px;">
@@ -347,23 +348,13 @@
         <button id="rp_close" style="height: 30px">取消</button>
     </div>
 </div>
-<div id="bp" style="padding: 0 10px;">
-    <div style=" display: flex; flex-direction: column; justify-content: space-between; align-items: center">
-        <div style="display: flex;justify-content: space-between;height: 40px; align-items: center; width: 100%;">收料单号：<input
-                type="text" id="purchaseNum"></div>
-    </div>
-    <div style="height: 30px;  display: flex; justify-content: space-between;  align-items: center">
-        <button id="bp_submit" style="height: 30px">确认</button>
-        <button id="bp_close" style="height: 30px">取消</button>
-    </div>
-</div>
 <script>
     var printId;
     //打印
-    function inputParam(id) {
+    /*function inputParam(id) {
 
         printId = id;
-        $("#receiptCode").val("");
+        $("#win").val("");
         $('#win').window({
             title: '请输入打印信息',
             collapsible: false,
@@ -388,7 +379,7 @@
     //取消打印
     $("#wind_close").click(function () {
         $('#win').window('close');
-    })
+    })*/
 
     function print(id) {
         $.getJSON("purchaseReceiptNodeController.do?getPrintData", {id: id}, function (data) {
@@ -435,7 +426,7 @@
     }
 
 
-    function printByreceiptCode(receiptCode){
+    function printByreceiptCode(){
         $("#receiptCode").val("");
         $('#win').window({
             title: '请输入打印信息',
@@ -446,12 +437,30 @@
             height: 130,
             modal: true
         });
+    }
+
+    //提交批量打印
+    $("#bp_submit").click(function(){
+        var receiptCode = $("#receiptCode option:selected").val();
+        if (!receiptCode) {
+            $.messager.alert('error', '收料单号不能为空!', 'info');
+            return false;
+        }
+        doPrintByreceiptCode(receiptCode);
+    })
+
+    function doPrintByreceiptCode(receiptCode){
         $.getJSON("purchaseReceiptNodeController.do?getPrintDataByreceiptCode", {receiptCode: receiptCode}, function (data) {
             if (!!data) {
                 printQRCode(data);
+                $('#win').window('close');
             } else {
                 $.messager.alert('error', '无有效数据!', 'info');
             }
         })
     }
+    //取消批量打印
+    $("#bp_close").click(function () {
+        $('#win').window('close');
+    })
 </script>

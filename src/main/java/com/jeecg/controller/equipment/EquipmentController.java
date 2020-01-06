@@ -117,7 +117,7 @@ public class EquipmentController extends BaseController {
 			keys[0] = "类型";
 			values[0] = "99-设备";
 			//二维码编号
-			keys[1] = "二维码编号";
+			keys[1] = "二维码";
 			values[1] = qrCodeEntity.getNumber();
 			//设备编号
 			keys[2] = "设备编号";
@@ -128,7 +128,7 @@ public class EquipmentController extends BaseController {
 			//二维码类型
 			keys[4] = "设备型号";
 			values[4] = qrCodeEntity.getMaterialSize();
-			result.add(generateContent(qrCode.concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
+			result.add(generateContent(qrCodeEntity.getCode().concat(",").concat(qrCode).concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
 			return result;
 		}
 		return null;
@@ -154,7 +154,7 @@ public class EquipmentController extends BaseController {
 			keys[0] = "类型";
 			values[0] = "99-设备";
 			//二维码编号
-			keys[1] = "二维码编号";
+			keys[1] = "二维码";
 			values[1] = qrCodeEntity.getNumber();
 			//设备编号
 			keys[2] = "设备编号";
@@ -166,7 +166,7 @@ public class EquipmentController extends BaseController {
 			keys[4] = "设备型号";
 			values[4] = qrCodeEntity.getMaterialSize();
 
-			result.add(generateContent(qrCode.concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
+			result.add(generateContent(qrCodeEntity.getCode().concat(",").concat(qrCode).concat(",").concat(qrCodeEntity.getQrCodeType()), keys, values));
 		}
 	}
 
