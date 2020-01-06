@@ -58,8 +58,8 @@ public class ERPurTranslateMap {
             put("rejectionReason","FRejectReason");//拒收原因
         }};
         */
-        TRANSLATE_DETAIL_PROPERTY = new String[]{"rawMaterialCode","rawMaterialName","rawMaterialSize","actualArrivalNumber","actualReceivedNumber","repositoryCode","inventoryStatus","rejectionReason","repositorySpace"};
-        TRANSLATE_DETAIL_PARAM = new String[]{"FMaterialId","FMaterialName","FMateriaModel","FActlandQty","FActReceiveQty","FStockID","FStockStatusId","FRejectReason","FStockLocId"};
-        TRANSLATE_DETAIL_TYPE = new Class[]{String.class,String.class,String.class,Double.class,Double.class,String.class,String.class,String.class,String.class};
+        TRANSLATE_DETAIL_PROPERTY = new String[]{"rawMaterialCode","rawMaterialName","rawMaterialSize","actualArrivalNumber","actualReceivedNumber","repositoryCode","inventoryStatus","rejectionReason","repositorySpace","attr1"};
+        TRANSLATE_DETAIL_PARAM = new String[]{"FMaterialId","FMaterialName","FMateriaModel","FActlandQty","FActReceiveQty","FStockID","FStockStatusId","FRejectReason","FStockLocId","FSupplierLot"};
+        TRANSLATE_DETAIL_TYPE = new Class[]{String.class,String.class,String.class,Double.class,Double.class,String.class,String.class,String.class,String.class,String.class};
     }
 }

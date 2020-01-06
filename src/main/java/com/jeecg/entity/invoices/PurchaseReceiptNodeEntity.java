@@ -59,7 +59,7 @@ public class PurchaseReceiptNodeEntity implements java.io.Serializable {
 	private java.lang.String rejectionReason;
 	/**采购收料单主键*/
 	private java.lang.String inspectId;
-	/**预留1*/
+	/**预留1->批次*/
 	private java.lang.String attr1;
 	/**预留2*/
 	private java.lang.String attr2;

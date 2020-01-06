@@ -40,6 +40,12 @@ public class FinishedLastInspectEntity implements java.io.Serializable {
 	private java.util.Date lastInspectDate;
 	/**末检编号*/
 	private String lastInspectNumber;
+	/**总数量*/
+	private java.lang.Integer count;
+	/**合格数量*/
+	private java.lang.Integer qualifiedCount;
+	/**不合格数量*/
+	private java.lang.Integer unqualifiedCount;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -182,5 +188,54 @@ public class FinishedLastInspectEntity implements java.io.Serializable {
 
 	public void setLastInspectNumber(String lastInspectNumber) {
 		this.lastInspectNumber = lastInspectNumber;
+	}
+
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  总数量
+	 */
+	@Column(name ="COUNT",nullable=true,precision=10,scale=0)
+	public java.lang.Integer getCount(){
+		return this.count;
+	}
+
+	/**
+	 *方法: 设置java.lang.Integer
+	 *@param: java.lang.Integer  总数量
+	 */
+	public void setCount(java.lang.Integer count){
+		this.count = count;
+	}
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  合格数量
+	 */
+	@Column(name ="QUALIFIED_COUNT",nullable=true,precision=10,scale=0)
+	public java.lang.Integer getQualifiedCount(){
+		return this.qualifiedCount;
+	}
+
+	/**
+	 *方法: 设置java.lang.Integer
+	 *@param: java.lang.Integer  合格数量
+	 */
+	public void setQualifiedCount(java.lang.Integer qualifiedCount){
+		this.qualifiedCount = qualifiedCount;
+	}
+	/**
+	 *方法: 取得java.lang.Integer
+	 *@return: java.lang.Integer  不合格数量
+	 */
+	@Column(name ="UNQUALIFIED_COUNT",nullable=true,precision=10,scale=0)
+	public java.lang.Integer getUnqualifiedCount(){
+		return this.unqualifiedCount;
+	}
+
+	/**
+	 *方法: 设置java.lang.Integer
+	 *@param: java.lang.Integer  不合格数量
+	 */
+	public void setUnqualifiedCount(java.lang.Integer unqualifiedCount){
+		this.unqualifiedCount = unqualifiedCount;
 	}
 }

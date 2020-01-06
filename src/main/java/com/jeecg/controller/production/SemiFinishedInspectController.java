@@ -5,6 +5,7 @@ import com.jeecg.entity.production.*;
 import com.jeecg.page.production.SemiFinishedInspectPage;
 import com.jeecg.service.basic.SemiFinishedProductServiceI;
 import com.jeecg.service.production.SemiFinishedInspectServiceI;
+import com.jeecg.util.MathUtil;
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.beanvalidator.BeanValidators;
 import org.jeecgframework.core.common.controller.BaseController;
@@ -79,7 +80,6 @@ public class SemiFinishedInspectController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -124,7 +124,6 @@ public class SemiFinishedInspectController extends BaseController {
 	/**
 	 * 添加半成品首末检
 	 * 
-	 * @param ids
 	 * @return
 	 */
 	@RequestMapping(params = "save")
@@ -133,34 +132,26 @@ public class SemiFinishedInspectController extends BaseController {
 		String message = null;
 		List<SemiFinishedFirstInspectEntity> semiFinishedFirstInspectList =  semiFinishedInspectPage.getSemiFinishedFirstInspectList();
 		List<SemiFinishedLastInspectEntity> semiFinishedLastInspectList =  semiFinishedInspectPage.getSemiFinishedLastInspectList();
-		int count = 0,qualifiedCount = 0,unQualifiedCount = 0;
-		if(semiFinishedFirstInspectList!=null&&semiFinishedFirstInspectList.size()>0){
-			for (SemiFinishedFirstInspectEntity semiFinishedFirstInspect : semiFinishedFirstInspectList) {
-				count++;
-				if(semiFinishedFirstInspect.getFirstInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
-				}
-			}
-		}
-		if(semiFinishedLastInspectList!=null&&semiFinishedLastInspectList.size()>0){
+		if(semiFinishedLastInspectList!=null&&semiFinishedLastInspectList.size()>0) {
 			Date date = null;
+			SemiFinishedLastInspectEntity lastInspectEntity = new SemiFinishedLastInspectEntity();
 			for (SemiFinishedLastInspectEntity semiFinishedLastInspect : semiFinishedLastInspectList) {
-				if(date==null||date.compareTo(semiFinishedLastInspect.getLastInspectDate())>0){
-					semiFinishedInspect.setResult(semiFinishedLastInspect.getLastInspectResult()==1?"OK":"NG");
-				}
-				count++;
-				if(semiFinishedLastInspect.getLastInspectResult()==1){
-					qualifiedCount++;
-				}else{
-					unQualifiedCount++;
+				if (date == null || date.compareTo(semiFinishedLastInspect.getLastInspectDate()) > 0) {
+					lastInspectEntity = semiFinishedLastInspect;
 				}
 			}
+			semiFinishedInspect.setResult(lastInspectEntity.getLastInspectResult()!=null&&lastInspectEntity.getLastInspectResult() == 1 ? "OK" : "NG");
+			semiFinishedInspect.setCount(MathUtil.toInt(lastInspectEntity.getCount()));
+			semiFinishedInspect.setQualifiedCount(MathUtil.toInt(lastInspectEntity.getQualifiedCount()));
+			semiFinishedInspect.setUnQualifiedCount(MathUtil.toInt(lastInspectEntity.getUnqualifiedCount()));
 		}
-		semiFinishedInspect.setCount(count);
-		semiFinishedInspect.setQualifiedCount(qualifiedCount);
-		semiFinishedInspect.setUnQualifiedCount(unQualifiedCount);
+		//获取批次号
+		if(StringUtil.isNotEmpty(semiFinishedInspect.getSemiFinishedCode())){
+			List<SemiFinishedProductionEntity> semiFinishedProductionEntityList = systemService.findByProperty(SemiFinishedProductionEntity.class, "semiFinishedSerino", semiFinishedInspect.getSemiFinishedCode());
+			if(semiFinishedProductionEntityList!=null&&semiFinishedProductionEntityList.size()>0){
+				semiFinishedInspect.setBatchNo(semiFinishedProductionEntityList.get(0).getBatchNumber());
+			}
+		}
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(semiFinishedInspect.getId())) {
 			message = "更新成功";

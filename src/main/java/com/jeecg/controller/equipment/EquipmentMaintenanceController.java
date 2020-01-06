@@ -1,4 +1,5 @@
 package com.jeecg.controller.equipment;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -80,6 +81,25 @@ public class EquipmentMaintenanceController extends BaseController {
 		return new ModelAndView("com/jeecg/equipment/equipmentMaintenanceList");
 	}
 
+
+	@RequestMapping(value = "/apiList")
+	@ResponseBody
+	public List apiList(@RequestBody EquipmentMaintenanceEntity equipmentMaintenance){
+		String equipmentNumber = equipmentMaintenance.getEquipmentNumber();
+		String planMaintenancePerson = equipmentMaintenance.getPlanMaintenancePerson();
+		String hql = "from EquipmentMaintenanceEntity where 1=1";
+		List param = new ArrayList();
+		if(StringUtil.isNotEmpty(equipmentNumber)){
+			hql += " and equipmentNumber = ?";
+			param.add(equipmentNumber);
+		}
+		if(StringUtil.isNotEmpty(planMaintenancePerson)){
+			hql += " and planMaintenancePerson = ?";
+			param.add(planMaintenancePerson);
+		}
+		return  equipmentMaintenanceService.findHql(hql, param.toArray());
+	}
+
 	/**
 	 * easyui AJAX请求数据
 	 * 
@@ -145,6 +165,11 @@ public class EquipmentMaintenanceController extends BaseController {
 		}
 		j.setMsg(message);
 		return j;
+	}
+
+	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
+	public void apiSave(@RequestBody EquipmentMaintenanceEntity equipmentMaintenanceEntity){
+		equipmentMaintenanceService.save(equipmentMaintenanceEntity);
 	}
 
 	/**

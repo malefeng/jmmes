@@ -2,6 +2,8 @@ package com.jeecg.controller.warehous;
 
 import com.jeecg.batch.FinishedOutLookDataBatchRunnable;
 import com.jeecg.batch.ProductionLookDataBatchRunnable;
+import com.jeecg.entity.production.FinishedInspectItemEntity;
+import com.jeecg.entity.production.FinishedProductionEntity;
 import com.jeecg.entity.warehous.FinishedWarehousIOEntity;
 import com.jeecg.service.warehous.FinishedWarehousIOServiceI;
 import com.jeecg.util.DictionaryUtil;
@@ -138,6 +140,15 @@ public class FinishedWarehousIOController extends BaseController {
 		String message = null;
 		AjaxJson j = new AjaxJson();
 		if (StringUtil.isNotEmpty(finishedWarehousIO.getId())) {
+			//判断是否成品检
+			List<FinishedInspectItemEntity> finishedInspectItemEntities = systemService.findByProperty(FinishedInspectItemEntity.class, "finishedCode", finishedWarehousIO.getFinishedSerino());
+			if(finishedInspectItemEntities!=null&&finishedInspectItemEntities.size()>0){
+				if(!StringUtil.equals("1",finishedInspectItemEntities.get(0).getStatus())){
+					message="该成品未检验，不允许入库";
+					j.setMsg(message);
+					return j;
+				}
+			}
 			message = "成品出入库更新成功";
 			FinishedWarehousIOEntity t = finishedWarehousIOService.get(FinishedWarehousIOEntity.class, finishedWarehousIO.getId());
 			try {
@@ -166,7 +177,15 @@ public class FinishedWarehousIOController extends BaseController {
 
 	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
 	@ResponseBody
-	public void apiSave(@RequestBody FinishedWarehousIOEntity finishedWarehousIO){
+	public void apiSave(@RequestBody FinishedWarehousIOEntity finishedWarehousIO,HttpServletResponse response) throws IOException {
+		//判断是否成品检
+		List<FinishedInspectItemEntity> finishedInspectItemEntities = systemService.findByProperty(FinishedInspectItemEntity.class, "finishedCode", finishedWarehousIO.getFinishedSerino());
+		if(finishedInspectItemEntities!=null&&finishedInspectItemEntities.size()>0){
+			if(!StringUtil.equals("1",finishedInspectItemEntities.get(0).getStatus())){
+				response.sendError(202,"该成品未检验，不允许入库");
+				return;
+			}
+		}
 		finishedWarehousIOService.saveOrUpdate(finishedWarehousIO);
 		if("1".equals(finishedWarehousIO.getIoType())){
 			//同步生产看板数据

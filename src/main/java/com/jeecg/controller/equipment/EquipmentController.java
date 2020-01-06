@@ -51,7 +51,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  */
 @Controller
-@RequestMapping("/equipmentController")
+	@RequestMapping("/equipmentController")
 public class EquipmentController extends BaseController {
 	/**
 	 * Logger for this class
@@ -95,6 +95,12 @@ public class EquipmentController extends BaseController {
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, equipment, request.getParameterMap());
 		this.equipmentService.getDataGridReturn(cq, true);
 		TagUtil.datagrid(response, dataGrid);
+	}
+
+	@RequestMapping(value="/apiList/{equipmentNumber}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<EquipmentEntity> list(@PathVariable("equipmentNumber") String equipmentNumber, HttpServletRequest request) {
+		return this.equipmentService.findByProperty(EquipmentEntity.class, "equipmentNumber", equipmentNumber);
 	}
 
 	/**
@@ -145,6 +151,11 @@ public class EquipmentController extends BaseController {
 		}
 		j.setMsg(message);
 		return j;
+	}
+
+	@RequestMapping(value = "/apiSave",method = RequestMethod.POST)
+	public void apiSave(@RequestBody EquipmentEntity equipmentEntity){
+		equipmentService.save(equipmentEntity);
 	}
 
 	/**

@@ -33,6 +33,9 @@
 				  <td align="left" bgcolor="#EEEEEE">末检状态</td>
 				  <td align="left" bgcolor="#EEEEEE">末检结果</td>
 				  <td align="left" bgcolor="#EEEEEE">末检时间</td>
+				  <td align="left" bgcolor="#EEEEEE">总数量</td>
+				  <td align="left" bgcolor="#EEEEEE">合格数量</td>
+				  <td align="left" bgcolor="#EEEEEE">不合格数量</td>
 	</tr>
 	<tbody id="add_finishedLastInspect_table">	
 	<c:if test="${fn:length(finishedLastInspectList)  <= 0 }">
@@ -44,6 +47,9 @@
 				<td align="left"><t:dictSelect field="finishedLastInspectList[0].lastInspectState" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="finishedLastInspectList[0].lastInspectResult" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="finishedLastInspectList[0].lastInspectDate" class="Wdate" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
+				<td align="left"><input name="finishedLastInspectList[0].count"  maxlength="" type="text" style="width:120px;" ></td>
+				<td align="left"><input name="finishedLastInspectList[0].qualifiedCount" maxlength="" type="text" style="width:120px;" ></td>
+				<td align="left"><input name="finishedLastInspectList[0].unqualifiedCount" maxlength="" type="text" style="width:120px;" ></td>
    			</tr>
 	</c:if>
 	<c:if test="${fn:length(finishedLastInspectList)  > 0 }">
@@ -57,6 +63,9 @@
 				<td align="left"><t:dictSelect field="finishedLastInspectList[${stuts.index }].lastInspectState" defaultVal="${poVal.lastInspectState }" typeGroupCode="inspeType" readonly="true"></t:dictSelect></td>
 				<td align="left"><t:dictSelect field="finishedLastInspectList[${stuts.index }].lastInspectResult" defaultVal="${poVal.lastInspectResult }" typeGroupCode="inspeRes" readonly="true"></t:dictSelect></td>
 				<td align="left"><input name="finishedLastInspectList[${stuts.index }].lastInspectDate" class="Wdate" value="${poVal.lastInspectDate }" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" maxlength="" type="text" style="width:120px;" ></td>
+				   <td align="left"><input name="finishedLastInspectList[${stuts.index }].count" maxlength="" value="${poVal.count }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="finishedLastInspectList[${stuts.index }].qualifiedCount" maxlength="" value="${poVal.qualifiedCount }" type="text" style="width:120px;"></td>
+				   <td align="left"><input name="finishedLastInspectList[${stuts.index }].unqualifiedCount" maxlength="" value="${poVal.unqualifiedCount }" type="text" style="width:120px;"></td>
    			</tr>
 		</c:forEach>
 	</c:if>	
