@@ -36,10 +36,10 @@
                     sortable: true
                 }, {field: 'inspectLogSheet', title: '检验记录表', sortable: true},
                     {
-                    field: 'result',
+                    field: 'status',
                     title: '检验状态',
                     sortable: true,
-                        formatter:function(val){
+                    formatter:function(val){
                         return ${checkState}[val]
                     }
                 },
@@ -47,8 +47,8 @@
                     field: 'result',
                     title: '检验结果',
                     sortable: true,
-                        formatter:function(val){
-                        return val==1?"通过":"未通过"
+                    formatter:function(val){
+                        return ${inspeRes}[val]
                     }
                 },
                     {field: 'batchNo', title: '批号', sortable: true},

@@ -191,7 +191,8 @@ public class RipeningWarehousIOController extends BaseController {
 					finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
 					finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
 					finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
-					finishedInspectItemEntity.setStatus("2");
+					//检验状态：1-未检
+					finishedInspectItemEntity.setStatus("1");
 					systemService.save(finishedInspectItemEntity);
 				}
 			} catch (Exception e) {
@@ -276,7 +277,8 @@ public class RipeningWarehousIOController extends BaseController {
 			finishedInspectItemEntity.setFinishedName(ripeningWarehousIO.getProductName());
 			finishedInspectItemEntity.setProductionDispatchingNumber(ripeningWarehousIO.getProductionOrderNumber());
 			finishedInspectItemEntity.setSalesOrderNumber(ripeningWarehousIO.getProductSerino());
-			finishedInspectItemEntity.setStatus("2");
+			//检验状态：1-未检
+			finishedInspectItemEntity.setStatus("1");
 			systemService.save(finishedInspectItemEntity);
 		}
 		ripeningWarehousIOService.saveOrUpdate(ripeningWarehousIO);

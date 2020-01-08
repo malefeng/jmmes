@@ -78,7 +78,7 @@ public class FinishedInspectItemController extends BaseController {
 	@RequestMapping(params = "list")
 	public ModelAndView list(HttpServletRequest request) {
 
-		dictionaryUtil.writeDicList(request,"checkState");
+		dictionaryUtil.writeDicList(request,"checkState","inspeRes");
 		return new ModelAndView("com/jeecg/production/finishedInspectItemList");
 	}
 
