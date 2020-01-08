@@ -208,12 +208,13 @@ public class CheckTaskController extends BaseController {
 
 	@RequestMapping(value="/apiList/{pageNo}/{pageSize}", method = RequestMethod.GET)
 	@ResponseBody
-	public List<CheckTaskEntity> apiList(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize){
-		CriteriaQuery query = new CriteriaQuery(CheckTaskEntity.class);
-		query.setCurPage(pageNo<=0?1:pageNo);
-		query.setPageSize(pageSize<1?1:pageSize);
-		List<CheckTaskEntity> listCheckTasks = this.checkTaskService.getListByCriteriaQuery(query,true);
-		return listCheckTasks;
+	public List<CheckTaskEntity> apiList(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize,@RequestParam("checkPersonPlan")String checkPersonPlan){
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from t_check_task where 1=1 ");
+		if(StringUtil.isNotEmpty(checkPersonPlan)){
+			sql.append(" and check_person_plan = '").append(checkPersonPlan).append("'");
+		}
+		return checkTaskService.findObjForJdbc(sql.toString(),pageNo,pageSize,CheckTaskEntity.class);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
