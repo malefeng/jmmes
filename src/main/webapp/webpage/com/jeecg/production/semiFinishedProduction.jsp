@@ -100,10 +100,7 @@
 			</td>
 				<td align="right"><label class="Validform_label">是否需要熟成:</label></td>
 				<td class="value">
-					<select id="needRipening" name="needRipening" value="${semiFinishedProductionPage.needRipening}">
-						<option value="1">是</option>
-						<option value="0">否</option>
-					</select>
+					<t:dictSelect field="needRipening" id="needRipening" defaultVal="${semiFinishedProductionPage.needRipening}" typeGroupCode="needRipen" hasLabel="false" type="list"></t:dictSelect>
 				</td>
 			</tr>
 				<tr id="ripeningHours_line">

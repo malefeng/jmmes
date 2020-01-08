@@ -356,7 +356,7 @@
             minimizable: false,
             maximizable: false,
             width: 300,
-            height: 370,
+            height: 400,
             modal: true
         });
     }
@@ -386,7 +386,7 @@
             id: id,
             batchNo: batchNo,
             times: times,
-            times: times,
+            itemTimes: itemTimes,
             firstTimes: firstTimes,
             lastTimes: lastTimes,
             takeMaterilNumber: takeMaterilNumber,

@@ -31,7 +31,7 @@
         .table, .table * {
             margin: 0 auto;
             padding: 4px;
-            font-size: 18px;
+            font-size: 14px;
             font-family: Arial, 宋体, Helvetica, sans-serif;
         }
 

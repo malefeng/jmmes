@@ -74,13 +74,14 @@
 				<td align="left"><t:dictSelect field="finishedProductionNodeList[${stuts.index }].unit" defaultVal="${poVal.unit }" typeGroupCode="unit" readonly="true"></t:dictSelect></td>
    			</tr>
 		</c:forEach>
-	</c:if>	
+	</c:if>
 	</tbody>
 </table>
 </div>
+<%--
 <div hidden>
 	<t:dictSelect field="finishedProductionNodeList[${stuts.index }].code" dictTable="t_raw_material_list" dictField="raw_material_code" dictText="raw_material_code" hasLabel="false" type="list"></t:dictSelect>
 	<t:dictSelect field="finishedProductionNodeList[${stuts.index }].name" dictTable="t_raw_material_list" dictField="raw_material_name" dictText="raw_material_name" hasLabel="false" type="list"></t:dictSelect>
 	<t:dictSelect field="finishedProductionNodeList[${stuts.index }].code" dictTable="t_semi_finished_product_list" dictField="semi_finished_code" dictText="semi_finished_name" hasLabel="false" type="list"></t:dictSelect>
 	<t:dictSelect field="finishedProductionNodeList[${stuts.index }].name" dictTable="t_semi_finished_product_list" dictField="semi_finished_name" dictText="semi_finished_name" hasLabel="false" type="list"></t:dictSelect>
-</div>
+</div>--%>
