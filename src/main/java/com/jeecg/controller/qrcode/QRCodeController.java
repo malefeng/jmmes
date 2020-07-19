@@ -78,7 +78,7 @@ public class QRCodeController extends BaseController {
 		Map resultMap = new HashMap();
 		String sql = "SELECT " +
 				"   count(id) times, " +
-				"   batch_no batchNo, " +
+				"   max(batch_no) batchNo, " +
 				"   qr_code_type qrCodeType " +
 				"  FROM " +
 				"   t_qr_code " +
