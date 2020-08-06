@@ -18,6 +18,7 @@
                 pageSize: 10,
                 pagination: true,
                 pageList: [10, 20, 30],
+                sortName: 'createDate',
                 sortOrder: 'desc',
                 rownumbers: true,
                 singleSelect: true,
