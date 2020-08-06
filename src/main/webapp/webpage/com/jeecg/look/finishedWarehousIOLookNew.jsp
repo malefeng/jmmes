@@ -84,8 +84,8 @@
             <div class="table-th">物料名称</div>
             <div class="table-th">规格型号</div>
             <div class="table-th">客户</div>
-            <div class="table-th">应发米数</div>
-            <div class="table-th">实发米数</div>
+            <div class="table-th">应发数量</div>
+            <div class="table-th">实发数量</div>
             <div class="table-th">发货率（%）</div>
             <div class="table-th">发货完成时间</div>
         </div>

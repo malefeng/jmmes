@@ -10,9 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.jeecgframework.core.common.controller.CustomJsonDateDeserializer;
+
 import javax.persistence.SequenceGenerator;
 
 /**   
@@ -151,6 +154,7 @@ public class EquipmentMaintenanceEntity implements java.io.Serializable {
 	 *方法: 设置java.util.Date
 	 *@param: java.util.Date  创建日期
 	 */
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setCreateDate(java.util.Date createDate){
 		this.createDate = createDate;
 	}
@@ -199,6 +203,7 @@ public class EquipmentMaintenanceEntity implements java.io.Serializable {
 	 *方法: 设置java.util.Date
 	 *@param: java.util.Date  更新日期
 	 */
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setUpdateDate(java.util.Date updateDate){
 		this.updateDate = updateDate;
 	}
@@ -391,6 +396,7 @@ public class EquipmentMaintenanceEntity implements java.io.Serializable {
 	 *方法: 设置java.util.Date
 	 *@param: java.util.Date  采购时间
 	 */
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setPurchaseDate(java.util.Date purchaseDate){
 		this.purchaseDate = purchaseDate;
 	}
@@ -487,6 +493,7 @@ public class EquipmentMaintenanceEntity implements java.io.Serializable {
 	 *方法: 设置java.util.Date
 	 *@param: java.util.Date  计划维护时间
 	 */
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setPlanMaintenanceData(java.util.Date planMaintenanceData){
 		this.planMaintenanceData = planMaintenanceData;
 	}
@@ -519,6 +526,7 @@ public class EquipmentMaintenanceEntity implements java.io.Serializable {
 	 *方法: 设置java.util.Date
 	 *@param: java.util.Date  实际维护时间
 	 */
+	@JsonDeserialize(using = CustomJsonDateDeserializer.class)
 	public void setActualMaintenanceData(java.util.Date actualMaintenanceData){
 		this.actualMaintenanceData = actualMaintenanceData;
 	}

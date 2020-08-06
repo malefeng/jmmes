@@ -154,6 +154,7 @@ public class FinishedProductionController extends BaseController {
 				finishedInspectItemEntity.setFinishedName(finishedProduction.getFinishedName());
 				finishedInspectItemEntity.setProductionDispatchingNumber(finishedProduction.getProductionOrderNumber());
 				finishedInspectItemEntity.setSalesOrderNumber(finishedProduction.getFinishedSerino());
+				finishedInspectItemEntity.setStatus("1");
 				systemService.save(finishedInspectItemEntity);
 			}
 		}

@@ -1,5 +1,7 @@
 package com.jeecg.service.impl.production;
 
+import com.jeecg.entity.production.FinishedInspectItemEntity;
+import com.jeecg.page.production.FinishedInspectItemPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -15,16 +17,29 @@ public class FinishedProductionServiceImpl extends CommonServiceImpl implements 
 
 	
 	public void addMain(FinishedProductionEntity finishedProduction,
-	        List<FinishedProductionNodeEntity> finishedProductionNodeList){
-			//保存主信息
-			this.save(finishedProduction);
-		
-			/**保存-成品生产物料详情*/
-			for(FinishedProductionNodeEntity finishedProductionNode:finishedProductionNodeList){
-				//外键设置
-				finishedProductionNode.setFinishedSerino(finishedProduction.getFinishedSerino());
-				this.save(finishedProductionNode);
-			}
+		List<FinishedProductionNodeEntity> finishedProductionNodeList){
+		//保存主信息
+		this.save(finishedProduction);
+
+		/**保存-成品生产物料详情*/
+		for(FinishedProductionNodeEntity finishedProductionNode:finishedProductionNodeList){
+			//外键设置
+			finishedProductionNode.setFinishedSerino(finishedProduction.getFinishedSerino());
+			this.save(finishedProductionNode);
+		}
+
+		/**
+		 * 如果不需要熟成，则生成成品检验数据
+		 */
+		if(!"1".equals(finishedProduction.getNeedRipening())){
+			FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+			finishedInspectItemEntity.setFinishedCode(finishedProduction.getFinishedCode());
+			finishedInspectItemEntity.setFinishedName(finishedProduction.getFinishedName());
+			finishedInspectItemEntity.setProductionDispatchingNumber(finishedProduction.getProductionOrderNumber());
+			finishedInspectItemEntity.setSalesOrderNumber(finishedProduction.getFinishedSerino());
+			finishedInspectItemEntity.setStatus("1");
+			super.save(finishedInspectItemEntity);
+		}
 	}
 
 	
