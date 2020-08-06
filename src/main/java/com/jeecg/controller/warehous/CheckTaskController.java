@@ -210,11 +210,11 @@ public class CheckTaskController extends BaseController {
 	@ResponseBody
 	public List<CheckTaskEntity> apiList(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize,@RequestParam("checkPersonPlan")String checkPersonPlan){
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from t_check_task where 1=1 ");
+		sql.append("from CheckTaskEntity where 1=1 ");
 		if(StringUtil.isNotEmpty(checkPersonPlan)){
-			sql.append(" and check_person_plan = '").append(checkPersonPlan).append("'");
+			sql.append(" and checkPersonPlan = '").append(checkPersonPlan).append("'");
 		}
-		return checkTaskService.findObjForJdbc(sql.toString(),pageNo,pageSize,CheckTaskEntity.class);
+		return checkTaskService.findHql(sql.toString(),new Object[]{});
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
