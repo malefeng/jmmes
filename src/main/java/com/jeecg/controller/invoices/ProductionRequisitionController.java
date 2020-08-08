@@ -8,6 +8,7 @@ import com.jeecg.constant.ERSalTranslateMap;
 import com.jeecg.entity.invoices.*;
 import com.jeecg.entity.look.ProductionParehousIOLookEntity;
 import com.jeecg.entity.warehous.MaterialWarehousIOEntity;
+import com.jeecg.entity.warehous.MaterialWarehousNodeEntity;
 import com.jeecg.page.invoices.ProductionRequisitionPage;
 import com.jeecg.service.invoices.ProductionRequisitionServiceI;
 import com.jeecg.util.*;
@@ -19,6 +20,7 @@ import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.ListUtils;
+import org.jeecgframework.core.util.ResourceUtil;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.jwt.util.ResponseMessage;
 import org.jeecgframework.jwt.util.Result;
@@ -198,38 +200,63 @@ public class ProductionRequisitionController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		List<ProductionRequisitionNodeEntity> productionRequisitionNodeList =  productionRequisitionPage.getProductionRequisitionNodeList();
 		List<ProductionRequisitionOrgNodeEntity> productionRequisitionOrgNodeList =  productionRequisitionPage.getProductionRequisitionOrgNodeList();
-		if(!ListUtils.isNullOrEmpty(productionRequisitionNodeList)){
-			List<MaterialWarehousIOEntity> materialWarehousIOEntityList = new ArrayList<>(productionRequisitionNodeList.size());
-			for (ProductionRequisitionNodeEntity productionRequisitionNodeEntity: productionRequisitionNodeList) {
-				//对应的原料库存信息
-				MaterialWarehousIOEntity materialWarehousIOEntity = null;
-				try {
-					materialWarehousIOEntity = productionRequisitionService.findUniqueByProperty(MaterialWarehousIOEntity.class, "materialSerino", productionRequisitionNodeEntity.getRawMaterialSerino());
-				} catch (Exception e) {
-					response.setStatus(500);
-					response.sendError(500,"原料仓库中，原料编号："+productionRequisitionNodeEntity.getRawMaterialSerino()+"存在重复数据");
-					e.printStackTrace();
-				}
-				if(materialWarehousIOEntity==null){
-					message = "原料信息不存在";
-					j.setMsg(message);
-					return j;
-				}
-				//已配料
-				materialWarehousIOEntity.setIoType("4");
-				materialWarehousIOEntityList.add(materialWarehousIOEntity);
-				productionRequisitionService.updateEntitie(materialWarehousIOEntity);
-				productionRequisitionNodeEntity.setFinishedCode(productionRequisition.getFinishedCode());
-				productionRequisitionNodeEntity.setFinishedName(productionRequisition.getFinishedName());
-				productionRequisitionNodeEntity.setProductionOrderNumber(productionRequisition.getProductionOrderNumber());
-				productionRequisitionNodeEntity.setProductionDispatchingNumber(productionRequisition.getProductionDispatchingNumber());
-			}
-		}
+
 		if (StringUtil.isNotEmpty(productionRequisition.getId())) {
 			message = "更新成功";
 			productionRequisitionService.updateMain(productionRequisition, productionRequisitionNodeList,productionRequisitionOrgNodeList);
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} else {
+			//尽在新增时保存配料信息
+			if(!ListUtils.isNullOrEmpty(productionRequisitionNodeList)){
+				List<MaterialWarehousIOEntity> materialWarehousIOEntityList = new ArrayList<>(productionRequisitionNodeList.size());
+				List<MaterialWarehousNodeEntity> materialWarehousNodeEntityAddList = new ArrayList<>();
+				for (ProductionRequisitionNodeEntity productionRequisitionNodeEntity: productionRequisitionNodeList) {
+					//对应的原料库存信息
+					MaterialWarehousIOEntity materialWarehousIOEntity = null;
+					try {
+						materialWarehousIOEntity = productionRequisitionService.findUniqueByProperty(MaterialWarehousIOEntity.class, "materialSerino", productionRequisitionNodeEntity.getRawMaterialSerino());
+					} catch (Exception e) {
+						response.setStatus(500);
+						response.sendError(500,"原料仓库中，原料编号："+productionRequisitionNodeEntity.getRawMaterialSerino()+"存在重复数据");
+						e.printStackTrace();
+					}
+					if(materialWarehousIOEntity==null){
+						message = "原料信息不存在";
+						j.setMsg(message);
+						return j;
+					}
+					//原料主信息，已配料
+					materialWarehousIOEntity.setIoType("4");
+					materialWarehousIOEntityList.add(materialWarehousIOEntity);
+
+					//原料子信息，已配料
+					MaterialWarehousNodeEntity materialWarehousNodeEntity = new MaterialWarehousNodeEntity();
+					materialWarehousNodeEntity.setMaterialSerino(materialWarehousIOEntity.getMaterialSerino());
+					materialWarehousNodeEntity.setProductionOrderNumber(productionRequisition.getProductionDispatchingNumber());//生产派工单号
+					materialWarehousNodeEntity.setWarehouseOutState("4");//已配料
+					materialWarehousNodeEntity.setWarehouseOutNumber(productionRequisitionNodeEntity.getRawMaterialNum());//出库数量
+					materialWarehousNodeEntity.setWarehouseOutDate(new Date());
+					materialWarehousNodeEntity.setProductionMaterialNumber(productionRequisition.getProductionOrderNumber());//生产订单号
+					materialWarehousNodeEntity.setUnit(materialWarehousIOEntity.getUnit());//单位
+					materialWarehousNodeEntity.setWarehouseOutPersonCode(ResourceUtil.getSessionUser().getUserName());//出库人
+					materialWarehousNodeEntity.setVirtualRepository(productionRequisition.getRepositoryCode());//仓库
+					materialWarehousNodeEntity.setVirtualRepositoryNumber(""+
+							(MathUtil.toInt(materialWarehousIOEntity.getWarehouseOutNumber())-MathUtil.toInt(productionRequisitionNodeEntity.getRawMaterialNum())));//本次入虚拟仓库数量，即仓库剩余数量
+					materialWarehousNodeEntity.setWarehouseOutNumber(productionRequisitionNodeEntity.getRawMaterialNum());//出库数量
+					materialWarehousNodeEntity.setBatchNumber(productionRequisitionNodeEntity.getBatchNumber());//原料批次
+					materialWarehousNodeEntityAddList.add(materialWarehousNodeEntity);
+
+					productionRequisitionService.updateEntitie(materialWarehousIOEntity);
+					productionRequisitionNodeEntity.setFinishedCode(productionRequisition.getFinishedCode());
+					productionRequisitionNodeEntity.setFinishedName(productionRequisition.getFinishedName());
+					productionRequisitionNodeEntity.setProductionOrderNumber(productionRequisition.getProductionOrderNumber());
+					productionRequisitionNodeEntity.setProductionDispatchingNumber(productionRequisition.getProductionDispatchingNumber());
+				}
+				if(materialWarehousNodeEntityAddList.size()>0){
+					//保存原料库存的已配料子信息
+					systemService.batchSave(materialWarehousNodeEntityAddList);
+				}
+			}
 			message = "添加成功";
 			productionRequisitionService.addMain(productionRequisition, productionRequisitionNodeList,productionRequisitionOrgNodeList);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
@@ -424,8 +451,8 @@ public class ProductionRequisitionController extends BaseController {
 					//与领料车间相同的虚拟仓库原料才可以参与配料
 					if(StringUtil.equals(materialWarehousIOEntity.getVirtualRepository(),requisitionWorkshopCode)){
 						count += MathUtil.toInt(materialWarehousIOEntity.getVirtualRepositoryNumber());
-
 					}
+					if(count<=0){continue;}
 					ProductionRequisitionNodeEntity productionRequisitionNodeEntity = new ProductionRequisitionNodeEntity();
 					//数量
 					productionRequisitionNodeEntity.setRawMaterialNum(String.valueOf(val>=count?count:val));
