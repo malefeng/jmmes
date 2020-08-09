@@ -171,6 +171,16 @@ public class FinishedProductionController extends BaseController {
 			finishedProductionService.updateMain(finishedProduction, finishedProductionNodeList);
 		}else{
 			finishedProductionService.addMain(finishedProduction, finishedProductionNodeList);
+			//如果不需要熟成，则生成成品检验数据
+			if(!"1".equals(finishedProduction.getNeedRipening())){
+				FinishedInspectItemEntity finishedInspectItemEntity = new FinishedInspectItemEntity();
+				finishedInspectItemEntity.setFinishedCode(finishedProduction.getFinishedCode());
+				finishedInspectItemEntity.setFinishedName(finishedProduction.getFinishedName());
+				finishedInspectItemEntity.setProductionDispatchingNumber(finishedProduction.getProductionOrderNumber());
+				finishedInspectItemEntity.setSalesOrderNumber(finishedProduction.getFinishedSerino());
+				finishedInspectItemEntity.setStatus("1");
+				systemService.save(finishedInspectItemEntity);
+			}
 		}
 	}
 

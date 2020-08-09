@@ -181,7 +181,7 @@ public class FinishedWarehousIOController extends BaseController {
 		//判断是否成品检
 		List<FinishedInspectItemEntity> finishedInspectItemEntities = systemService.findByProperty(FinishedInspectItemEntity.class, "finishedCode", finishedWarehousIO.getFinishedSerino());
 		if(finishedInspectItemEntities!=null&&finishedInspectItemEntities.size()>0){
-			if(!StringUtil.equals("1",finishedInspectItemEntities.get(0).getStatus())){
+			if(!StringUtil.equals("2",finishedInspectItemEntities.get(0).getStatus())){
 				response.sendError(202,"该成品未检验，不允许入库");
 				return;
 			}
